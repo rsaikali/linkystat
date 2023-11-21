@@ -1,4 +1,4 @@
-name: backup-database
+name: Backup MySQL database
 on:
   schedule:
     - cron: "0 0 * * *"

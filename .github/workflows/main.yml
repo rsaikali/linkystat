@@ -1,8 +1,12 @@
-name: deploy-production
+name: Deploy Linkystat to production
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:      
 jobs:
   deploy-production:
     runs-on:
