@@ -1,0 +1,9 @@
+name: deploy-production
+on: [push]
+jobs:
+  check-bats-version:
+    runs-on:
+      - self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - run: cat requirements.txt
