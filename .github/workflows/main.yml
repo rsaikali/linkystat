@@ -8,3 +8,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: 'Create environment file'
         run: echo '${{ secrets.ENV_FILE }}' > env/.env
+      - name: 'Stop previous application'
+        run: docker compose --env-file ./env/.env stop || true
+      - name: 'Build and start new application'
+        run: docker compose --env-file ./env/.env --profile production up --build -d
