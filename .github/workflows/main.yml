@@ -1,7 +1,7 @@
 name: deploy-production
 on: [push]
 jobs:
-  check-bats-version:
+  deploy-production:
     runs-on:
       - self-hosted
     steps:
