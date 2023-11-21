@@ -1,5 +1,7 @@
 name: backup-database
-on: [push]
+on:
+  schedule:
+    - cron: "0 0 * * *"
 jobs:
   backup-database:
     runs-on:
@@ -37,4 +39,4 @@ jobs:
 
           # Keep only 3 latest backup files
           cd ${backup_directory}
-          rm `ls -t ${backup_directory} | awk 'NR>3'`
+          rm `ls -t ${backup_directory} | awk 'NR>3'` || true
