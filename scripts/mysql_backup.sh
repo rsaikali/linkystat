@@ -27,4 +27,4 @@ echo "LinkyStat MySQL backup size on ${current_date} is ${backup_size}ko" | mail
 
 # Keep only 3 latest backup files
 cd ${backup_directory}
-rm `ls -t ${backup_directory} | awk 'NR>3'`
+rm `ls -t ${backup_directory} | awk 'NR>3'` || true
