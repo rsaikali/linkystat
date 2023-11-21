@@ -1,0 +1,125 @@
+version: '3'
+services:
+
+  ###############################################################################
+  # Python Linky application
+  linky2db:
+    container_name: linky2db
+    build: .
+    restart: always
+    environment:
+      LINKY_USB_DEVICE: ${LINKY_USB_DEVICE}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Europe/Paris
+    devices:
+      - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ###############################################################################
+  # MySQL Database
+  mysql:
+    container_name: mysql
+    image: mysql:8.2
+    restart: always
+    command: mysqld --skip-performance-schema --skip-mysqlx --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES UTF8;' --lc_time_names='fr_FR'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      GRAFANA_MYSQL_USER: ${GRAFANA_MYSQL_USER}
+      GRAFANA_MYSQL_PASSWORD: ${GRAFANA_MYSQL_PASSWORD}
+      DAYS_OFFSET: ${DAYS_OFFSET}
+      TZ: Europe/Paris
+    ports:
+      - 3306:3306
+    volumes:
+      - ./files/mysql/init-script.sh:/docker-entrypoint-initdb.d/init-script.sh
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}
+      interval: 1s
+      retries: 120
+
+  ###############################################################################
+  # Grafana
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:10.2.1
+    restart: always
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      GF_SECURITY_ADMIN_EMAIL: ${GF_SECURITY_ADMIN_EMAIL}
+      GF_ANALYTICS_REPORTING_ENABLED: ${GF_ANALYTICS_REPORTING_ENABLED}
+      GF_ANALYTICS_GOOGLE_ANALYTICS_4_ID: ${GF_ANALYTICS_GOOGLE_ANALYTICS_4_ID}
+      GF_INSTALL_PLUGINS: yesoreyeram-boomtheme-panel
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      GRAFANA_MYSQL_USER: ${GRAFANA_MYSQL_USER}
+      GRAFANA_MYSQL_PASSWORD: ${GRAFANA_MYSQL_PASSWORD}
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      VIRTUAL_PORT: ${VIRTUAL_PORT}
+      LETSENCRYPT_HOST: ${VIRTUAL_HOST}
+      LETSENCRYPT_EMAIL: ${GF_SECURITY_ADMIN_EMAIL}
+      TZ: Europe/Paris
+    volumes:
+      - ./files/grafana/etc:/etc/grafana
+    healthcheck:
+      test: curl http://localhost:3000/healthz | grep Ok
+      interval: 1s
+      retries: 120
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ###############################################################################
+  # NginX
+  nginx:
+    container_name: nginx
+    profiles: ["production"]
+    image: nginxproxy/nginx-proxy
+    restart: always
+    environment:
+      TZ: Europe/Paris
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  ###############################################################################
+  # LetsEncrypt
+  letsencrypt:
+    container_name: letsencrypt
+    profiles: ["production"]
+    image: nginxproxy/acme-companion
+    restart: always
+    environment:
+      DEFAULT_EMAIL: ${GF_SECURITY_ADMIN_EMAIL}
+      TZ: Europe/Paris
+    volumes_from:
+      - nginx
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+###############################################################################
+# MySQL volume
+volumes:
+  dbdata:
+  conf:
+  vhost:
+  html:
+  certs:
+  acme:

@@ -1,0 +1,8 @@
+.venv
+.vscode
+linkystat.code-workspace
+docker-compose-dev.yaml
+env/.env
+env/.env.dev
+scripts
+src/__pycache__
