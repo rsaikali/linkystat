@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: 'Backup MySQL database'
-        run: scripts/mysql_backup.sh
+        run: ./scripts/mysql_backup.sh
