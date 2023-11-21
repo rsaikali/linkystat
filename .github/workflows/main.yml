@@ -1,9 +1,14 @@
 name: deploy-production
-on: [push]
+on:
+  push:
+    branches:
+      - main
 jobs:
   deploy-production:
     runs-on:
       - self-hosted
+    environment: 
+        name: production
     steps:
       - uses: actions/checkout@v4
       - name: 'Create environment file'
