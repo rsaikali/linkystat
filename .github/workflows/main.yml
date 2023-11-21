@@ -6,4 +6,5 @@ jobs:
       - self-hosted
     steps:
       - uses: actions/checkout@v4
-      - run: touch test.txt
+      - name: 'Create environment file'
+        run: echo "${{ secrets.ENV_FILE }}" > env/.env
