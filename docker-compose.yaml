@@ -51,7 +51,7 @@ services:
   # Grafana
   grafana:
     container_name: grafana
-    image: grafana/grafana:10.2.1
+    image: grafana/grafana:10.2.2
     restart: always
     environment:
       GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
