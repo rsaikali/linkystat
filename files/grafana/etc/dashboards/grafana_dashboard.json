@@ -530,8 +530,8 @@
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+        "type": "datasource",
+        "uid": "-- Dashboard --"
       },
       "description": "",
       "fieldConfig": {
@@ -605,34 +605,27 @@
       "targets": [
         {
           "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
+            "type": "datasource",
+            "uid": "-- Dashboard --"
           },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh FROM monthly_history ORDER BY provider_time DESC",
+          "panelId": 9,
           "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "withTransforms": false
         }
       ],
       "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "provider_time"
+              }
+            ]
+          }
+        },
         {
           "id": "convertFieldType",
           "options": {
@@ -994,8 +987,8 @@
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+        "type": "datasource",
+        "uid": "-- Dashboard --"
       },
       "description": "",
       "fieldConfig": {
@@ -1073,34 +1066,27 @@
       "targets": [
         {
           "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
+            "type": "datasource",
+            "uid": "-- Dashboard --"
           },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh FROM yearly_history ORDER BY provider_time DESC",
+          "panelId": 13,
           "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "withTransforms": false
         }
       ],
       "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "provider_time"
+              }
+            ]
+          }
+        },
         {
           "id": "convertFieldType",
           "options": {}
