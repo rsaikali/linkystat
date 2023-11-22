@@ -1,4 +1,4 @@
-name: Backup MySQL database
+name: "MySQL: Backup database"
 on:
   schedule:
     - cron: "30 * * * *"
