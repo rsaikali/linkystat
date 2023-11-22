@@ -12,12 +12,12 @@ jobs:
         env:
           BASE64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
         run: |
-          echo "${BASE64}" | base64 --decode > auth.json
-          echo "auth_json=$(cat auth.json)" >> $GITHUB_OUTPUT
+          auth_json=`echo "${BASE64}" | base64 --decode`
+          echo "auth_json=$auth_json" >> $GITHUB_OUTPUT
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
-          service-account-key-json: "${{ steps.credentials.outputs.auth_json }}"
+          service-account-key-json: ${{ steps.credentials.outputs.auth_json }}
           download-file-name: linkystat_mysql_backup.sql.gz
       - name: Restore MySQL database
         run: ./scripts/mysql_restore.sh ${PWD}/linkystat_mysql_backup.sql.gz
