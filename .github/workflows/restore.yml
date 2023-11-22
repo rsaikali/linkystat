@@ -9,11 +9,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Get Google Drive credentials
         id: credentials
-        env:
-          BASE64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
         run: |
-          echo $BASE64 | base64 --decode > auth.json
-          echo "auth=$(cat auth.json)" >> $GITHUB_OUTPUT
+          echo "auth=$(echo "${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}" | base64 --decode)" >> $GITHUB_OUTPUT
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
