@@ -1,0 +1,20 @@
+name: Restore MySQL database
+on:
+  workflow_dispatch:
+jobs:
+  restore-database:
+    runs-on:
+      - self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Google Drive credentials
+        id: credentials
+        run: echo "auth=$(echo ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }} | base64 --decode)" >> $GITHUB_OUTPUT
+      - name: Download backup file from Google Drive
+        uses: k0staa/download-gdrive-file-action@v1
+        with:
+          service-account-key-json: ${{ steps.credentials.outputs.auth }}
+          download-file-name: linkystat_mysql_backup.sql.gz
+      - name: Restore MySQL database
+        run: ./scripts/mysql_restore.sh ${PWD}/linkystat_mysql_backup.sql.gz
+      
