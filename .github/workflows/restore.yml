@@ -7,17 +7,14 @@ jobs:
       - self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Get Google Drive credentials
-        id: credentials
-        env:
-          BASE64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
-        run: |
-          auth_json=`echo "${BASE64}" | base64 --decode`
-          echo "auth_json=$auth_json" >> $GITHUB_OUTPUT
+      - uses: akiojin/decode-base64-github-action@v0.1.0
+        id: decode-base64
+        with:
+          base64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
-          service-account-key-json: ${{ steps.credentials.outputs.auth_json }}
+          service-account-key-json: ${{ steps.decode-base64.outputs.decoded }}
           download-file-name: linkystat_mysql_backup.sql.gz
       - name: Restore MySQL database
         run: ./scripts/mysql_restore.sh ${PWD}/linkystat_mysql_backup.sql.gz
