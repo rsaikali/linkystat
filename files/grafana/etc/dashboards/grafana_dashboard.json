@@ -430,7 +430,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 11,
         "x": 0,
         "y": 11
       },
@@ -582,8 +582,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 9,
+        "x": 11,
         "y": 11
       },
       "id": 8,
@@ -670,6 +670,127 @@
       ],
       "transparent": true,
       "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "neutral": 0
+          },
+          "decimals": 1,
+          "displayName": "Tendance mensuelle",
+          "mappings": [],
+          "max": 15,
+          "min": -15,
+          "noValue": "Not enough data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-green",
+                "value": -15
+              },
+              {
+                "color": "semi-dark-green",
+                "value": -10
+              },
+              {
+                "color": "green",
+                "value": -5
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 10
+              },
+              {
+                "color": "#E24D42",
+                "value": 15
+              }
+            ]
+          },
+          "unit": "kWh/j"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 11
+      },
+      "id": 21,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true,
+        "text": {
+          "titleSize": 16,
+          "valueSize": 22
+        }
+      },
+      "pluginVersion": "10.2.1",
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n     \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -774,7 +895,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 11,
         "x": 0,
         "y": 21
       },
@@ -929,8 +1050,8 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 12,
-        "x": 12,
+        "w": 9,
+        "x": 11,
         "y": 21
       },
       "id": 12,
@@ -1071,10 +1192,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 29
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 21
       },
       "id": 20,
       "options": {
