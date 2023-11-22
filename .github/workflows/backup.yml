@@ -11,3 +11,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: 'Backup MySQL database'
         run: ./scripts/mysql_backup.sh
+      - name: 'Upload MySQL backup to Google Drive'
+        uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
+        with:
+          target: "./mysql_backup_linkystat.sql.gz"
+          credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+          parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
+          override: true
