@@ -16,5 +16,8 @@ jobs:
         with:
           service-account-key-json: ${{ steps.decode-base64.outputs.decoded }}
           download-file-name: linkystat_mysql_backup.sql.gz
+          download-to: ./scripts/
       - name: Restore MySQL database
-        run: ./scripts/mysql_restore.sh ${PWD}/linkystat_mysql_backup.sql.gz
+        run: |
+          cd scripts
+          ./mysql_restore.sh ./linkystat_mysql_backup.sql.gz
