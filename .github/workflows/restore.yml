@@ -13,7 +13,7 @@ jobs:
           BASE64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
         run: |
           echo "${BASE64}" | base64 --decode > auth.json
-          echo 'auth_json="$(cat auth.json)"' >> $GITHUB_OUTPUT
+          echo "auth_json=$(cat auth.json)" >> $GITHUB_OUTPUT
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
