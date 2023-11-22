@@ -4,11 +4,10 @@ production_host=linky.local
 
 # Backup production MySQL database
 ssh ${production_host} /bin/bash <<EOF
-    cd linkystat/scripts
     mysql_docker_id=\$(docker ps -f name=mysql --format "{{.ID}}")
     mysql_root_password=\$(docker exec \${mysql_docker_id} printenv MYSQL_ROOT_PASSWORD)
-    mysql_database=$(docker exec ${mysql_docker_id} printenv MYSQL_DATABASE)
-    docker exec \${mysql_docker_id} /usr/bin/mysqldump -u root --password=\${mysql_root_password} --insert-ignore --skip-triggers --compact --no-create-db --no-create-info -B ${mysql_database} | gzip -c > /tmp/backup.sql.gz
+    mysql_database=\$(docker exec \${mysql_docker_id} printenv MYSQL_DATABASE)
+    docker exec \${mysql_docker_id} /usr/bin/mysqldump -u root --password=\${mysql_root_password} --insert-ignore --skip-triggers --compact --no-create-db --no-create-info -B \${mysql_database} | gzip -c > /tmp/backup.sql.gz
 EOF
 
 # Copy new SQL dump file locally
