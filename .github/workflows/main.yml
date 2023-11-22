@@ -20,6 +20,6 @@ jobs:
       - name: 'Build new Linkystat application'
         run: docker compose --env-file ./env/.env --profile production build --pull 
       - name: 'Stop previous Linkystat application'
-        run: docker compose --env-file ./env/.env stop || true
+        run: docker compose --env-file ./env/.env --profile production stop || true
       - name: 'Start new Linkystat application'
         run: docker compose --env-file ./env/.env --profile production up -d
