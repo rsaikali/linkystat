@@ -12,12 +12,20 @@ jobs:
       - name: Get current date
         id: date
         run: echo "timestamp=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      - name: 'Get MySQL backup filenames'
+        id: backup_filenames
+        run: |
+          echo '${{ secrets.ENV_FILE }}' > .env
+          source .env
+          echo "latest=$VIRTUAL_HOST.sql.gz" >> $GITHUB_OUTPUT
+          echo "timestamped=$VIRTUAL_HOST.${{ steps.date.outputs.timestamp }}.sql.gz" >> $GITHUB_OUTPUT
       - name: Backup MySQL database
         run: ./scripts/mysql_backup.sh
       - name: Upload latest MySQL backup to Google Drive
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
           target: "./linkystat_mysql_backup.sql.gz"
+          name: "${{ steps.backup_filenames.outputs.latest }}"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
           override: true
@@ -25,7 +33,7 @@ jobs:
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
           target: "./linkystat_mysql_backup.sql.gz"
-          name: "linkystat_mysql_backup.${{ steps.date.outputs.timestamp }}.sql.gz"
+          name: "${{ steps.backup_filenames.outputs.timestamped }}"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
           override: true

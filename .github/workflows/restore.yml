@@ -11,10 +11,16 @@ jobs:
         id: decode-base64
         with:
           base64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+      - name: 'Get MySQL backup filenames'
+        id: backup_filenames
+        run: |
+          echo '${{ secrets.ENV_FILE }}' > .env
+          source .env
+          echo "latest=$VIRTUAL_HOST.sql.gz" >> $GITHUB_OUTPUT  
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
           service-account-key-json: ${{ steps.decode-base64.outputs.decoded }}
-          download-file-name: linkystat_mysql_backup.sql.gz
+          download-file-name: ${{ steps.backup_filenames.outputs.latest }}
       - name: Restore MySQL database
-        run: ./scripts/mysql_restore.sh ${PWD}/linkystat_mysql_backup.sql.gz
+        run: ./scripts/mysql_restore.sh ${PWD}/${{ steps.backup_filenames.outputs.latest }}
