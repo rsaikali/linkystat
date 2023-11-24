@@ -16,9 +16,8 @@ jobs:
         id: backup_filenames
         run: |
           echo '${{ secrets.ENV_FILE }}' > .env
-          . .env
-          echo "latest=$VIRTUAL_HOST.sql.gz" >> $GITHUB_OUTPUT
-          echo "timestamped=$VIRTUAL_HOST.${{ steps.date.outputs.timestamp }}.sql.gz" >> $GITHUB_OUTPUT
+          echo "latest=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).sql.gz" >> $GITHUB_OUTPUT  
+          echo "timestamped=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).${{ steps.date.outputs.timestamp }}.sql.gz" >> $GITHUB_OUTPUT
       - name: Backup MySQL database
         run: ./scripts/mysql_backup.sh
       - name: Upload latest MySQL backup to Google Drive

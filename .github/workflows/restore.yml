@@ -15,8 +15,7 @@ jobs:
         id: backup_filenames
         run: |
           echo '${{ secrets.ENV_FILE }}' > .env
-          . .env
-          echo "latest=$VIRTUAL_HOST.sql.gz" >> $GITHUB_OUTPUT  
+          echo "latest=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).sql.gz" >> $GITHUB_OUTPUT  
       - name: Download backup file from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
