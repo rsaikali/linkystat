@@ -36,7 +36,7 @@ class LinkyData(object):
         logging.info("Connected to Linky: %s" % self.serial_port.get_settings())
 
         # Initialize MySQL database engine
-        logging.info(f"Connecting to database: {CONNECTION_STRING}")
+        logging.info(f"Connecting to database on {DB_HOST}")
         self.engine = sa.create_engine(CONNECTION_STRING)
         logging.info(f"Connected to database: {self.engine.url}")
 
@@ -134,12 +134,12 @@ class LinkyDataFromProd(object):
         PRODUCTION_CONNECTION_STRING = f"mysql+pymysql://{PRODUCTION_DB_USER}:{PRODUCTION_DB_PASSWORD}@{PRODUCTION_DB_HOST}:{PRODUCTION_DB_PORT}/{PRODUCTION_DB_NAME}"
 
         # SQLAlchemy production MySQL engine
-        logging.info(f"Connecting to database: {PRODUCTION_CONNECTION_STRING}")
+        logging.info(f"Connecting to database on {PRODUCTION_DB_HOST}")
         self.production_engine = sa.create_engine(PRODUCTION_CONNECTION_STRING)
         logging.info(f"Connected to database: {self.production_engine.url}")
 
         # SQLAlchemy MySQL engine
-        logging.info(f"Connecting to database: {CONNECTION_STRING}")
+        logging.info(f"Connecting to database on {DB_HOST}")
         self.engine = sa.create_engine(CONNECTION_STRING)
         logging.info(f"Connected to database: {self.engine.url}")
 
