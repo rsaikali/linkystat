@@ -3,10 +3,19 @@ on:
   schedule:
     - cron: "30 * * * *"
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        type: environment
+        default: 'raspberrypi_rsaikali'
+        required: true
 jobs:
   backup-database:
     runs-on:
       - self-hosted
+      - ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
+    environment: 
+        name: ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
     steps:
       - uses: actions/checkout@v4
       - name: Get current date
