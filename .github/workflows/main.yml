@@ -6,13 +6,19 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:      
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        type: environment
+        default: 'raspberrypi_rsaikali'
+        required: true
 jobs:
   deploy-production:
     runs-on:
       - self-hosted
     environment: 
-        name: production
+        name: ${{ inputs.environment }} 
     steps:
       - uses: actions/checkout@v4
       - name: 'Create environment file'
