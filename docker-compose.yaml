@@ -43,7 +43,7 @@ services:
       - ./files/mysql/init-script.sh:/docker-entrypoint-initdb.d/init-script.sh
       - dbdata:/var/lib/mysql
     healthcheck:
-      test: mysqladmin ping -h localhost -uroot -p'${MYSQL_ROOT_PASSWORD}'
+      test: mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}
       interval: 1s
       retries: 120
 

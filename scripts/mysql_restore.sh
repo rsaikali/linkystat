@@ -9,4 +9,4 @@ mysql_root_password=$(docker exec ${mysql_docker_id} printenv MYSQL_ROOT_PASSWOR
 mysql_database=$(docker exec ${mysql_docker_id} printenv MYSQL_DATABASE)
 
 # Load backup file into MySQL database
-zcat ${backup_file} | docker exec -i ${mysql_docker_id} /usr/bin/mysql -u root --password='${mysql_root_password}' ${mysql_database}
+zcat ${backup_file} | docker exec -i ${mysql_docker_id} /usr/bin/mysql -u root --password=${mysql_root_password} ${mysql_database}
