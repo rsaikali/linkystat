@@ -37,16 +37,16 @@ mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE OR REPLACE VIEW monthly_history AS
     SELECT
-	    DATE_FORMAT(MAX(DATE_ADD(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH)), '%Y-%m') AS provider_time,
+	    DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y-%m') AS provider_time,
 	    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
-    WHERE time > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+    WHERE time BETWEEN DATE_SUB(now(), INTERVAL 1 MONTH) AND now()
     UNION
-    SELECT 
+    SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y-%m') AS provider_time,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
-    WHERE DATE_FORMAT(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m') != DATE_FORMAT(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m')
+    WHERE DATE_FORMAT(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m') < DATE_FORMAT(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m')
     GROUP BY MONTH(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY)), YEAR(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY))
     ORDER BY provider_time DESC;
 
@@ -57,7 +57,7 @@ CREATE OR REPLACE VIEW yearly_history AS
     FROM linky_history
     WHERE time > DATE_SUB(NOW(), INTERVAL 1 YEAR)
     UNION
-    SELECT 
+    SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y') AS provider_time,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
