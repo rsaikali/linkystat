@@ -40,7 +40,7 @@ CREATE OR REPLACE VIEW monthly_history AS
 	    DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y-%m') AS provider_time,
 	    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
-    WHERE time BETWEEN DATE_SUB(now(), INTERVAL 1 MONTH) AND now()
+    WHERE time >= DATE_SUB(now(), INTERVAL 1 MONTH)
     UNION
     SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y-%m') AS provider_time,
