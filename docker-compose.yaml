@@ -82,7 +82,7 @@ services:
   # NginX
   nginx:
     container_name: nginx
-    profiles: ["production"]
+    profiles: ["https"]
     image: nginxproxy/nginx-proxy
     restart: always
     environment:
@@ -101,7 +101,7 @@ services:
   # LetsEncrypt
   letsencrypt:
     container_name: letsencrypt
-    profiles: ["production"]
+    profiles: ["https"]
     image: nginxproxy/acme-companion
     restart: always
     environment:
