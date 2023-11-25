@@ -4,6 +4,6 @@ Monitoring for Linky device (French electricity meter) through Grafana
 
 <img
   src="./files/images/linkystat_grafana.png"
-  alt="Alt text"
-  title="Optional title"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
   style="display: inline-block; margin: 0 auto; max-width: 1200px">
