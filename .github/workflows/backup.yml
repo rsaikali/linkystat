@@ -21,19 +21,17 @@ jobs:
       - name: Get current date
         id: date
         run: echo "timestamp=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-      - name: 'Get MySQL backup filenames'
-        id: backup_filenames
-        run: |
-          echo '${{ secrets.ENV_FILE }}' > .env
-          echo "latest=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).sql.gz" >> $GITHUB_OUTPUT  
-          echo "timestamped=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).${{ steps.date.outputs.timestamp }}.sql.gz" >> $GITHUB_OUTPUT
+      - name: 'Get .env file from secrets'
+        run: echo '${{ secrets.ENV_FILE }}' > .env
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2.2.0
       - name: Backup MySQL database
         run: ./scripts/mysql_backup.sh
       - name: Upload latest MySQL backup to Google Drive
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
           target: "./linkystat_mysql_backup.sql.gz"
-          name: "${{ steps.backup_filenames.outputs.latest }}"
+          name: "${{ env.VIRTUAL_HOST }}.sql.gz"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
           override: true
@@ -41,7 +39,7 @@ jobs:
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
           target: "./linkystat_mysql_backup.sql.gz"
-          name: "${{ steps.backup_filenames.outputs.timestamped }}"
+          name: "${{ env.VIRTUAL_HOST }}.${{ steps.date.outputs.timestamp }}.sql.gz"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
           override: true

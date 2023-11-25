@@ -20,15 +20,14 @@ jobs:
         id: decode-base64
         with:
           base64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
-      - name: 'Get MySQL backup filenames'
-        id: backup_filenames
-        run: |
-          echo '${{ secrets.ENV_FILE }}' > .env
-          echo "latest=$(cat .env | grep VIRTUAL_HOST | cut -d '=' -f 2).sql.gz" >> $GITHUB_OUTPUT  
-      - name: Download backup file from Google Drive
+      - name: 'Get .env file from secrets'
+        run: echo '${{ secrets.ENV_FILE }}' > .env
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2.2.0
+      - name: Download latest MySQL backup from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
           service-account-key-json: ${{ steps.decode-base64.outputs.decoded }}
-          download-file-name: ${{ steps.backup_filenames.outputs.latest }}
+          download-file-name: "${{ env.VIRTUAL_HOST }}.sql.gz"
       - name: Restore MySQL database
-        run: ./scripts/mysql_restore.sh ${PWD}/${{ steps.backup_filenames.outputs.latest }}
+        run: ./scripts/mysql_restore.sh ${PWD}/${{ env.VIRTUAL_HOST }}.sql.gz
