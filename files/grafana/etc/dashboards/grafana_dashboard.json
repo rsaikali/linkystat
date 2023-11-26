@@ -581,8 +581,8 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 8,
+        "h": 6,
+        "w": 12,
         "x": 12,
         "y": 11
       },
@@ -676,13 +676,31 @@
             "mode": "thresholds"
           },
           "custom": {
-            "neutral": 0
+            "axisBorderShow": false,
+            "axisCenteredZero": true,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "axisSoftMax": 15,
+            "axisSoftMin": -15,
+            "fillOpacity": 100,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
           },
-          "decimals": 1,
+          "decimals": 0,
           "displayName": "Tendance mensuelle",
           "mappings": [],
-          "max": 15,
-          "min": -15,
           "noValue": "Not enough data",
           "thresholds": {
             "mode": "absolute",
@@ -726,29 +744,34 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 20,
-        "y": 11
+        "h": 2,
+        "w": 12,
+        "x": 12,
+        "y": 17
       },
-      "id": 21,
+      "id": 22,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "barRadius": 0.25,
+        "barWidth": 1,
+        "colorByField": "DIFF",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
-        "showThresholdLabels": true,
-        "showThresholdMarkers": true,
-        "text": {
-          "titleSize": 16,
-          "valueSize": 22
-        }
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "normal",
+        "text": {},
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "10.2.1",
       "targets": [
@@ -761,7 +784,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n     \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR",
+          "rawSql": "SELECT\r\n    now() as time,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 MONTH AND NOW() - INTERVAL 1 HOUR",
           "refId": "A",
           "sql": {
             "columns": [
@@ -782,8 +805,9 @@
           }
         }
       ],
+      "title": "Tendance mensuelle",
       "transparent": true,
-      "type": "gauge"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -1043,7 +1067,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 8,
+        "w": 12,
         "x": 12,
         "y": 21
       },
@@ -1128,13 +1152,31 @@
             "mode": "thresholds"
           },
           "custom": {
-            "neutral": 0
+            "axisBorderShow": false,
+            "axisCenteredZero": true,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "axisSoftMax": 15,
+            "axisSoftMin": -15,
+            "fillOpacity": 100,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
           },
-          "decimals": 1,
-          "displayName": "Tendance annuelle",
+          "decimals": 0,
+          "displayName": "Tendance mensuelle",
           "mappings": [],
-          "max": 15,
-          "min": -15,
           "noValue": "Not enough data",
           "thresholds": {
             "mode": "absolute",
@@ -1178,29 +1220,34 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 20,
-        "y": 21
+        "h": 2,
+        "w": 12,
+        "x": 12,
+        "y": 26
       },
-      "id": 20,
+      "id": 23,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "barRadius": 0.25,
+        "barWidth": 1,
+        "colorByField": "DIFF",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
-        "showThresholdLabels": true,
-        "showThresholdMarkers": true,
-        "text": {
-          "titleSize": 16,
-          "valueSize": 22
-        }
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "normal",
+        "text": {},
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "10.2.1",
       "targets": [
@@ -1213,7 +1260,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n     \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR",
+          "rawSql": "SELECT\r\n     now() as time,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1234,8 +1281,9 @@
           }
         }
       ],
+      "title": "Tendance annuelle",
       "transparent": true,
-      "type": "gauge"
+      "type": "barchart"
     }
   ],
   "refresh": "1s",
