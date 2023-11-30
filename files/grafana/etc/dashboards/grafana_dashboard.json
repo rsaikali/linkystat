@@ -681,8 +681,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "hidden",
-            "axisSoftMax": 15,
-            "axisSoftMin": -15,
             "fillOpacity": 100,
             "gradientMode": "scheme",
             "hideFrom": {
@@ -701,12 +699,14 @@
           "decimals": 0,
           "displayName": "Tendance mensuelle",
           "mappings": [],
+          "max": 15,
+          "min": -15,
           "noValue": "Not enough data",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-green",
                 "value": null
               },
               {
@@ -734,7 +734,7 @@
                 "value": 10
               },
               {
-                "color": "#E24D42",
+                "color": "dark-red",
                 "value": 15
               }
             ]
@@ -1157,8 +1157,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "hidden",
-            "axisSoftMax": 15,
-            "axisSoftMin": -15,
             "fillOpacity": 100,
             "gradientMode": "scheme",
             "hideFrom": {
@@ -1177,12 +1175,14 @@
           "decimals": 0,
           "displayName": "Tendance mensuelle",
           "mappings": [],
+          "max": 15,
+          "min": -15,
           "noValue": "Not enough data",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-green",
                 "value": null
               },
               {
@@ -1210,7 +1210,7 @@
                 "value": 10
               },
               {
-                "color": "#E24D42",
+                "color": "dark-red",
                 "value": 15
               }
             ]
