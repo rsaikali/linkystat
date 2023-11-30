@@ -805,7 +805,6 @@
           }
         }
       ],
-      "title": "Tendance mensuelle",
       "transparent": true,
       "type": "barchart"
     },
@@ -1175,8 +1174,8 @@
           "decimals": 0,
           "displayName": "Tendance mensuelle",
           "mappings": [],
-          "max": 15,
-          "min": -15,
+          "max": 20,
+          "min": -20,
           "noValue": "Not enough data",
           "thresholds": {
             "mode": "absolute",
@@ -1281,7 +1280,6 @@
           }
         }
       ],
-      "title": "Tendance annuelle",
       "transparent": true,
       "type": "barchart"
     }
@@ -1297,6 +1295,7 @@
     "to": "now"
   },
   "timepicker": {
+    "hidden": false,
     "nowDelay": "",
     "refresh_intervals": [
       "1s",
