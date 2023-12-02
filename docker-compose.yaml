@@ -78,6 +78,8 @@ services:
       LETSENCRYPT_HOST: ${VIRTUAL_HOST}
       LETSENCRYPT_EMAIL: ${GF_SECURITY_ADMIN_EMAIL}
       TZ: Europe/Paris
+    ports:
+      - 3000:3000
     volumes:
       - ./files/grafana/etc:/etc/grafana
     healthcheck:
