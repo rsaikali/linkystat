@@ -1160,7 +1160,7 @@
             "neutral": 0
           },
           "decimals": 0,
-          "displayName": "Tendance mensuelle",
+          "displayName": "Tendance annuelle",
           "mappings": [],
           "max": 15,
           "min": -15,
