@@ -4,8 +4,7 @@ echo "*********************************"
 echo "*** Creating Linkystat schema ***"
 echo "*********************************"
 
-
-echo "*** Creating ${GRAFANA_MYSQL_USER} user ***"
+echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
@@ -13,7 +12,7 @@ GRANT SELECT, SHOW VIEW ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
 FLUSH PRIVILEGES;
 "
 
-echo "*** Creating tables ***"
+echo "************* Creating tables *************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE TABLE IF NOT EXISTS linky_realtime (
@@ -22,17 +21,17 @@ CREATE TABLE IF NOT EXISTS linky_realtime (
     HCHP DOUBLE NOT NULL,
     HCHC DOUBLE NOT NULL,
     PRIMARY KEY (time)
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE IF NOT EXISTS linky_history (
     time datetime NOT NULL,
     HCHC double DEFAULT 0,
     HCHP double DEFAULT 0,
     PRIMARY KEY (time)
-) ENGINE=InnoDB;
+);
 "
 
-echo "*** Creating views ***"
+echo "************** Creating views *************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE OR REPLACE VIEW monthly_history AS
@@ -67,7 +66,7 @@ CREATE OR REPLACE VIEW yearly_history AS
     ORDER BY provider_time DESC;
 "
 
-echo "*** Creating triggers ***"
+echo "************ Creating triggers ************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 delimiter ;;
@@ -83,7 +82,7 @@ END;;
 delimiter ;
 "
 
-echo "*** Creating events ***"
+echo "************* Creating events *************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 delimiter ;;
@@ -95,6 +94,6 @@ END;;
 delimiter ;
 "
 
-echo "**************************************"
-echo "*** Done creating Linkystat schema ***"
-echo "**************************************"
+echo "*******************************************"
+echo "***** Done creating Linkystat schema ******"
+echo "*******************************************"

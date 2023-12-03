@@ -30,9 +30,7 @@ services:
     command: >
       mysqld --skip-performance-schema
              --skip-mysqlx
-             --innodb-buffer-pool-size=4G
-             --innodb-buffer-pool-chunk-size=512M
-             --innodb-buffer-pool-instances=8
+             --default-storage-engine=MyISAM
              --character-set-server=utf8mb4
              --collation-server=utf8mb4_unicode_ci
              --init-connect='SET NAMES UTF8;'
