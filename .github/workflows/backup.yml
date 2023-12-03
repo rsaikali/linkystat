@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Get current date
         id: date
-        run: echo "timestamp=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: echo "timestamp=$(date +'%Y-%m-%d.%H%M%S')" >> $GITHUB_OUTPUT
       - name: 'Get .env file from secrets'
         run: echo '${{ secrets.ENV_FILE }}' > .env
       - name: Load .env file
