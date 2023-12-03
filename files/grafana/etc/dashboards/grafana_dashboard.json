@@ -62,7 +62,7 @@
               },
               {
                 "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}"
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}"
                 },
                 "type": "style"
               },
