@@ -1,5 +1,5 @@
 cffi==1.16.0
-cryptography==41.0.4
+cryptography==41.0.6
 greenlet==3.0.1
 numpy==1.26.2
 pandas==2.0.2
