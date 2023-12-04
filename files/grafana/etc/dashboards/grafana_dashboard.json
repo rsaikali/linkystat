@@ -259,23 +259,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Moyenne journée (24h)"
-            },
-            "properties": [
-              {
-                "id": "decimals",
-                "value": 0
-              },
-              {
-                "id": "unit",
-                "value": "w"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Moyenne journée (1an)"
+              "options": "Moyenne jour (sur 24h)"
             },
             "properties": [
               {
@@ -291,16 +275,16 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Moyenne (période)"
+              "options": "Moyenne jour (sur 1 an)"
             },
             "properties": [
               {
-                "id": "unit",
-                "value": "W"
-              },
-              {
                 "id": "decimals",
                 "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "W"
               }
             ]
           }
@@ -342,7 +326,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT DATE_FORMAT(time, \"%T\") as \"Dernière mesure\", PAPP as \"Puissance instantanée\", \r\n(SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / ((${__to} - ${__from}) / 3600000) AS total_kwh FROM linky_realtime WHERE $__timeFilter(time)) AS \"Moyenne (période)\",\r\n(SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 AS total_kwh FROM linky_realtime WHERE time > NOW() - INTERVAL 1 DAY) AS \"Moyenne journée (24h)\", \r\n(SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Moyenne journée (1an)\", HCHP/1000 AS \"Compteur Heures Pleines\", HCHC/1000 AS \"Compteur Heures Creuses\" FROM linky.linky_realtime ORDER BY time DESC LIMIT 1\r\n",
+          "rawSql": "SELECT DATE_FORMAT(time, \"%T\") as \"Dernière mesure\", PAPP as \"Puissance instantanée\", \r\n(SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 AS total_kwh FROM linky_realtime WHERE time > NOW() - INTERVAL 1 DAY) AS \"Moyenne jour (sur 24h)\", \r\n(SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Moyenne jour (sur 1 an)\", HCHP/1000 AS \"Compteur Heures Pleines\", HCHC/1000 AS \"Compteur Heures Creuses\" FROM linky.linky_realtime ORDER BY time DESC LIMIT 1\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -777,7 +761,11 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        }
       },
       "pluginVersion": "10.2.1",
       "targets": [
@@ -1225,7 +1213,11 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        }
       },
       "pluginVersion": "10.2.1",
       "targets": [
