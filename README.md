@@ -9,7 +9,18 @@ Monitoring for Linky device (French electricity meter) through Grafana
   style="display: inline-block; margin: 0 auto; max-width: 1200px">
 
 ## Hardware Requirements
+
+
+<table>
+  <tr>
+    <td valign="top"><img src="files/images/raspberry-pi-4.png"></td>
+    <td valign="top"><img src="files/images/teleinfo.png"></td>
+    <td valign="top"><img src="files/images/linky.png"></td>
+  </tr>
+ </table>
+
 - RaspberryPi (or any other computer that can stand 24/7 next to your Linky electricity meter :wink:)
+
 - [Micro Teleinfo V3.0](https://www.tindie.com/products/hallard/micro-teleinfo-v30/) dongle. It is plugged in the RaspberryPi through USB port and connected to the Teleinfo Linky pins.
 The USB dongle is available on [Tindie](https://www.tindie.com/products/hallard/micro-teleinfo-v30/).
 - [Linky](https://particulier.edf.fr/en/home/contract-and-consumption/meter/linky-meter.html) electricity meter.
