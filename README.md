@@ -10,12 +10,11 @@ Monitoring for Linky device (French electricity meter) through Grafana
 
 ## Hardware Requirements
 
-
 <table>
   <tr>
-    <td valign="top"><img src="files/images/raspberry-pi-4.png"></td>
-    <td valign="top"><img src="files/images/teleinfo.png"></td>
-    <td valign="top"><img src="files/images/linky.png"></td>
+    <td valign="center"><img src="files/images/raspberry-pi-4.png"></td>
+    <td valign="center"><img src="files/images/teleinfo.png"></td>
+    <td valign="center"><img src="files/images/linky.png"></td>
   </tr>
  </table>
 
