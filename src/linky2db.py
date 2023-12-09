@@ -3,7 +3,6 @@ import os
 import time
 from datetime import datetime
 
-import pandas as pd
 import serial
 import sqlalchemy as sa
 
@@ -143,7 +142,7 @@ class LinkyDataFromProd(object):
         self.engine = sa.create_engine(CONNECTION_STRING)
         logging.info(f"Connected to database: {self.engine.url}")
 
-        self.last_linky_data = pd.DataFrame()
+        self.last_linky_data = ()
 
     def get_data(self):
         """
@@ -158,33 +157,26 @@ class LinkyDataFromProd(object):
         Finally, the method pauses before starting the next iteration of the loop.
         """
         while True:
-            try:
-                # Get last realtime data from production database
-                with self.production_engine.begin() as conn:
-                    df = pd.read_sql(sa.text("SELECT time, PAPP, HCHP, HCHC FROM linky_realtime ORDER BY time DESC LIMIT 1"), con=conn)
-            except sa.exc.OperationalError:
-                logging.warning("Production database is unavailable. Retrying in 5s...")
-                time.sleep(5)
-                continue
+            with self.production_engine.connect() as con:
+                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC FROM linky_realtime ORDER BY time DESC LIMIT 1"))
+                row = list(rs)[0]
 
-            df = df.iloc[-1:]
-            df["time"] = pd.to_datetime(df["time"], format="%Y-%m-%dT%H:%M:%SZ")
-            last_time = df.iloc[0]["time"]
-            df.set_index("time", inplace=True)
-
-            if self.last_linky_data.equals(df):
+            if self.last_linky_data == row:
                 time.sleep(0.1)
                 continue
 
-            # Insert realtime data from production
-            try:
-                logging.info(f"Got new Linky data from production environment at {last_time}: PAPP={int(df.iloc[0]['PAPP'])} HCHP={int(df.iloc[0]['HCHP'])} HCHC={int(df.iloc[0]['HCHC'])}")
-                df.to_sql(name="linky_realtime", con=self.engine, if_exists="append", index=True)
-            except Exception as e:
-                logging.error(e)
-                continue
+            with self.engine.connect() as con:
+                try:
+                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC) VALUES (:time, :PAPP, :HCHP, :HCHC)")
+                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3])
+                    params = stmt.compile().params
+                    logging.info(f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}")
+                    con.execute(stmt)
+                    con.commit()
+                except sa.exc.IntegrityError as e:
+                    logging.error(e)
 
-            self.last_linky_data = df
+            self.last_linky_data = row
             time.sleep(0.1)
 
 
