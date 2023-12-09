@@ -179,7 +179,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(time, $__interval, previous), ROUND(AVG(PAPP)) FROM linky.linky_realtime WHERE $__timeFilter(time) GROUP BY $__timeGroup(time, $__interval)",
+          "rawSql": "SELECT $__timeGroupAlias(time, $__interval, previous), ROUND(AVG(PAPP)) AS \"Puissance apparente\" FROM linky.linky_realtime WHERE $__timeFilter(time) GROUP BY $__timeGroup(time, $__interval)",
           "refId": "A",
           "sql": {
             "columns": [
