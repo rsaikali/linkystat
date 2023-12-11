@@ -51,7 +51,7 @@ CREATE OR REPLACE VIEW monthly_history AS
 
 CREATE OR REPLACE VIEW yearly_history AS
     SELECT
-        DATE_FORMAT(MAX(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y') AS provider_time,
+        DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y') AS provider_time,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
     WHERE time BETWEEN NOW() - INTERVAL 1 YEAR - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
