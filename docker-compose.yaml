@@ -30,6 +30,7 @@ services:
     command: >
       mysqld --skip-performance-schema
              --skip-mysqlx
+             --max-execution-time=10000
              --default-storage-engine=InnoDB
              --innodb-buffer-pool-size=4G
              --innodb-buffer-pool-chunk-size=512M
