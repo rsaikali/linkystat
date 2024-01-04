@@ -4,11 +4,25 @@ echo "*********************************"
 echo "*** Creating Linkystat schema ***"
 echo "*********************************"
 
+echo "*********** Creating functions ************"
+mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
+"
+DELIMITER ;;
+
+CREATE FUNCTION getNbDaysCurrentPeriod() RETURNS INT NOT DETERMINISTIC NO SQL 
+    BEGIN
+        RETURN DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(NOW(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH)));
+    END;;
+
+DELIMITER ;
+"
+
 echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
-GRANT SELECT, SHOW VIEW ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
+GRANT SELECT, SHOW VIEW, EXECUTE ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
+GRANT EXECUTE ON FUNCTION ${MYSQL_DATABASE}.getNbDaysCurrentPeriod TO '${GRAFANA_MYSQL_USER}';
 FLUSH PRIVILEGES;
 "
 
@@ -39,7 +53,7 @@ CREATE OR REPLACE VIEW monthly_history AS
 	    DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y-%m') AS provider_time,
 	    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
-    WHERE time BETWEEN NOW() - INTERVAL DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH))) DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
+    WHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
     UNION
     SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y-%m') AS provider_time,
