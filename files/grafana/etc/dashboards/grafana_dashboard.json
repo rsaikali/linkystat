@@ -1230,7 +1230,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n     now() as time,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 YEAR AND NOW() - INTERVAL 1 HOUR",
+          "rawSql": "SELECT\r\n     now() as time,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentYear() DAY AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL getNbDaysCurrentYear() DAY AND NOW() - INTERVAL 1 HOUR",
           "refId": "A",
           "sql": {
             "columns": [
