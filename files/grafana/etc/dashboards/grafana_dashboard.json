@@ -27,65 +27,6 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
-      "description": "",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 11,
-      "options": {
-        "activeTheme": "Linkystat",
-        "disableThemePicker": true,
-        "themes": [
-          {
-            "name": "Linkystat",
-            "styles": [
-              {
-                "props": {
-                  "theme": "dark"
-                },
-                "type": "basetheme"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "bgimage"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "url"
-              },
-              {
-                "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}"
-                },
-                "type": "style"
-              },
-              {
-                "props": {
-                  "color": ""
-                },
-                "type": "panel-container-bg-color"
-              }
-            ]
-          }
-        ]
-      },
-      "pluginVersion": "0.2.1",
-      "title": "Linky",
-      "transparent": true,
-      "type": "yesoreyeram-boomtheme-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -151,7 +92,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 1
+        "y": 0
       },
       "hideTimeOverride": true,
       "id": 1,
@@ -259,7 +200,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Puissance moyenne (24h)"
+              "options": "Puissance moyenne (jour)"
             },
             "properties": [
               {
@@ -275,7 +216,23 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Puissance moyenne (1 an)"
+              "options": "Puissance moyenne (mois)"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "W"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Puissance moyenne (an)"
             },
             "properties": [
               {
@@ -294,7 +251,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 1
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -326,7 +283,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT PAPP as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 AS total_kwh FROM linky_realtime WHERE time > NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (24h)\", \r\n      (SELECT total_kwh / getNbDaysCurrentYear() / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (1 an)\", \r\n       HCHP/1000 AS \"Compteur Heures Pleines\", \r\n       HCHC/1000 AS \"Compteur Heures Creuses\",\r\n       DATE_FORMAT(time, \"%T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+          "rawSql": "SELECT PAPP as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 AS total_kwh FROM linky_realtime WHERE time > NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (jour)\", \r\n      (SELECT total_kwh / getNbDaysCurrentPeriod() / 24 * 1000 FROM monthly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (mois)\", \r\n      (SELECT total_kwh / getNbDaysCurrentYear() / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (an)\", \r\n       HCHP/1000 AS \"Compteur Heures Pleines\", \r\n       HCHC/1000 AS \"Compteur Heures Creuses\",\r\n       DATE_FORMAT(time, \"%T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -365,7 +322,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 8
       },
       "id": 16,
       "options": {
@@ -449,7 +406,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 10
       },
       "id": 9,
       "options": {
@@ -601,7 +558,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 11
+        "y": 10
       },
       "id": 8,
       "options": {
@@ -746,7 +703,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 11
+        "y": 10
       },
       "id": 22,
       "options": {
@@ -811,7 +768,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 18
       },
       "id": 17,
       "options": {
@@ -907,7 +864,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 20
       },
       "id": 13,
       "options": {
@@ -1062,7 +1019,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 21
+        "y": 20
       },
       "id": 12,
       "options": {
@@ -1198,7 +1155,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 21
+        "y": 20
       },
       "id": 23,
       "options": {
@@ -1253,6 +1210,64 @@
       ],
       "transparent": true,
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 11,
+      "options": {
+        "activeTheme": "Linkystat",
+        "disableThemePicker": true,
+        "themes": [
+          {
+            "name": "Linkystat",
+            "styles": [
+              {
+                "props": {
+                  "theme": "dark"
+                },
+                "type": "basetheme"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "bgimage"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "url"
+              },
+              {
+                "props": {
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}"
+                },
+                "type": "style"
+              },
+              {
+                "props": {
+                  "color": ""
+                },
+                "type": "panel-container-bg-color"
+              }
+            ]
+          }
+        ]
+      },
+      "pluginVersion": "0.2.1",
+      "transparent": true,
+      "type": "yesoreyeram-boomtheme-panel"
     }
   ],
   "refresh": "1s",
