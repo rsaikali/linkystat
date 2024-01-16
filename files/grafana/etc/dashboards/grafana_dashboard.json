@@ -27,6 +27,65 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "description": "",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "activeTheme": "Linkystat",
+        "disableThemePicker": true,
+        "themes": [
+          {
+            "name": "Linkystat",
+            "styles": [
+              {
+                "props": {
+                  "theme": "dark"
+                },
+                "type": "basetheme"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "bgimage"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "url"
+              },
+              {
+                "props": {
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}"
+                },
+                "type": "style"
+              },
+              {
+                "props": {
+                  "color": ""
+                },
+                "type": "panel-container-bg-color"
+              }
+            ]
+          }
+        ]
+      },
+      "pluginVersion": "0.2.1",
+      "title": "Linky",
+      "transparent": true,
+      "type": "yesoreyeram-boomtheme-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -92,7 +151,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "hideTimeOverride": true,
       "id": 1,
@@ -251,7 +310,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -272,7 +331,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "dataset": "linky",
@@ -322,7 +381,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "id": 16,
       "options": {
@@ -334,7 +393,7 @@
         "content": "## Historique par mois\n",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "dataset": "linky",
@@ -406,7 +465,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 9,
       "options": {
@@ -558,7 +617,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 10
+        "y": 11
       },
       "id": 8,
       "options": {
@@ -575,7 +634,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "datasource": {
@@ -703,7 +762,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 10
+        "y": 11
       },
       "id": 22,
       "options": {
@@ -719,12 +778,13 @@
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {
           "titleSize": 18,
           "valueSize": 24
         }
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "dataset": "linky",
@@ -768,7 +828,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 19
       },
       "id": 17,
       "options": {
@@ -780,7 +840,7 @@
         "content": "## Historique par an\n",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "dataset": "linky",
@@ -864,7 +924,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 21
       },
       "id": 13,
       "options": {
@@ -1019,7 +1079,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 20
+        "y": 21
       },
       "id": 12,
       "options": {
@@ -1036,7 +1096,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "datasource": {
@@ -1155,7 +1215,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 20
+        "y": 21
       },
       "id": 23,
       "options": {
@@ -1171,12 +1231,13 @@
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {
           "titleSize": 18,
           "valueSize": 24
         }
       },
-      "pluginVersion": "10.2.1",
+      "pluginVersion": "10.2.3",
       "targets": [
         {
           "dataset": "linky",
@@ -1210,68 +1271,10 @@
       ],
       "transparent": true,
       "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 28
-      },
-      "id": 11,
-      "options": {
-        "activeTheme": "Linkystat",
-        "disableThemePicker": true,
-        "themes": [
-          {
-            "name": "Linkystat",
-            "styles": [
-              {
-                "props": {
-                  "theme": "dark"
-                },
-                "type": "basetheme"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "bgimage"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "url"
-              },
-              {
-                "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}"
-                },
-                "type": "style"
-              },
-              {
-                "props": {
-                  "color": ""
-                },
-                "type": "panel-container-bg-color"
-              }
-            ]
-          }
-        ]
-      },
-      "pluginVersion": "0.2.1",
-      "transparent": true,
-      "type": "yesoreyeram-boomtheme-panel"
     }
   ],
   "refresh": "1s",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
