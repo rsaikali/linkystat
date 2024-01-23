@@ -1021,24 +1021,19 @@
     },
     {
       "datasource": {
-        "type": "datasource",
-        "uid": "-- Dashboard --"
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
+            "fixedColor": "text",
             "mode": "continuous-GrYlRd"
           },
-          "custom": {
-            "align": "center",
-            "cellOptions": {
-              "type": "color-text"
-            },
-            "filterable": false,
-            "inspect": false
-          },
+          "fieldMinMax": false,
           "mappings": [],
+          "max": 30,
+          "min": -30,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1052,103 +1047,66 @@
               }
             ]
           },
-          "unit": "kWh"
+          "unit": "%"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Date"
-            },
-            "properties": [
-              {
-                "id": "unit"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "text",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 2,
         "w": 6,
         "x": 12,
         "y": 21
       },
-      "id": 12,
+      "id": 24,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": [],
-          "reducer": [
-            "mean"
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "show": false
+          "fields": "",
+          "values": false
         },
-        "showHeader": false,
-        "sortBy": []
+        "textMode": "value",
+        "wideLayout": true
       },
       "pluginVersion": "10.2.3",
       "targets": [
         {
+          "dataset": "linky",
           "datasource": {
-            "type": "datasource",
-            "uid": "-- Dashboard --"
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
           },
-          "panelId": 13,
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT -1 * (100 - ((MIN(total_kwh) * 100) / MAX(total_kwh))) FROM yearly_history ORDER BY provider_time ASC",
           "refId": "A",
-          "withTransforms": false
-        }
-      ],
-      "transformations": [
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
+          "sql": {
+            "columns": [
               {
-                "desc": true,
-                "field": "provider_time"
+                "parameters": [],
+                "type": "function"
               }
-            ]
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {}
-        },
-        {
-          "id": "formatTime",
-          "options": {
-            "outputFormat": "YYYY",
-            "timeField": "provider_time",
-            "useTimezone": true
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "provider_time": "Date",
-              "start_date": "Date",
-              "time": "Date",
-              "total_kwh": "Consommation"
-            }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
           }
         }
       ],
       "transparent": true,
-      "type": "table"
+      "type": "stat"
     },
     {
       "datasource": {
@@ -1271,6 +1229,137 @@
       ],
       "transparent": true,
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kWh"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Date"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 23
+      },
+      "id": 12,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": [],
+          "reducer": [
+            "mean"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "10.2.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 13,
+          "refId": "A",
+          "withTransforms": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "provider_time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {}
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY",
+            "timeField": "provider_time",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "provider_time": "Date",
+              "start_date": "Date",
+              "time": "Date",
+              "total_kwh": "Consommation"
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "table"
     }
   ],
   "refresh": "1s",
