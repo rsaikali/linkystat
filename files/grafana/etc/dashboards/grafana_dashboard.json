@@ -291,25 +291,33 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Cos φ"
+              "options": "Puissance moyenne (an)"
             },
             "properties": [
               {
                 "id": "decimals",
-                "value": 3
+                "value": 0
               },
               {
                 "id": "unit",
-                "value": "none"
+                "value": "W"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": ""
+              "options": "Cos φ"
             },
-            "properties": []
+            "properties": [
+              {
+                "id": "unit"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
           }
         ]
       },
