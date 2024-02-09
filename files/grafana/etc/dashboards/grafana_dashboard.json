@@ -291,18 +291,25 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Puissance moyenne (an)"
+              "options": "Cos φ"
             },
             "properties": [
               {
                 "id": "decimals",
-                "value": 0
+                "value": 3
               },
               {
                 "id": "unit",
-                "value": "W"
+                "value": "none"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": ""
+            },
+            "properties": []
           }
         ]
       },
@@ -342,7 +349,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT PAPP as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 AS total_kwh FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (jour)\", \r\n      (SELECT total_kwh / 31 / 24 * 1000 FROM monthly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (mois)\", \r\n      (SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (an)\", \r\n       HCHP/1000 AS \"Compteur Heures Pleines\", \r\n       HCHC/1000 AS \"Compteur Heures Creuses\",\r\n       DATE_FORMAT(time, \"%T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+          "rawSql": "SELECT PAPP as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Cos φ\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (jour)\", \r\n      (SELECT total_kwh / 31 / 24 * 1000 FROM monthly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (mois)\", \r\n      (SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (an)\", \r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\",\r\n       DATE_FORMAT(time, \"%d/%m %T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
           "refId": "A",
           "sql": {
             "columns": [
