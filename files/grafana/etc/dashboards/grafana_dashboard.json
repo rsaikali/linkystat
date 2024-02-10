@@ -20,7 +20,7 @@
   "graphTooltip": 2,
   "id": 1,
   "links": [],
-  "liveNow": true,
+  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -179,7 +179,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT $__timeGroupAlias(time, $__interval, previous), ROUND(AVG(PAPP)) AS \"Puissance apparente\" FROM linky.linky_realtime WHERE $__timeFilter(time) GROUP BY $__timeGroup(time, $__interval)",
+          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  PAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -303,21 +303,6 @@
                 "value": "W"
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Cos φ"
-            },
-            "properties": [
-              {
-                "id": "unit"
-              },
-              {
-                "id": "decimals",
-                "value": 3
-              }
-            ]
           }
         ]
       },
@@ -357,7 +342,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT PAPP as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Cos φ\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (jour)\", \r\n      (SELECT total_kwh / 31 / 24 * 1000 FROM monthly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (mois)\", \r\n      (SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (an)\", \r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\",\r\n       DATE_FORMAT(time, \"%d/%m %T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+          "rawSql": "SELECT PAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) as \"Puissance instantanée\", \r\n      (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance moyenne (jour)\", \r\n      (SELECT total_kwh / 31 / 24 * 1000 FROM monthly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (mois)\", \r\n      (SELECT total_kwh / 365 / 24 * 1000 FROM yearly_history ORDER BY provider_time DESC LIMIT 1) AS \"Puissance moyenne (an)\", \r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\",\r\n       DATE_FORMAT(time, \"%d/%m %T\") as \"Dernière mesure\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
           "refId": "A",
           "sql": {
             "columns": [
