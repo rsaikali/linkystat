@@ -102,6 +102,10 @@ class LinkyData(object):
         Returns:
         - is_valid (bool): True if the checksum is valid, False otherwise.
         """
+        # Don't verify checksum for DATE
+        if key == "DATE":
+            return True
+
         # Convert the key, value, and tab character into a list of ASCII values
         checked_data = [ord(c) for c in (key + "\t" + value + "\t")]
 
