@@ -69,13 +69,14 @@ class LinkyData(object):
                 if key not in KEEP_KEYS.keys() or not self.verify_checksum(key, value, checksum):
                     continue
 
+                logging.info(data)
+                logging.info("-----")
+
                 # Check if all expected keys have been processed
                 if len(data.keys()) == len(KEEP_KEYS.keys()):
 
                     # Get timestamp from dataframe
                     timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
-
-                    logging.info(data)
 
                     # Log the received packet information
                     logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])}]")
