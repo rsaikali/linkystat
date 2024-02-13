@@ -19,7 +19,7 @@ CONNECTION_STRING = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT
 # Port serial
 LINKY_USB_DEVICE = os.getenv("LINKY_USB_DEVICE", "/dev/null")
 LINKY_BAUDRATE = int(os.getenv("LINKY_BAUDRATE", 9600))
-KEEP_KEYS = {"SINSTS": "PAPP", "EASF01": "HCHC", "EASF02": "HCHP"}
+KEEP_KEYS = {"DATE": "DATE", "SINSTS": "PAPP", "EASF01": "HCHC", "EASF02": "HCHP"}
 
 
 class LinkyData(object):
@@ -74,8 +74,9 @@ class LinkyData(object):
 
                 # Check if all expected keys have been processed
                 if len(data.keys()) == len(KEEP_KEYS.keys()):
-                    # Get the current timestamp
-                    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                    # Get timestamp from dataframe
+                    timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
 
                     # Log the received packet information
                     logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])}]")
@@ -85,7 +86,7 @@ class LinkyData(object):
                         # Prepare the SQL query to insert the data into the table
                         sql_query = f"""
                             INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP)
-                            VALUES ('{now}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']})
+                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']})
                         """
                         # Execute the SQL query
                         connection.execute(sa.sql.text(sql_query))
