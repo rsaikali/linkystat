@@ -70,7 +70,7 @@ class LinkyData(object):
                     continue
 
                 # Store value in curretn dataframe
-                data[key] = value
+                data[KEEP_KEYS[key]] = value
 
                 # Check if all expected keys have been processed
                 if len(data.keys()) == len(KEEP_KEYS.keys()):
