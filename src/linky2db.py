@@ -56,7 +56,7 @@ class LinkyData(object):
                     logging.info("------")
 
                 # Decode the line and split it into an array
-                arr = line.decode("ascii").strip().split("")
+                arr = line.decode("ascii").strip().split()
 
                 # Check if the array has the expected number of elements
                 if len(arr) != 3:
