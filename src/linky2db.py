@@ -53,7 +53,6 @@ class LinkyData(object):
                 # Check if the line contains the start of a new packet
                 if b"\x03\x02" in bytearray(line):
                     data = {}
-                    logging.info("------")
 
                 # Decode the line and split it into an array
                 arr = line.decode("ascii").strip().split()
@@ -65,7 +64,6 @@ class LinkyData(object):
 
                 # Extract the key, value, and checksum from the array
                 key, value, checksum = arr
-                logging.info(arr)
 
                 # Check if the key is one of the expected ones and if the checksum is correct
                 if key not in KEEP_KEYS.keys() or not self.verify_checksum(key, value, checksum):
@@ -76,6 +74,8 @@ class LinkyData(object):
 
                     # Get timestamp from dataframe
                     timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
+
+                    logging.info(data)
 
                     # Log the received packet information
                     logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])}]")
