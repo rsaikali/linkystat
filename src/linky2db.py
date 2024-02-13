@@ -53,9 +53,10 @@ class LinkyData(object):
                 # Check if the line contains the start of a new packet
                 if b"\x03\x02" in bytearray(line):
                     data = {}
+                    logging.info("------")
 
                 # Decode the line and split it into an array
-                arr = line.decode("ascii").strip().split("\t")
+                arr = line.decode("ascii").strip().split("")
 
                 # Check if the array has the expected number of elements
                 if len(arr) != 3:
