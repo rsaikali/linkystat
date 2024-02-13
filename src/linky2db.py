@@ -64,12 +64,11 @@ class LinkyData(object):
 
                 # Extract the key, value, and checksum from the array
                 key, value, checksum = arr
+                logging.info(key, value, checksum)
 
                 # Check if the key is one of the expected ones and if the checksum is correct
                 if key not in KEEP_KEYS.keys() or not self.verify_checksum(key, value, checksum):
                     continue
-
-                logging.info(data)
 
                 # Check if all expected keys have been processed
                 if len(data.keys()) == len(KEEP_KEYS.keys()):
