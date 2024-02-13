@@ -69,8 +69,8 @@ class LinkyData(object):
                 if key not in KEEP_KEYS.keys() or not self.verify_checksum(key, value, checksum):
                     continue
 
-                logging.info(data)
-                logging.info("-----")
+                # Store value in curretn dataframe
+                data[key] = value
 
                 # Check if all expected keys have been processed
                 if len(data.keys()) == len(KEEP_KEYS.keys()):
