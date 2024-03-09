@@ -11,7 +11,13 @@ DELIMITER ;;
 
 CREATE FUNCTION getNbDaysCurrentPeriod() RETURNS INT DETERMINISTIC NO SQL
     BEGIN
-        RETURN DAYOFMONTH(LAST_DAY(DATE_SUB(DATE_ADD(NOW(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH)));
+		RETURN 
+			CASE WHEN DAYOFMONTH(current_date) <= ${DAYS_OFFSET}
+				THEN DAYOFMONTH(LAST_DAY(DATE_ADD(
+						DATE_SUB(current_date, interval 1 month), 
+						interval ${DAYS_OFFSET} - DAYOFMONTH(current_date) day)))                     
+				ELSE DAYOFMONTH(LAST_DAY(date_add(current_date, interval ${DAYS_OFFSET} - DAYOFMONTH(current_date) day)))
+			END;
     END;;
 
 CREATE FUNCTION getNbDaysCurrentYear() RETURNS INT DETERMINISTIC
