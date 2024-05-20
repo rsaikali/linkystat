@@ -716,7 +716,7 @@
           "custom": {
             "neutral": 0
           },
-          "decimals": 0,
+          "decimals": 1,
           "displayName": "Tendance mensuelle",
           "mappings": [],
           "max": 15,
@@ -742,8 +742,16 @@
                 "value": -5
               },
               {
-                "color": "red",
+                "color": "text",
+                "value": -0.5
+              },
+              {
+                "color": "text",
                 "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.5
               },
               {
                 "color": "semi-dark-red",
@@ -801,7 +809,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n    AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL 1 HOUR",
+          "rawSql": "SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 \r\n    - \r\n    (\r\n\t\tSELECT\r\n\t\t\t(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\t\tFROM linky_history\r\n\t\tWHERE time BETWEEN\r\n\t\t\tNOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 DAY - INTERVAL 1 HOUR\r\n\t\tAND\r\n\t\t\tNOW() - INTERVAL getNbDaysCurrentPeriod() DAY\r\n\t) AS DIFF\r\nFROM linky_realtime\r\nWHERE time > DATE_SUB(NOW(), INTERVAL 24 HOUR);",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1172,7 +1180,7 @@
           "custom": {
             "neutral": 0
           },
-          "decimals": 0,
+          "decimals": 1,
           "displayName": "Tendance annuelle",
           "mappings": [],
           "max": 15,
@@ -1198,8 +1206,16 @@
                 "value": -5
               },
               {
-                "color": "red",
+                "color": "text",
+                "value": -0.5
+              },
+              {
+                "color": "text",
                 "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.5
               },
               {
                 "color": "semi-dark-red",
@@ -1257,7 +1273,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n     now() as time,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 -\r\n    (\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\tFROM linky_history\r\n\tWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY - INTERVAL 365 DAY AND NOW() - INTERVAL 1 HOUR - INTERVAL 1 DAY\r\n    )\r\n     AS DIFF\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 HOUR - INTERVAL 365 DAY AND NOW() - INTERVAL 1 HOUR",
+          "rawSql": "SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 \r\n    - \r\n    (\r\n\t\tSELECT\r\n\t\t\t(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n\t\tFROM linky_history\r\n\t\tWHERE time BETWEEN\r\n\t\t\tNOW() - INTERVAL 1 YEAR - INTERVAL 1 DAY - INTERVAL 1 HOUR\r\n\t\tAND\r\n\t\t\tNOW() - INTERVAL 1 YEAR\r\n\t) AS DIFF\r\nFROM linky_realtime\r\nWHERE time > DATE_SUB(NOW(), INTERVAL 24 HOUR);",
           "refId": "A",
           "sql": {
             "columns": [
