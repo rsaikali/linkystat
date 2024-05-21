@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-production_host=linky.local
+production_host=linky.home
 
 # Backup production MySQL database
 ssh ${production_host} /bin/bash <<EOF
