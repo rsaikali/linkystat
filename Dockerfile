@@ -2,17 +2,17 @@ FROM python:3.11-slim
 
 ENV LINKY_USB_DEVICE /dev/ttyACM0
 
-ENV DB_HOST db
-ENV DB_PORT 3306
-ENV DB_NAME linky
-ENV DB_USER mysql_user
-ENV DB_PASSWORD mysql_password
+ENV MYSQL_HOST db
+ENV MYSQL_PORT 3306
+ENV MYSQL_NAME linky
+ENV MYSQL_USER mysql_user
+ENV MYSQL_PASSWORD mysql_password
 
 ENV PYTHONUNBUFFERED 1
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV TZ "Europe/Paris"
 
-WORKDIR /linky2db
+WORKDIR /app
 
 COPY requirements.txt .
 
@@ -21,4 +21,4 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY src .
 
-CMD [ "python", "linky2db.py" ]
+CMD [ "python", "src/linky2db.py" ]

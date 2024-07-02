@@ -1,0 +1,1 @@
+copy env\.env.dev .env

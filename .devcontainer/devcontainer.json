@@ -1,0 +1,45 @@
+{
+    "name": "linkystat-dev",
+    "workspaceFolder": "/app",
+    "service": "linky2db",
+    "shutdownAction": "stopCompose",
+    "dockerComposeFile": [
+        "../compose.yaml"
+    ],
+    "postStartCommand": "./scripts/sync_dev_db.sh",
+    "postAttachCommand": "python src/linky2db.py",
+    "forwardPorts": [
+        "grafana:3000",
+        "mysql:3306"
+    ],
+    "mounts": [
+        "type=bind,source=${localEnv:USERPROFILE}\\.ssh,target=/root/.ssh,readonly"
+    ],
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+        "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+            "packages": "procps,iputils-ping,openssh-client"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "tabby.api.endpoint": "http://host.docker.internal:8080"
+            },
+            "extensions": [
+                "eamodio.gitlens",
+                "ms-python.autopep8",
+                "ms-python.black-formatter",
+                "ms-python.flake8",
+                "ms-python.vscode-pylance",
+                "ms-python.python",
+                "ms-python.debugpy",
+                "tabbyml.vscode-tabby"
+            ]
+        }
+    },
+    "initializeCommand": [
+        ".devcontainer/initializeCommand"
+    ]
+}

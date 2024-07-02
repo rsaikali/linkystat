@@ -1,5 +1,8 @@
 #/bin/sh -xe
 
+unset MYSQL_HOST
+unset MYSQL_PORT
+
 echo "*********************************"
 echo "*** Creating Linkystat schema ***"
 echo "*********************************"

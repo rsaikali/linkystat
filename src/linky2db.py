@@ -6,15 +6,17 @@ from datetime import datetime
 import serial
 import sqlalchemy as sa
 
-logging.basicConfig(format="[%(asctime)s %(levelname)s/%(module)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+logging.basicConfig(format="[%(asctime)s %(levelname)s/%(module)s] %(message)s",
+                    datefmt="%Y-%m-%d %H:%M:%S",
+                    level=logging.INFO)
 
 # MySQL database
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = int(os.getenv("DB_PORT", 3306))
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-CONNECTION_STRING = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
+MYSQL_NAME = os.getenv("MYSQL_NAME")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+CONNECTION_STRING = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_NAME}"
 
 # Port serial
 LINKY_USB_DEVICE = os.getenv("LINKY_USB_DEVICE", "/dev/null")
@@ -35,7 +37,7 @@ class LinkyData(object):
         logging.info("Connected to Linky: %s" % self.serial_port.get_settings())
 
         # Initialize MySQL database engine
-        logging.info(f"Connecting to database on {DB_HOST}")
+        logging.info(f"Connecting to database on {MYSQL_HOST}")
         self.engine = sa.create_engine(CONNECTION_STRING)
         logging.info(f"Connected to database: {self.engine.url}")
 
@@ -143,7 +145,7 @@ class LinkyDataFromProd(object):
         logging.info(f"Connected to database: {self.production_engine.url}")
 
         # SQLAlchemy MySQL engine
-        logging.info(f"Connecting to database on {DB_HOST}")
+        logging.info(f"Connecting to database on {MYSQL_HOST}")
         self.engine = sa.create_engine(CONNECTION_STRING)
         logging.info(f"Connected to database: {self.engine.url}")
 

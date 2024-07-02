@@ -1,9 +1,7 @@
 #!/bin/bash -e
 
-production_host=linky.home
-
 # Backup production MySQL database
-ssh ${production_host} /bin/bash <<EOF
+ssh PRODUCTION_USER@$PRODUCTION_DB_HOST /bin/bash <<EOF
     mysql_docker_id=\$(docker ps -f name=mysql --format "{{.ID}}")
     mysql_root_password=\$(docker exec \${mysql_docker_id} printenv MYSQL_ROOT_PASSWORD)
     mysql_database=\$(docker exec \${mysql_docker_id} printenv MYSQL_DATABASE)
@@ -11,13 +9,11 @@ ssh ${production_host} /bin/bash <<EOF
 EOF
 
 # Copy new SQL dump file locally
-scp ${production_host}:/tmp/backup.sql.gz .
+scp PRODUCTION_USER@$PRODUCTION_DB_HOST:/tmp/backup.sql.gz .
 
 # Restore local MySQL database
 mysql_docker_id=$(docker ps -f name=mysql --format "{{.ID}}")
-mysql_root_password=$(docker exec ${mysql_docker_id} printenv MYSQL_ROOT_PASSWORD)
-mysql_database=$(docker exec ${mysql_docker_id} printenv MYSQL_DATABASE)
-zcat backup.sql.gz | docker exec -i ${mysql_docker_id} /usr/bin/mysql -u root --password=${mysql_root_password} ${mysql_database}
+zcat backup.sql.gz | docker exec -i ${mysql_docker_id} /usr/bin/mysql -u root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE
 
 # Remove SQL dump file
 rm -Rf backup.sql.gz

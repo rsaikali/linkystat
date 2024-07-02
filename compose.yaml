@@ -1,0 +1,69 @@
+services:
+
+  ###############################################################################
+  # Python Linky application
+  linky2db:
+    container_name: linky2db
+    build: .
+    restart: always
+    env_file: .env
+    command: sleep infinity
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+  ###############################################################################
+  # MySQL Database
+  mysql:
+    container_name: mysql
+    image: mysql:8.4
+    restart: always
+    env_file: .env
+    command: >
+      mysqld --skip-performance-schema
+             --skip-mysqlx
+             --max-execution-time=10000
+             --default-storage-engine=InnoDB
+             --innodb-buffer-pool-size=4G
+             --innodb-buffer-pool-chunk-size=512M
+             --innodb-buffer-pool-instances=8
+             --character-set-server=utf8mb4
+             --collation-server=utf8mb4_unicode_ci
+             --init-connect='SET NAMES UTF8;'
+             --lc_time_names='fr_FR'
+             --mysql_native_password=ON
+    ports:
+      - 3306:3306
+    volumes:
+      - ./files/mysql/init-script.sh:/docker-entrypoint-initdb.d/init-script.sh
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} --database ${MYSQL_DATABASE} -e 'SHOW TABLES' | [ $(wc -l) -gt 4 ]
+      interval: 1s
+      retries: 120
+
+###############################################################################
+  # Grafana
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:10.3.6
+    restart: always
+    env_file: .env
+    ports:
+      - 3000:3000
+    volumes:
+      - ./files/grafana/etc:/etc/grafana
+    healthcheck:
+      test: curl http://localhost:3000/healthz | grep Ok
+      interval: 1s
+      retries: 120
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+###############################################################################
+# MySQL volume
+volumes:
+  dbdata:
