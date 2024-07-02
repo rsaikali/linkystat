@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Backup production MySQL database
-ssh PRODUCTION_USER@$PRODUCTION_DB_HOST /bin/bash <<EOF
+ssh $PRODUCTION_USER@$PRODUCTION_DB_HOST /bin/bash <<EOF
     mysql_docker_id=\$(docker ps -f name=mysql --format "{{.ID}}")
     mysql_root_password=\$(docker exec \${mysql_docker_id} printenv MYSQL_ROOT_PASSWORD)
     mysql_database=\$(docker exec \${mysql_docker_id} printenv MYSQL_DATABASE)
@@ -9,7 +9,7 @@ ssh PRODUCTION_USER@$PRODUCTION_DB_HOST /bin/bash <<EOF
 EOF
 
 # Copy new SQL dump file locally
-scp PRODUCTION_USER@$PRODUCTION_DB_HOST:/tmp/backup.sql.gz .
+scp $PRODUCTION_USER@$PRODUCTION_DB_HOST:/tmp/backup.sql.gz .
 
 # Restore local MySQL database
 mysql_docker_id=$(docker ps -f name=mysql --format "{{.ID}}")
