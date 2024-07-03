@@ -83,15 +83,6 @@ Keep variables empty to use in a simple environment (Grafana will be available o
 | `LETSENCRYPT_HOST` | LetsEncrypt domain name (should be identical to `VIRTUAL_HOST`) |
 | `LETSENCRYPT_EMAIL` | LetsEncrypt email used for certificate generation |
 
-If you want to follow Google analytics of your Grafana instance, you can add the following variables to your environment file.
-You will need to create a [Google Analytics 4](https://analytics.google.com/) account and get a tracking ID.
-
-| Name | Description | Default value |
-| ---- | ----------- | ------------- |
-| `GF_ANALYTICS_REPORTING_ENABLED` | Set to `true` to enable Google Analytics | `false` |
-| `GF_ANALYTICS_GOOGLE_ANALYTICS_4_ID` | Google Analytics 4 identifier | |
-
-
 ## License
 
 [MIT](./LICENSE)
