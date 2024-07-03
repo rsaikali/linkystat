@@ -21,5 +21,4 @@ COPY src .
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /app/src
-CMD  ["python", "linky2db.py"]
+CMD  ["sh", "-c", "cd /app/src && python linky2db.py"]
