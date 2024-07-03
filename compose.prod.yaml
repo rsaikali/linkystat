@@ -3,7 +3,6 @@ services:
   ###############################################################################
   # Python Linky application
   linky2db:
-    command: python /app/src/linky2db.py
     restart: always
     devices:
       - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}

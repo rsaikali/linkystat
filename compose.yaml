@@ -6,7 +6,6 @@ services:
     container_name: linky2db
     build: .
     env_file: .env
-    command: sleep infinity
     depends_on:
       mysql:
         condition: service_healthy

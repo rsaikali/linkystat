@@ -15,10 +15,11 @@ ENV TZ "Europe/Paris"
 WORKDIR /app
 
 COPY requirements.txt .
+COPY src .
 
 RUN pip install --no-cache-dir --upgrade pip \
  && pip install --no-cache-dir -r requirements.txt
 
-COPY src .
+WORKDIR /app/src
 
-CMD [ "python", "/app/src/linky2db.py" ]
+ENTRYPOINT [ "python", "linky2db.py" ]

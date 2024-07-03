@@ -3,5 +3,6 @@ services:
   ###############################################################################
   # Python Linky application
   linky2db:
+    command: sleep infinity
     volumes:
       - .:/app
