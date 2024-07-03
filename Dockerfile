@@ -21,4 +21,4 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY src .
 
-CMD [ "python", "src/linky2db.py" ]
+CMD [ "python", "/app/src/linky2db.py" ]
