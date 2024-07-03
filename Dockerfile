@@ -15,9 +15,9 @@ ENV TZ "Europe/Paris"
 WORKDIR /app
 
 COPY requirements.txt .
-COPY src ./
+COPY src .
 
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-CMD  ["python src/linky2db.py"]
+CMD  ["sleep", "infinity"]
