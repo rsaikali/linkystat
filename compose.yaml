@@ -5,21 +5,17 @@ services:
   linky2db:
     container_name: linky2db
     build: .
-    restart: always
     env_file: .env
     command: sleep infinity
     depends_on:
       mysql:
         condition: service_healthy
-    volumes:
-      - .:/app
 
   ###############################################################################
   # MySQL Database
   mysql:
     container_name: mysql
     image: mysql:8.4
-    restart: always
     env_file: .env
     command: >
       mysqld --skip-performance-schema
@@ -44,12 +40,11 @@ services:
       interval: 1s
       retries: 120
 
-###############################################################################
+  ###############################################################################
   # Grafana
   grafana:
     container_name: grafana
     image: grafana/grafana:11.0.1
-    restart: always
     env_file: .env
     ports:
       - 3000:3000

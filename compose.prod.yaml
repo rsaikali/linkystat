@@ -4,8 +4,19 @@ services:
   # Python Linky application
   linky2db:
     command: python src/linky2db.py
+    restart: always
     devices:
       - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}
+
+  ###############################################################################
+  # MySQL Database
+  mysql:
+    restart: always
+
+  ###############################################################################
+  # Grafana
+  grafana:
+    restart: always
 
   ###############################################################################
   # NginX

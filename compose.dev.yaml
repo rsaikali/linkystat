@@ -1,0 +1,7 @@
+services:
+
+  ###############################################################################
+  # Python Linky application
+  linky2db:
+    volumes:
+      - .:/app

@@ -4,7 +4,8 @@
     "service": "linky2db",
     "shutdownAction": "stopCompose",
     "dockerComposeFile": [
-        "../compose.yaml"
+        "../compose.yaml",
+        "../compose.dev.yaml"
     ],
     "postStartCommand": "./scripts/sync_dev_db.sh",
     "postAttachCommand": "python src/linky2db.py",
