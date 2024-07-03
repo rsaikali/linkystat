@@ -36,7 +36,8 @@
                 "ms-python.vscode-pylance",
                 "ms-python.python",
                 "ms-python.debugpy",
-                "tabbyml.vscode-tabby"
+                "tabbyml.vscode-tabby",
+                "nicollasr.vscode-streamdeck"
             ]
         }
     },
