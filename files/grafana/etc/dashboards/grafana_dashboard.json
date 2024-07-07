@@ -273,13 +273,12 @@
         "baseValueFontSize": "14px",
         "interpretAsTrend": true,
         "percentageNrDecimals": 0,
-        "percentageValueDecimals": 3,
         "percentageValueField": "current",
         "percentageValueFontSize": "80%",
         "positiveIsGood": false,
         "referenceText": "comparé à la moyenne du mois",
         "referenceTextFontSize": "10px",
-        "unit": "kWh"
+        "unit": "currencyEUR"
       },
       "targets": [
         {
@@ -291,7 +290,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 / getNbDaysCurrentPeriod() as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    ((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    ((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod() as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
           "refId": "A",
           "sql": {
             "columns": [
@@ -312,7 +311,7 @@
           }
         }
       ],
-      "title": "Consommation sur 24h",
+      "title": "Coût sur 24h (hors abonnement)",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -357,7 +356,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 60,
+            "fillOpacity": 100,
             "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
@@ -714,7 +713,7 @@
         "x": 18,
         "y": 7
       },
-      "id": 32,
+      "id": 37,
       "options": {
         "baseValueField": "base",
         "baseValueFontSize": "14px",
@@ -738,7 +737,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(\r\nSELECT \"current\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 365 as t FROM linky_history WHERE time >= NOW() - INTERVAL 1 YEAR\r\n)\r\nUNION\r\n(\r\nSELECT \"base\", total_kwh * 1000 / 24 / 365 as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1\r\n)",
+          "rawSql": "(SELECT \"current\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 365 as t FROM linky_history WHERE time >= NOW() - INTERVAL 1 YEAR)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / 365 as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -851,6 +850,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": true,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -867,10 +867,39 @@
           },
           "unit": "kWh"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "price"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": false,
+                  "viz": true
+                }
+              },
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "displayName",
+                "value": "Coût"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 12
@@ -909,7 +938,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh FROM monthly_history ORDER BY provider_time ASC",
+          "rawSql": "SELECT provider_time, total_kwh, $abonnement + (total_hp_kwh* $prix_hp) + (total_hc_kwh* $prix_hc) as price FROM monthly_history ORDER BY provider_time ASC",
           "refId": "A",
           "sql": {
             "columns": [
@@ -972,6 +1001,213 @@
     },
     {
       "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 12
+      },
+      "id": 36,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 0,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé au mois dernier",
+        "referenceTextFontSize": "10px",
+        "unit": "currencyEUR"
+      },
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "(SELECT \"current\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Coût du mois",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "t",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "neutral": 0
+          },
+          "decimals": 0,
+          "displayName": "Tendance mensuelle",
+          "mappings": [],
+          "max": 15,
+          "min": -15,
+          "noValue": "Not enough data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-green",
+                "value": -15
+              },
+              {
+                "color": "semi-dark-green",
+                "value": -10
+              },
+              {
+                "color": "green",
+                "value": -5
+              },
+              {
+                "color": "text",
+                "value": -1
+              },
+              {
+                "color": "text",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 10
+              },
+              {
+                "color": "dark-red",
+                "value": 15
+              }
+            ]
+          },
+          "unit": "kWh/j"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 12
+      },
+      "id": 22,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        }
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\n-\r\n(SELECT \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL getNbDaysCurrentPeriod() DAY + INTERVAL 1 HOUR)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
         "type": "datasource",
         "uid": "-- Dashboard --"
       },
@@ -987,8 +1223,10 @@
               "type": "color-text"
             },
             "filterable": false,
-            "inspect": false
+            "inspect": false,
+            "minWidth": 100
           },
+          "fieldMinMax": true,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1019,14 +1257,37 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "price"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 6,
         "x": 12,
-        "y": 12
+        "y": 15
       },
       "id": 8,
       "options": {
@@ -1111,141 +1372,11 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "neutral": 0
-          },
-          "decimals": 0,
-          "displayName": "Tendance mensuelle",
-          "mappings": [],
-          "max": 15,
-          "min": -15,
-          "noValue": "Not enough data",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
-              },
-              {
-                "color": "dark-green",
-                "value": -15
-              },
-              {
-                "color": "semi-dark-green",
-                "value": -10
-              },
-              {
-                "color": "green",
-                "value": -5
-              },
-              {
-                "color": "text",
-                "value": -1
-              },
-              {
-                "color": "text",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 1
-              },
-              {
-                "color": "semi-dark-red",
-                "value": 5
-              },
-              {
-                "color": "dark-red",
-                "value": 10
-              },
-              {
-                "color": "dark-red",
-                "value": 15
-              }
-            ]
-          },
-          "unit": "kWh/j"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 12
-      },
-      "id": 22,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto",
-        "text": {
-          "titleSize": 18,
-          "valueSize": 24
-        }
-      },
-      "pluginVersion": "11.0.1",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\n-\r\n(SELECT \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL getNbDaysCurrentPeriod() DAY + INTERVAL 1 HOUR)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
       "gridPos": {
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 21
       },
       "id": 17,
       "options": {
@@ -1298,7 +1429,7 @@
               "tooltip": false,
               "viz": false
             },
-            "lineWidth": 0,
+            "lineWidth": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -1307,12 +1438,14 @@
             }
           },
           "decimals": 0,
+          "fieldMinMax": true,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1333,22 +1466,50 @@
                 "id": "unit"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "price"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "€"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": false,
+                  "viz": true
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Facture moyenne"
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 23
       },
       "id": 13,
       "options": {
         "barRadius": 0.2,
-        "barWidth": 0.9,
+        "barWidth": 0.95,
         "colorByField": "Consommation",
         "fullHighlight": false,
-        "groupWidth": 0.7,
+        "groupWidth": 0.8,
         "legend": {
           "calcs": [],
           "displayMode": "list",
@@ -1376,7 +1537,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh FROM yearly_history ORDER BY provider_time ASC",
+          "rawSql": "SELECT provider_time, total_kwh, ($abonnement * 12) + ((total_hp_kwh* $prix_hp) + (total_hc_kwh* $prix_hc)) as price FROM yearly_history ORDER BY provider_time ASC",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1438,6 +1599,213 @@
     },
     {
       "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 23
+      },
+      "id": 35,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 0,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé à l'année dernière",
+        "referenceTextFontSize": "10px",
+        "unit": "currencyEUR"
+      },
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "(\r\n  SELECT \"current\", $abonnement + (((total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc)) / 12) as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1\r\n)\r\nUNION\r\n(\r\n  SELECT \"base\", $abonnement + ((total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc)) / 12 as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1\r\n)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Facture moyenne année",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "t",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "neutral": 0
+          },
+          "decimals": 0,
+          "displayName": "Tendance annuelle",
+          "mappings": [],
+          "max": 15,
+          "min": -15,
+          "noValue": "Not enough data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-green",
+                "value": -15
+              },
+              {
+                "color": "semi-dark-green",
+                "value": -10
+              },
+              {
+                "color": "green",
+                "value": -5
+              },
+              {
+                "color": "text",
+                "value": -1
+              },
+              {
+                "color": "text",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 10
+              },
+              {
+                "color": "dark-red",
+                "value": 15
+              }
+            ]
+          },
+          "unit": "kWh/j"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 23
+      },
+      "id": 23,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        }
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\n-\r\n(SELECT \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 365 DAY AND NOW() - INTERVAL 365 DAY + INTERVAL 1 HOUR)\r\n\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
         "type": "datasource",
         "uid": "-- Dashboard --"
       },
@@ -1453,14 +1821,17 @@
               "type": "color-text"
             },
             "filterable": false,
-            "inspect": false
+            "inspect": false,
+            "minWidth": 100
           },
+          "fieldMinMax": true,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1488,6 +1859,29 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "price"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "€"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
@@ -1495,7 +1889,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 22
+        "y": 26
       },
       "id": 12,
       "options": {
@@ -1567,141 +1961,12 @@
       "type": "table"
     },
     {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "neutral": 0
-          },
-          "decimals": 0,
-          "displayName": "Tendance annuelle",
-          "mappings": [],
-          "max": 15,
-          "min": -15,
-          "noValue": "Not enough data",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green"
-              },
-              {
-                "color": "dark-green",
-                "value": -15
-              },
-              {
-                "color": "semi-dark-green",
-                "value": -10
-              },
-              {
-                "color": "green",
-                "value": -5
-              },
-              {
-                "color": "text",
-                "value": -1
-              },
-              {
-                "color": "text",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 1
-              },
-              {
-                "color": "semi-dark-red",
-                "value": 5
-              },
-              {
-                "color": "dark-red",
-                "value": 10
-              },
-              {
-                "color": "dark-red",
-                "value": 15
-              }
-            ]
-          },
-          "unit": "kWh/j"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 22
-      },
-      "id": 23,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto",
-        "text": {
-          "titleSize": 18,
-          "valueSize": 24
-        }
-      },
-      "pluginVersion": "11.0.1",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\n-\r\n(SELECT \r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 365 DAY AND NOW() - INTERVAL 365 DAY + INTERVAL 1 HOUR)\r\n\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 32
       },
       "id": 24,
       "panels": [
@@ -1769,7 +2034,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 38
+            "y": 31
           },
           "id": 25,
           "options": {
@@ -1841,10 +2106,38 @@
   "schemaVersion": 39,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "description": "Abonnement mensuel TTC (en €)",
+        "hide": 2,
+        "label": "Abonnement mensuel",
+        "name": "abonnement",
+        "query": "16.70",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": "Prix Heures Pleines (en €/kWh)",
+        "hide": 2,
+        "label": "Prix Heures Pleines",
+        "name": "prix_hp",
+        "query": "0.2795",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": "Prix Heures Creuses (en €/kWh)",
+        "hide": 2,
+        "label": "Prix Heures Creuses",
+        "name": "prix_hc",
+        "query": "0.1927",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,

@@ -66,12 +66,16 @@ mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 CREATE OR REPLACE VIEW monthly_history AS
     SELECT
 	    DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y-%m') AS provider_time,
+        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
+        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
 	    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
     WHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
     UNION
     SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y-%m') AS provider_time,
+        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
+        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
     WHERE DATE_FORMAT(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m') < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m')
@@ -81,12 +85,16 @@ CREATE OR REPLACE VIEW monthly_history AS
 CREATE OR REPLACE VIEW yearly_history AS
     SELECT
         DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y') AS provider_time,
+        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
+        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
     WHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentYear() DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
     UNION
     SELECT
         DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y') AS provider_time,
+        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
+        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
         (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh
     FROM linky_history
     GROUP BY YEAR(DATE_ADD(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH))
