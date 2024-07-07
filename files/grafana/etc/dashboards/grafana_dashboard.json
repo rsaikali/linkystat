@@ -938,7 +938,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh, total_hp_kwh, total_hc_kwh FROM monthly_history ORDER BY provider_time ASC",
+          "rawSql": "SELECT provider_time, total_hp_kwh, total_hc_kwh FROM monthly_history ORDER BY provider_time ASC",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1044,6 +1044,20 @@
           }
         },
         {
+          "id": "calculateField",
+          "options": {
+            "alias": "total_kwh",
+            "binary": {
+              "left": "total_hp_kwh",
+              "right": "total_hc_kwh"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
@@ -1051,10 +1065,20 @@
               "total_hc_kwh * prix_hc": true,
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
+              "total_kwh": false
             },
             "includeByName": {},
-            "indexByName": {},
+            "indexByName": {
+              "provider_time": 0,
+              "total_hc_kwh": 3,
+              "total_hc_kwh * prix_hc": 5,
+              "total_hp_kwh": 2,
+              "total_hp_kwh * prix_hp": 4,
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": 6,
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement": 7,
+              "total_kwh": 1
+            },
             "renameByName": {
               "provider_time": "Date",
               "start_date": "Date",
@@ -1588,7 +1612,7 @@
       "options": {
         "barRadius": 0.2,
         "barWidth": 0.95,
-        "colorByField": "Consommation",
+        "colorByField": "total_kwh",
         "fullHighlight": false,
         "groupWidth": 0.8,
         "legend": {
@@ -1618,7 +1642,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_kwh, total_hp_kwh, total_hc_kwh FROM yearly_history ORDER BY provider_time ASC",
+          "rawSql": "SELECT provider_time, total_hp_kwh, total_hc_kwh FROM yearly_history ORDER BY provider_time ASC",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1730,6 +1754,20 @@
           }
         },
         {
+          "id": "calculateField",
+          "options": {
+            "alias": "total_kwh",
+            "binary": {
+              "left": "total_hp_kwh",
+              "right": "total_hc_kwh"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {
@@ -1738,10 +1776,21 @@
               "total_hc_kwh * prix_hc": true,
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
+              "total_kwh": false
             },
             "includeByName": {},
-            "indexByName": {},
+            "indexByName": {
+              "abonnement * 12": 7,
+              "provider_time": 0,
+              "total_hc_kwh": 3,
+              "total_hc_kwh * prix_hc": 5,
+              "total_hp_kwh": 2,
+              "total_hp_kwh * prix_hp": 4,
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": 6,
+              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement * 12": 8,
+              "total_kwh": 1
+            },
             "renameByName": {
               "provider_time": "Date",
               "start_date": "Date",
@@ -2142,8 +2191,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
