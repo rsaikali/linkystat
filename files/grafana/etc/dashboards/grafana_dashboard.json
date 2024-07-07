@@ -278,7 +278,7 @@
         "positiveIsGood": false,
         "referenceText": "comparé à la moyenne du mois",
         "referenceTextFontSize": "10px",
-        "unit": "currencyEUR"
+        "unit": "€"
       },
       "targets": [
         {
@@ -1101,7 +1101,7 @@
         "positiveIsGood": false,
         "referenceText": "comparé au mois dernier",
         "referenceTextFontSize": "10px",
-        "unit": "currencyEUR"
+        "unit": "€"
       },
       "targets": [
         {
@@ -1778,7 +1778,7 @@
         "positiveIsGood": false,
         "referenceText": "comparé à l'année dernière",
         "referenceTextFontSize": "10px",
-        "unit": "currencyEUR"
+        "unit": "€"
       },
       "targets": [
         {
@@ -2116,7 +2116,7 @@
       "type": "table"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2124,136 +2124,138 @@
         "y": 32
       },
       "id": 24,
-      "panels": [],
-      "title": "...",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 3,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "kWh"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Cos φ"
-            },
-            "properties": [
-              {
-                "id": "unit"
-              },
-              {
-                "id": "decimals"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "PAPP"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "VA"
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 12,
-        "x": 0,
-        "y": 33
-      },
-      "id": 25,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/.*/",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {
-          "valueSize": 22
-        },
-        "textMode": "value_and_name",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.0.1",
-      "targets": [
+      "panels": [
         {
-          "dataset": "linky",
           "datasource": {
             "type": "mysql",
             "uid": "P211906C1C32DB77E"
           },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT (SELECT ROUND(((MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24) / AVG(PAPP), 2) FROM linky_realtime) as \"Cos φ\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 3,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
                   {
-                    "name": "PAPP",
-                    "type": "functionParameter"
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "kWh"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cos φ"
+                },
+                "properties": [
+                  {
+                    "id": "unit"
+                  },
+                  {
+                    "id": "decimals"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "PAPP"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "VA"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 0,
+            "y": 33
+          },
+          "id": 25,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "/.*/",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "valueSize": 22
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.0.1",
+          "targets": [
+            {
+              "dataset": "linky",
+              "datasource": {
+                "type": "mysql",
+                "uid": "P211906C1C32DB77E"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT (SELECT ROUND(((MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24) / AVG(PAPP), 2) FROM linky_realtime) as \"Cos φ\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "PAPP",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
                   }
                 ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "linky_realtime"
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "linky_realtime"
+            }
+          ],
+          "transparent": true,
+          "type": "stat"
         }
       ],
-      "transparent": true,
-      "type": "stat"
+      "title": "...",
+      "type": "row"
     }
   ],
   "refresh": "1s",
