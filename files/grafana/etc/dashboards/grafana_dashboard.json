@@ -217,7 +217,7 @@
         "allowNeedleCrossLimits": false,
         "animateNeedleValueTransition": true,
         "animateNeedleValueTransitionSpeed": 500,
-        "edgeWidth": 0.05,
+        "edgeWidth": 0.01,
         "gaugeRadius": 0,
         "innerColor": "#181b1f",
         "markerEndEnabled": false,
