@@ -234,7 +234,7 @@
         "needleTickGap": 0.05,
         "needleWidth": 5,
         "operatorName": "firstNotNull",
-        "outerEdgeColor": "text",
+        "outerEdgeColor": "#7c7c87",
         "padding": 0.05,
         "pivotColor": "text",
         "pivotRadius": 0.1,
