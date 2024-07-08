@@ -184,26 +184,90 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 33
+              }
+            ]
+          },
+          "unit": "W"
+        },
+        "overrides": []
+      },
       "gridPos": {
-        "h": 3,
+        "h": 6,
         "w": 6,
         "x": 12,
         "y": 1
       },
-      "id": 29,
+      "id": 39,
       "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé à la moyenne du jour",
-        "referenceTextFontSize": "10px",
-        "unit": "W"
+        "allowNeedleCrossLimits": false,
+        "animateNeedleValueTransition": true,
+        "animateNeedleValueTransitionSpeed": 500,
+        "edgeWidth": 0.05,
+        "gaugeRadius": 0,
+        "innerColor": "#181b1f",
+        "markerEndEnabled": false,
+        "markerEndShape": "arrow",
+        "markerStartEnabled": false,
+        "markerStartShape": "circle",
+        "maxNeedleAngle": 320,
+        "maxTickAngle": 300,
+        "maxValue": 600,
+        "minValue": 0,
+        "needleColor": "dark-red",
+        "needleCrossLimitDegrees": 10,
+        "needleLengthNeg": 0,
+        "needleTickGap": 0.05,
+        "needleWidth": 5,
+        "operatorName": "firstNotNull",
+        "outerEdgeColor": "text",
+        "padding": 0.05,
+        "pivotColor": "text",
+        "pivotRadius": 0.1,
+        "showThresholdBandLowerRange": true,
+        "showThresholdBandMiddleRange": true,
+        "showThresholdBandOnGauge": false,
+        "showThresholdBandUpperRange": true,
+        "showThresholdStateOnBackground": false,
+        "showThresholdStateOnValue": false,
+        "tickEdgeGap": 0.05,
+        "tickFont": "Inter",
+        "tickLabelColor": "text",
+        "tickLabelFontSize": 20,
+        "tickLengthMaj": 0.15,
+        "tickLengthMin": 0.05,
+        "tickMajorColor": "text",
+        "tickMapConfig": {
+          "tickMaps": []
+        },
+        "tickMinorColor": "#000000",
+        "tickSpacingMajor": 100,
+        "tickSpacingMinor": 25,
+        "tickWidthMajor": 5,
+        "tickWidthMinor": 1,
+        "ticknessGaugeBasis": 200,
+        "unitsLabelColor": "text",
+        "valueFont": "Inter",
+        "valueFontSize": 52,
+        "valueYOffset": 0,
+        "zeroNeedleAngle": 40,
+        "zeroTickAngle": 60
       },
+      "pluginVersion": "2.0.1",
       "targets": [
         {
           "dataset": "linky",
@@ -214,7 +278,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(SELECT \"current\", PAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) as t\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as t FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY)",
+          "rawSql": "(\r\nSELECT\r\n\tPAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) as current\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1)\r\nUNION\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 * 2 as average\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -235,32 +299,15 @@
           }
         }
       ],
-      "title": "Puissance instantanée",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "t",
-                "handlerKey": "field.value"
-              }
-            ]
-          }
-        }
-      ],
       "transparent": true,
-      "type": "nikosc-percenttrend-panel"
+      "type": "briangann-gauge-panel"
     },
     {
       "datasource": {
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "description": "",
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -290,7 +337,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    ((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    ((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod() as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / getNbDaysCurrentPeriod())as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) + ($abonnement / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
           "refId": "A",
           "sql": {
             "columns": [
@@ -311,7 +358,7 @@
           }
         }
       ],
-      "title": "Coût sur 24h (hors abonnement)",
+      "title": "Coût sur 24h",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -475,7 +522,7 @@
       "gridPos": {
         "h": 3,
         "w": 6,
-        "x": 12,
+        "x": 18,
         "y": 4
       },
       "id": 30,
@@ -540,83 +587,6 @@
               {
                 "fieldName": "current",
                 "handlerKey": "field.name"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 4
-      },
-      "id": 31,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé à la semaine dernière",
-        "referenceTextFontSize": "10px",
-        "unit": "W"
-      },
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "(\r\nSELECT \"current\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 7 as t FROM linky_history WHERE time >= NOW() - INTERVAL 1 WEEK\r\n)\r\nUNION\r\n(\r\nSELECT \"base\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 7 as t FROM linky_history WHERE time BETWEEN NOW() - INTERVAL 2 WEEK AND NOW() - INTERVAL 1 WEEK\r\n)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Puissance moyenne semaine",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "t",
-                "handlerKey": "field.value"
               }
             ]
           }
@@ -2238,7 +2208,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 33
+            "y": 49
           },
           "id": 25,
           "options": {
