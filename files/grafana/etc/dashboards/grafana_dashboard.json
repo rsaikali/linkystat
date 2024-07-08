@@ -221,7 +221,7 @@
         "gaugeRadius": 0,
         "innerColor": "#181b1f",
         "markerEndEnabled": false,
-        "markerEndShape": "arrow",
+        "markerEndShape": "stub",
         "markerStartEnabled": false,
         "markerStartShape": "circle",
         "maxNeedleAngle": 320,
@@ -254,10 +254,10 @@
         "tickMapConfig": {
           "tickMaps": []
         },
-        "tickMinorColor": "#000000",
+        "tickMinorColor": "text",
         "tickSpacingMajor": 100,
         "tickSpacingMinor": 25,
-        "tickWidthMajor": 5,
+        "tickWidthMajor": 3,
         "tickWidthMinor": 1,
         "ticknessGaugeBasis": 200,
         "unitsLabelColor": "text",
