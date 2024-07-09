@@ -20,7 +20,7 @@
   "graphTooltip": 2,
   "id": 1,
   "links": [],
-  "liveNow": true,
+  "liveNow": false,
   "panels": [
     {
       "datasource": {
