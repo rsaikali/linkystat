@@ -3,18 +3,6 @@
 Monitoring for Linky device (French electricity meter) through Grafana
 
 <img
-  src="./files/images/linkystat_grafana_mobile_1.png"
-  alt="Monitoring for Linky device (French electricity meter) through Grafana"
-  title="Linkystat Grafana"
-  style="display: inline-block; margin: 0 auto; max-width: 400">
-
-<img
-  src="./files/images/linkystat_grafana_mobile_2.png"
-  alt="Monitoring for Linky device (French electricity meter) through Grafana"
-  title="Linkystat Grafana"
-  style="display: inline-block; margin: 0 auto; max-width: 400">
-
-<img
   src="./files/images/linkystat_grafana.png"
   alt="Monitoring for Linky device (French electricity meter) through Grafana"
   title="Linkystat Grafana"
@@ -95,6 +83,20 @@ Keep variables empty to use in a simple environment (Grafana will be available o
 | `LETSENCRYPT_HOST` | LetsEncrypt domain name (should be identical to `VIRTUAL_HOST`) |
 | `LETSENCRYPT_EMAIL` | LetsEncrypt email used for certificate generation |
 
+## Screenshots
+
+<img
+  src="./files/images/linkystat_grafana_mobile_1.png"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
+  style="display: inline-block; margin: 0 auto; max-width: 400">
+
+<img
+  src="./files/images/linkystat_grafana_mobile_2.png"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
+  style="display: inline-block; margin: 0 auto; max-width: 400">
+  
 ## License
 
 [MIT](./LICENSE)
