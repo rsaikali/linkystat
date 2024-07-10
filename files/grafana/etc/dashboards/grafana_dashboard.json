@@ -278,7 +278,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(\r\nSELECT\r\n\tPAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) as current\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1)\r\nUNION\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 * 2 as average\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)",
+          "rawSql": "(\r\nSELECT\r\n\tPAPP * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) as current\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1)\r\nUNION\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 * 2 as average\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -482,7 +482,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  PAPP * (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 1 DAY) AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
+          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  PAPP * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2161,7 +2161,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2201,6 +2202,18 @@
                     "value": 0
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cos φ"
+                },
+                "properties": [
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  }
+                ]
               }
             ]
           },
@@ -2208,7 +2221,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 49
+            "y": 33
           },
           "id": 25,
           "options": {
@@ -2241,7 +2254,7 @@
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT (SELECT ROUND(((MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24) / AVG(PAPP), 2) FROM linky_realtime) as \"Cos φ\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+              "rawSql": "SELECT (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) as \"Cos φ\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
               "refId": "A",
               "sql": {
                 "columns": [
