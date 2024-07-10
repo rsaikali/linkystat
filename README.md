@@ -3,6 +3,18 @@
 Monitoring for Linky device (French electricity meter) through Grafana
 
 <img
+  src="./files/images/linkystat_grafana_mobile_1.png"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
+  style="display: inline-block; margin: 0 auto; max-width: 400">
+
+<img
+  src="./files/images/linkystat_grafana_mobile_2.png"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
+  style="display: inline-block; margin: 0 auto; max-width: 400">
+
+<img
   src="./files/images/linkystat_grafana.png"
   alt="Monitoring for Linky device (French electricity meter) through Grafana"
   title="Linkystat Grafana"
@@ -39,15 +51,15 @@ git clone https://github.com/rsaikali/linkystat.git
 cd linkystat
 
 # Copy the example environment file
-cp env/.env.example env/.env
+cp env/.env.example .env
 
 # Edit the environment file (see next section for details)
-nano env/.env
+nano .env
 
 # Build and start the containers
-docker compose --env-file ./env/.env up -d
+docker compose --env-file ./.env up -d
 # or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
-docker compose --env-file ./env/.env --profile https up -d
+docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
 
 # Open Grafana in your browser
 http://<raspberry_ip_address>:3000
