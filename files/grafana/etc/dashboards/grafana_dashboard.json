@@ -83,8 +83,8 @@
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+        "type": "datasource",
+        "uid": "-- Dashboard --"
       },
       "fieldConfig": {
         "defaults": {
@@ -125,7 +125,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^last_time$/",
+          "fields": "/^time$/",
           "values": false
         },
         "showPercentChange": false,
@@ -138,41 +138,21 @@
       "pluginVersion": "11.0.1",
       "targets": [
         {
-          "dataset": "linky",
           "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
+            "type": "datasource",
+            "uid": "-- Dashboard --"
           },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT DATE_FORMAT(max(time), \"%W %d %M %T\") as last_time FROM linky_realtime",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "panelId": 1,
+          "refId": "A"
         }
       ],
       "transformations": [
         {
-          "id": "convertFieldType",
+          "id": "formatTime",
           "options": {
-            "conversions": [],
-            "fields": {}
+            "outputFormat": "dddd DD MMMM hh:mm:ss",
+            "timeField": "time",
+            "useTimezone": true
           }
         }
       ],
@@ -2140,8 +2120,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
