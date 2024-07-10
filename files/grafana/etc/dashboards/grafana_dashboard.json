@@ -181,8 +181,8 @@
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+        "type": "datasource",
+        "uid": "-- Dashboard --"
       },
       "fieldConfig": {
         "defaults": {
@@ -233,7 +233,7 @@
         "needleLengthNeg": 0,
         "needleTickGap": 0.05,
         "needleWidth": 10,
-        "operatorName": "firstNotNull",
+        "operatorName": "lastNotNull",
         "outerEdgeColor": "#7c7c87",
         "padding": 0.05,
         "pivotColor": "text",
@@ -270,33 +270,12 @@
       "pluginVersion": "2.0.1",
       "targets": [
         {
-          "dataset": "linky",
           "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
+            "type": "datasource",
+            "uid": "-- Dashboard --"
           },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "(\r\nSELECT\r\n\tPAPP * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) as current\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1)\r\nUNION\r\n(SELECT\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 * 2 as average\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "panelId": 1,
+          "refId": "A"
         }
       ],
       "transparent": true,
