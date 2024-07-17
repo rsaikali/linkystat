@@ -415,7 +415,7 @@
         "positiveIsGood": false,
         "referenceText": "comparé à la moyenne du mois",
         "referenceTextFontSize": "10px",
-        "unit": "€"
+        "unit": "€/j"
       },
       "targets": [
         {
@@ -490,7 +490,7 @@
         "baseValueFontSize": "14px",
         "interpretAsTrend": true,
         "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
+        "percentageValueDecimals": 3,
         "percentageValueField": "current",
         "percentageValueFontSize": "80%",
         "positiveIsGood": false,
@@ -508,7 +508,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC) as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / getNbDaysCurrentPeriod() as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / getNbDaysCurrentPeriod() / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1428,7 +1428,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1708,7 +1709,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
