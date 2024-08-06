@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM pypy:3-slim
 
 ENV LINKY_USB_DEVICE /dev/ttyACM0
 
