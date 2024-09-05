@@ -404,6 +404,87 @@
         "x": 6,
         "y": 2
       },
+      "id": 30,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 0,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé aux 24h précédentes",
+        "referenceTextFontSize": "10px",
+        "unit": "W sur 24h"
+      },
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL 2 DAY AND (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "provider_time",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "total_kwh",
+                "handlerKey": "field.value"
+              },
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 2,
+        "w": 6,
+        "x": 6,
+        "y": 4
+      },
       "id": 28,
       "options": {
         "baseValueField": "base",
@@ -482,7 +563,7 @@
         "h": 2,
         "w": 6,
         "x": 6,
-        "y": 4
+        "y": 6
       },
       "id": 42,
       "options": {
@@ -509,87 +590,6 @@
           "format": "table",
           "rawQuery": true,
           "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / getNbDaysCurrentPeriod() / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "provider_time",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "total_kwh",
-                "handlerKey": "field.value"
-              },
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 2,
-        "w": 6,
-        "x": 6,
-        "y": 6
-      },
-      "id": 30,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé aux 24h précédentes",
-        "referenceTextFontSize": "10px",
-        "unit": "W sur 24h"
-      },
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL 2 DAY AND (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1131,83 +1131,6 @@
         "x": 18,
         "y": 11
       },
-      "id": 33,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé au mois dernier",
-        "referenceTextFontSize": "10px",
-        "unit": "W"
-      },
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "(SELECT \"current\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Puissance moyenne mois",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "t",
-                "handlerKey": "field.value"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 14
-      },
       "id": 40,
       "options": {
         "baseValueField": "base",
@@ -1254,6 +1177,83 @@
         }
       ],
       "title": "Consommation du mois",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "t",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 14
+      },
+      "id": 33,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 0,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé au mois dernier",
+        "referenceTextFontSize": "10px",
+        "unit": "W"
+      },
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "(SELECT \"current\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Puissance moyenne mois",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -1825,83 +1825,6 @@
         "x": 18,
         "y": 22
       },
-      "id": 37,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé à l'année dernière",
-        "referenceTextFontSize": "10px",
-        "unit": "W"
-      },
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "(SELECT \"current\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 365 as t FROM linky_history WHERE time >= NOW() - INTERVAL 1 YEAR)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / 365 as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Puissance moyenne année",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "t",
-                "handlerKey": "field.value"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 25
-      },
       "id": 35,
       "options": {
         "baseValueField": "base",
@@ -1948,6 +1871,83 @@
         }
       ],
       "title": "Consommation de l'année",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "t",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 25
+      },
+      "id": 37,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 0,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé à l'année dernière",
+        "referenceTextFontSize": "10px",
+        "unit": "W"
+      },
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "(SELECT \"current\", (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 / 365 as t FROM linky_history WHERE time >= NOW() - INTERVAL 1 YEAR)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / 365 as t FROM yearly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Puissance moyenne année",
       "transformations": [
         {
           "id": "rowsToFields",
