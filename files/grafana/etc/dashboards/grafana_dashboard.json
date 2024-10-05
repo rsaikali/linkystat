@@ -121,6 +121,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -135,7 +136,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.1",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "datasource": {
@@ -178,6 +179,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "scheme",
@@ -571,7 +573,7 @@
         "baseValueFontSize": "14px",
         "interpretAsTrend": true,
         "percentageNrDecimals": 0,
-        "percentageValueDecimals": 3,
+        "percentageValueDecimals": 1,
         "percentageValueField": "current",
         "percentageValueFontSize": "80%",
         "positiveIsGood": false,
@@ -655,7 +657,7 @@
         "content": "## Historique par mois\n",
         "mode": "markdown"
       },
-      "pluginVersion": "11.0.1",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "dataset": "linky",
@@ -1055,7 +1057,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "11.0.1",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "datasource": {
@@ -1372,7 +1374,7 @@
         "content": "## Historique par an\n",
         "mode": "markdown"
       },
-      "pluginVersion": "11.0.1",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "dataset": "linky",
@@ -1785,7 +1787,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "11.0.1",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "datasource": {
@@ -2237,7 +2239,6 @@
     "from": "now-15m",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "hidden": false,
     "nowDelay": "",
