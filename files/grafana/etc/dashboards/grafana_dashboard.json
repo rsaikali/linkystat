@@ -477,6 +477,7 @@
     },
     {
       "datasource": {
+        "default": true,
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
@@ -510,7 +511,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) + ($abonnement / getNbDaysCurrentPeriod())  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2059,6 +2060,7 @@
       "panels": [
         {
           "datasource": {
+            "default": true,
             "type": "mysql",
             "uid": "P211906C1C32DB77E"
           },
@@ -2074,7 +2076,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2126,11 +2129,27 @@
                     "value": 2
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Consommation veille"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "W"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 0
+                  }
+                ]
               }
             ]
           },
           "gridPos": {
-            "h": 4,
+            "h": 6,
             "w": 12,
             "x": 0,
             "y": 32
@@ -2141,6 +2160,7 @@
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "horizontal",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
               "calcs": [
                 "lastNotNull"
@@ -2155,7 +2175,7 @@
             "textMode": "value_and_name",
             "wideLayout": true
           },
-          "pluginVersion": "11.0.1",
+          "pluginVersion": "11.2.2",
           "targets": [
             {
               "dataset": "linky",
@@ -2191,6 +2211,36 @@
                 "limit": 50
               },
               "table": "linky_realtime"
+            },
+            {
+              "dataset": "linky",
+              "datasource": {
+                "type": "mysql",
+                "uid": "P211906C1C32DB77E"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT AVG(nullif(v1, 0)) AS \"Consommation veille\" FROM (SELECT t, v as v1 FROM (SELECT\r\n\tmin(time) as t,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) as v\r\nFROM linky_realtime\r\nWHERE TIME BETWEEN DATE_SUB(DATE_FORMAT(NOW(), \"%Y-%m-%d %H:00:00\"), INTERVAL 7 DAY) AND DATE_FORMAT(NOW(), \"%Y-%m-%d %H:00:00\")\r\nGROUP BY HOUR(time), DAY(time)\r\nORDER BY v) AS t1 LIMIT 15) AS t2",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
             }
           ],
           "transparent": true,
