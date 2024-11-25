@@ -20,14 +20,13 @@
   "graphTooltip": 2,
   "id": 1,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
       "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -136,7 +135,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "datasource": {
@@ -147,6 +146,7 @@
           "refId": "A"
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "formatTime",
@@ -233,7 +233,6 @@
         "x": 12,
         "y": 1
       },
-      "hideTimeOverride": true,
       "id": 1,
       "interval": "1s",
       "maxDataPoints": 750,
@@ -250,6 +249,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "dataset": "linky",
@@ -289,6 +289,7 @@
           "table": "linky_realtime"
         }
       ],
+      "title": "",
       "transparent": true,
       "type": "timeseries"
     },
@@ -391,6 +392,7 @@
           "refId": "A"
         }
       ],
+      "title": "",
       "transparent": true,
       "type": "briangann-gauge-panel"
     },
@@ -400,6 +402,10 @@
         "uid": "P211906C1C32DB77E"
       },
       "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 2,
         "w": 6,
@@ -420,6 +426,7 @@
         "referenceTextFontSize": "10px",
         "unit": "W sur 24h"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -451,6 +458,7 @@
           }
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -482,6 +490,10 @@
         "uid": "P211906C1C32DB77E"
       },
       "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 2,
         "w": 6,
@@ -501,6 +513,7 @@
         "referenceTextFontSize": "10px",
         "unit": "€/j"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -532,6 +545,7 @@
           }
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -562,6 +576,10 @@
         "uid": "P211906C1C32DB77E"
       },
       "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 2,
         "w": 6,
@@ -582,6 +600,7 @@
         "referenceTextFontSize": "10px",
         "unit": "kWh/j"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -613,6 +632,7 @@
           }
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "rowsToFields",
@@ -638,9 +658,9 @@
       "type": "nikosc-percenttrend-panel"
     },
     {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -658,20 +678,8 @@
         "content": "## Historique par mois\n",
         "mode": "markdown"
       },
-      "pluginVersion": "11.2.2",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "builder",
-          "format": "table",
-          "rawSql": "",
-          "refId": "A"
-        }
-      ],
+      "pluginVersion": "11.3.1",
+      "title": "",
       "transparent": true,
       "type": "text"
     },
@@ -787,6 +795,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 100
       },
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "datasource": {
@@ -817,6 +826,7 @@
           }
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "sortBy",
@@ -847,9 +857,19 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh",
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh"
+                }
+              },
               "operator": "*",
-              "right": "$prix_hp"
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$prix_hp"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -861,9 +881,19 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hc_kwh",
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh"
+                }
+              },
               "operator": "*",
-              "right": "$prix_hc"
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$prix_hc"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -875,8 +905,18 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh * prix_hp",
-              "right": "total_hc_kwh * prix_hc"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh * prix_hp"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh * prix_hc"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -892,8 +932,18 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc",
-              "right": "$abonnement"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$abonnement"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -906,8 +956,18 @@
           "options": {
             "alias": "total_kwh",
             "binary": {
-              "left": "total_hp_kwh",
-              "right": "total_hc_kwh"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -924,6 +984,7 @@
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
               "total_kwh": false
             },
             "includeByName": {},
@@ -1058,7 +1119,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "datasource": {
@@ -1070,6 +1131,7 @@
           "withTransforms": true
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "convertFieldType",
@@ -1128,6 +1190,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1148,6 +1214,7 @@
         "referenceTextFontSize": "10px",
         "unit": "kWh"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -1205,6 +1272,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1225,6 +1296,7 @@
         "referenceTextFontSize": "10px",
         "unit": "W"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -1282,6 +1354,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1302,6 +1378,7 @@
         "referenceTextFontSize": "10px",
         "unit": "€"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -1355,9 +1432,9 @@
       "type": "nikosc-percenttrend-panel"
     },
     {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1375,20 +1452,8 @@
         "content": "## Historique par an\n",
         "mode": "markdown"
       },
-      "pluginVersion": "11.2.2",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "builder",
-          "format": "table",
-          "rawSql": "",
-          "refId": "A"
-        }
-      ],
+      "pluginVersion": "11.3.1",
+      "title": "",
       "transparent": true,
       "type": "text"
     },
@@ -1515,6 +1580,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "datasource": {
@@ -1545,6 +1611,7 @@
           }
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "convertFieldType",
@@ -1571,9 +1638,19 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh",
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh"
+                }
+              },
               "operator": "*",
-              "right": "$prix_hp"
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$prix_hp"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1585,9 +1662,19 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hc_kwh",
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh"
+                }
+              },
               "operator": "*",
-              "right": "$prix_hc"
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$prix_hc"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1599,8 +1686,18 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh * prix_hp",
-              "right": "total_hc_kwh * prix_hc"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh * prix_hp"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh * prix_hc"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1612,9 +1709,16 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "$abonnement",
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "$abonnement"
+                }
+              },
               "operator": "*",
-              "right": "12"
+              "right": {
+                "fixed": "12"
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1626,8 +1730,18 @@
           "id": "calculateField",
           "options": {
             "binary": {
-              "left": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc",
-              "right": "abonnement * 12"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "abonnement * 12"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1640,8 +1754,18 @@
           "options": {
             "alias": "total_kwh",
             "binary": {
-              "left": "total_hp_kwh",
-              "right": "total_hc_kwh"
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hp_kwh"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "total_hc_kwh"
+                }
+              }
             },
             "mode": "binary",
             "reduce": {
@@ -1659,6 +1783,7 @@
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
               "total_kwh": false
             },
             "includeByName": {},
@@ -1788,7 +1913,7 @@
         "showHeader": false,
         "sortBy": []
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.3.1",
       "targets": [
         {
           "datasource": {
@@ -1800,6 +1925,7 @@
           "withTransforms": true
         }
       ],
+      "title": "",
       "transformations": [
         {
           "id": "sortBy",
@@ -1822,6 +1948,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1842,6 +1972,7 @@
         "referenceTextFontSize": "10px",
         "unit": "kWh"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -1899,6 +2030,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1919,6 +2054,7 @@
         "referenceTextFontSize": "10px",
         "unit": "W"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -1976,6 +2112,10 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 6,
@@ -1996,6 +2136,7 @@
         "referenceTextFontSize": "10px",
         "unit": "€"
       },
+      "pluginVersion": "1.0.8",
       "targets": [
         {
           "dataset": "linky",
@@ -2076,8 +2217,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2175,7 +2315,7 @@
             "textMode": "value_and_name",
             "wideLayout": true
           },
-          "pluginVersion": "11.2.2",
+          "pluginVersion": "11.3.1",
           "targets": [
             {
               "dataset": "linky",
@@ -2222,7 +2362,7 @@
               "format": "table",
               "hide": false,
               "rawQuery": true,
-              "rawSql": "SELECT AVG(nullif(v1, 0)) AS \"Consommation veille\" FROM (SELECT t, v as v1 FROM (SELECT\r\n\tmin(time) as t,\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) as v\r\nFROM linky_realtime\r\nWHERE TIME BETWEEN DATE_SUB(DATE_FORMAT(NOW(), \"%Y-%m-%d %H:00:00\"), INTERVAL 7 DAY) AND DATE_FORMAT(NOW(), \"%Y-%m-%d %H:00:00\")\r\nGROUP BY HOUR(time), DAY(time)\r\nORDER BY v) AS t1 LIMIT 15) AS t2",
+              "rawSql": "SELECT ROUND(MIN(PAPP) * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime)) AS \"Consommation veille\" FROM linky.linky_realtime;",
               "refId": "B",
               "sql": {
                 "columns": [
@@ -2243,6 +2383,7 @@
               }
             }
           ],
+          "title": "",
           "transparent": true,
           "type": "stat"
         }
@@ -2251,36 +2392,49 @@
       "type": "row"
     }
   ],
+  "preload": true,
   "refresh": "2s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
+        "current": {
+          "text": "16.70",
+          "value": "16.70"
+        },
         "description": "Abonnement mensuel TTC (en €)",
         "hide": 2,
         "label": "Abonnement mensuel",
         "name": "abonnement",
         "query": "16.70",
-        "skipUrlSync": false,
+        "skipUrlSync": true,
         "type": "constant"
       },
       {
+        "current": {
+          "text": "0.2795",
+          "value": "0.2795"
+        },
         "description": "Prix Heures Pleines (en €/kWh)",
         "hide": 2,
         "label": "Prix Heures Pleines",
         "name": "prix_hp",
         "query": "0.2795",
-        "skipUrlSync": false,
+        "skipUrlSync": true,
         "type": "constant"
       },
       {
+        "current": {
+          "text": "0.1927",
+          "value": "0.1927"
+        },
         "description": "Prix Heures Creuses (en €/kWh)",
         "hide": 2,
         "label": "Prix Heures Creuses",
         "name": "prix_hc",
         "query": "0.1927",
-        "skipUrlSync": false,
+        "skipUrlSync": true,
         "type": "constant"
       }
     ]
@@ -2290,7 +2444,6 @@
     "to": "now"
   },
   "timepicker": {
-    "hidden": false,
     "nowDelay": "",
     "refresh_intervals": [
       "1s",
