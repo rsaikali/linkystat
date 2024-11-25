@@ -86,17 +86,23 @@ Keep variables empty to use in a simple environment (Grafana will be available o
 ## Screenshots
 
 <img
-  src="./files/images/linkystat_grafana_mobile_1.png"
+  src="./files/images/linkystat_grafana_mobile_1.jpg"
   alt="Monitoring for Linky device (French electricity meter) through Grafana"
   title="Linkystat Grafana"
   style="display: inline-block; margin: 0 auto; max-width: 400">
 
 <img
-  src="./files/images/linkystat_grafana_mobile_2.png"
+  src="./files/images/linkystat_grafana_mobile_2.jpg"
   alt="Monitoring for Linky device (French electricity meter) through Grafana"
   title="Linkystat Grafana"
   style="display: inline-block; margin: 0 auto; max-width: 400">
-  
+
+<img
+  src="./files/images/linkystat_grafana_mobile_3.jpg"
+  alt="Monitoring for Linky device (French electricity meter) through Grafana"
+  title="Linkystat Grafana"
+  style="display: inline-block; margin: 0 auto; max-width: 400">
+
 ## License
 
 [MIT](./LICENSE)
