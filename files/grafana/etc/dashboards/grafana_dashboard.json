@@ -1785,6 +1785,7 @@
                   "options": "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc"
                 }
               },
+              "operator": "+",
               "right": {
                 "matcher": {
                   "id": "byName",
@@ -1795,7 +1796,8 @@
             "mode": "binary",
             "reduce": {
               "reducer": "sum"
-            }
+            },
+            "replaceFields": false
           }
         },
         {
@@ -1833,6 +1835,7 @@
               "total_hp_kwh * prix_hp": true,
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
               "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement * 12": false,
               "total_kwh": false
             },
             "includeByName": {},
@@ -1848,11 +1851,13 @@
               "total_kwh": 1
             },
             "renameByName": {
+              "abonnement * 12": "",
               "provider_time": "Date",
               "start_date": "Date",
               "time": "Date",
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement * 12": "Prix",
               "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": "",
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc * abonnement * 12": "Prix",
               "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement * 12": "Prix",
               "total_kwh": "Consommation"
             }
