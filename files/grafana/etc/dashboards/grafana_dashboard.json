@@ -688,11 +688,11 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "fixed",
+            "seriesBy": "last"
           },
           "custom": {
             "axisBorderShow": false,
@@ -700,7 +700,9 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
             "fillOpacity": 100,
             "gradientMode": "scheme",
             "hideFrom": {
@@ -708,15 +710,27 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 0,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
-          "fieldMinMax": true,
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -730,35 +744,112 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "kWh"
+          }
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "Coût"
+              "options": "Consommation"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.barWidthFactor",
+                "value": 0.6
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "fieldMinMax",
+                "value": true
+              },
+              {
+                "id": "displayName",
+                "value": "Consommation"
+              },
+              {
+                "id": "unit",
+                "value": "kWh"
+              },
+              {
+                "id": "custom.barAlignment",
+                "value": -1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Température"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "smooth"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "displayName",
+                "value": "Température"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/total.*/"
             },
             "properties": [
               {
                 "id": "custom.hideFrom",
                 "value": {
-                  "legend": false,
-                  "tooltip": false,
+                  "legend": true,
+                  "tooltip": true,
                   "viz": true
                 }
-              },
-              {
-                "id": "unit",
-                "value": "€"
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              },
-              {
-                "id": "displayName",
-                "value": "Coût"
               }
             ]
           }
@@ -770,47 +861,59 @@
         "x": 0,
         "y": 11
       },
-      "id": 9,
+      "hideTimeOverride": true,
+      "id": 43,
       "options": {
-        "barRadius": 0.5,
-        "barWidth": 0.75,
-        "colorByField": "Consommation",
-        "fullHighlight": false,
-        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
-          "displayMode": "list",
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": false
         },
-        "orientation": "auto",
-        "showValue": "never",
-        "stacking": "none",
+        "timezone": [
+          "browser"
+        ],
         "tooltip": {
-          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
-        },
-        "xField": "Date",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
+        }
       },
       "pluginVersion": "11.3.1",
       "targets": [
         {
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
+          "dataset": "linky",
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT provider_time, total_hp_kwh, total_hc_kwh FROM monthly_history ORDER BY provider_time ASC",
+          "rawSql": "SELECT provider_time, total_hp_kwh, total_hc_kwh, total_kwh, temperature FROM linky.monthly_history",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "provider_time",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "temperature",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "total_kwh",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -822,24 +925,19 @@
                 "type": "groupBy"
               }
             ],
-            "limit": 50
-          }
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [],
+              "id": "8bbabba9-0123-4456-b89a-b1936887d77b",
+              "type": "group"
+            }
+          },
+          "table": "monthly_history"
         }
       ],
+      "timeFrom": "$total_days d",
       "title": "",
       "transformations": [
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "provider_time"
-              }
-            ]
-          }
-        },
         {
           "id": "convertFieldType",
           "options": {
@@ -920,10 +1018,6 @@
             },
             "mode": "binary",
             "reduce": {
-              "include": [
-                "total_hp_kwh * prix_hp",
-                "total_hc_kwh * prix_hc"
-              ],
               "reducer": "sum"
             }
           }
@@ -935,7 +1029,7 @@
               "left": {
                 "matcher": {
                   "id": "byName",
-                  "options": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc"
+                  "options": "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc"
                 }
               },
               "right": {
@@ -952,74 +1046,38 @@
           }
         },
         {
-          "id": "calculateField",
-          "options": {
-            "alias": "total_kwh",
-            "binary": {
-              "left": {
-                "matcher": {
-                  "id": "byName",
-                  "options": "total_hp_kwh"
-                }
-              },
-              "right": {
-                "matcher": {
-                  "id": "byName",
-                  "options": "total_hc_kwh"
-                }
-              }
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "total_hc_kwh": true,
-              "total_hc_kwh * prix_hc": true,
-              "total_hp_kwh": true,
-              "total_hp_kwh * prix_hp": true,
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
-              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
-              "total_kwh": false
+              "total_hc_kwh": false,
+              "total_hc_kwh * prix_hc": false,
+              "total_hp_kwh": false,
+              "total_hp_kwh * prix_hp": false,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": false,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement": false
             },
             "includeByName": {},
             "indexByName": {
               "provider_time": 0,
-              "total_hc_kwh": 3,
-              "total_hc_kwh * prix_hc": 5,
-              "total_hp_kwh": 2,
+              "temperature": 2,
+              "total_hc_kwh": 5,
+              "total_hc_kwh * prix_hc": 6,
+              "total_hp_kwh": 3,
               "total_hp_kwh * prix_hp": 4,
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": 6,
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement": 7,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": 7,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement": 8,
               "total_kwh": 1
             },
             "renameByName": {
               "provider_time": "Date",
-              "start_date": "Date",
-              "t": "Date",
-              "time": "Date",
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": "",
-              "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement": "Coût",
+              "temperature": "Température",
+              "total_hp_kwh": "",
               "total_kwh": "Consommation"
             }
           }
-        },
-        {
-          "id": "formatTime",
-          "options": {
-            "outputFormat": "MMMM YYYY",
-            "timeField": "Date",
-            "useTimezone": true
-          }
         }
       ],
-      "transparent": true,
-      "type": "barchart"
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1126,7 +1184,7 @@
             "type": "datasource",
             "uid": "-- Dashboard --"
           },
-          "panelId": 9,
+          "panelId": 43,
           "refId": "A",
           "withTransforms": true
         }
@@ -1134,28 +1192,16 @@
       "title": "",
       "transformations": [
         {
-          "id": "convertFieldType",
+          "id": "filterFieldsByName",
           "options": {
-            "conversions": [
-              {
-                "dateFormat": "MMMM YYYY",
-                "destinationType": "time",
-                "targetField": "Date"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Date"
-              }
-            ]
+            "byVariable": false,
+            "include": {
+              "names": [
+                "Date",
+                "Consommation",
+                "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement"
+              ]
+            }
           }
         },
         {
@@ -1169,6 +1215,7 @@
               "provider_time": "Date",
               "start_date": "Date",
               "time": "Date",
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement": "Coût",
               "total_kwh": "Consommation"
             }
           }
@@ -1178,6 +1225,7 @@
           "options": {
             "outputFormat": "MMMM YYYY",
             "timeField": "Date",
+            "timezone": "browser",
             "useTimezone": true
           }
         }
@@ -1537,7 +1585,7 @@
                 "id": "custom.hideFrom",
                 "value": {
                   "legend": true,
-                  "tooltip": false,
+                  "tooltip": true,
                   "viz": true
                 }
               },
@@ -1783,7 +1831,7 @@
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
-              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": false,
               "total_kwh": false
             },
             "includeByName": {},
@@ -1803,6 +1851,7 @@
               "start_date": "Date",
               "time": "Date",
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement * 12": "Prix",
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": "Prix",
               "total_kwh": "Consommation"
             }
           }
@@ -2436,6 +2485,20 @@
         "query": "0.1927",
         "skipUrlSync": true,
         "type": "constant"
+      },
+      {
+        "current": {
+          "text": "2043",
+          "value": "2043"
+        },
+        "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
+        "hide": 2,
+        "name": "total_days",
+        "options": [],
+        "query": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
       }
     ]
   },
