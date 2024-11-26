@@ -63,6 +63,10 @@ https://<your_domain_name>
 | ---- | ----------- | :-------------: |
 | `LINKY_USB_DEVICE` | Micro Teleinfo USB port | `/dev/ttyACM0` |
 | `DAYS_OFFSET` | Provider calculation offset in days (for example, set to `19` if your provider month range is from 20th of current month to 19th of next month) | `0` |
+| `OPENWEATHER_API_KEY` | OpenWeather API key | |
+| `OPENWEATHER_LATITUDE` | Latitude used by OpenWeather | |
+| `OPENWEATHER_LONGITUDE` | Longitude used by OpenWeather | |
+
 | `MYSQL_ROOT_PASSWORD` | MySQL root password | `root_password` |
 | `MYSQL_DATABASE` | MySQL Linkystat database | `linky` |
 | `MYSQL_USER` | MySQL Linkystat user | `linky` |
