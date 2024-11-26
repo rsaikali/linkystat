@@ -1782,7 +1782,7 @@
               "left": {
                 "matcher": {
                   "id": "byName",
-                  "options": "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc"
+                  "options": "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc"
                 }
               },
               "right": {
@@ -1832,7 +1832,7 @@
               "total_hp_kwh": true,
               "total_hp_kwh * prix_hp": true,
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc": true,
-              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": false,
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": true,
               "total_kwh": false
             },
             "includeByName": {},
@@ -1852,7 +1852,8 @@
               "start_date": "Date",
               "time": "Date",
               "total_hp_kwh * prix_hp  total_hc_kwh * prix_hc  abonnement * 12": "Prix",
-              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": "Prix",
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc": "",
+              "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement * 12": "Prix",
               "total_kwh": "Consommation"
             }
           }
