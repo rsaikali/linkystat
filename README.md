@@ -66,7 +66,6 @@ https://<your_domain_name>
 | `OPENWEATHER_API_KEY` | OpenWeather API key | |
 | `OPENWEATHER_LATITUDE` | Latitude used by OpenWeather | |
 | `OPENWEATHER_LONGITUDE` | Longitude used by OpenWeather | |
-
 | `MYSQL_ROOT_PASSWORD` | MySQL root password | `root_password` |
 | `MYSQL_DATABASE` | MySQL Linkystat database | `linky` |
 | `MYSQL_USER` | MySQL Linkystat user | `linky` |
