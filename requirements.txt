@@ -1,8 +1,10 @@
+cachetools==5.5.0
 cffi==1.16.0
 cryptography==43.0.1
 greenlet==3.0.2
 pycparser==2.21
 PyMySQL==1.1.1
 pyserial==3.5
+requests==2.32.3
 SQLAlchemy==2.0.15
 typing_extensions==4.8.0

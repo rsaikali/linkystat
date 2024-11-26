@@ -6,6 +6,8 @@ from datetime import datetime
 import serial
 import sqlalchemy as sa
 
+from weather import TemperatureManager
+
 logging.basicConfig(format="[%(asctime)s %(levelname)s/%(module)s] %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S",
                     level=logging.INFO)
@@ -17,6 +19,11 @@ MYSQL_NAME = os.getenv("MYSQL_NAME")
 MYSQL_USER = os.getenv("MYSQL_USER")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 CONNECTION_STRING = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_NAME}"
+
+# OpenWeather API
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", None)
+OPENWEATHER_LATITUDE = float(os.getenv("OPENWEATHER_LATITUDE"))
+OPENWEATHER_LONGITUDE = float(os.getenv("OPENWEATHER_LONGITUDE"))
 
 # Port serial
 LINKY_USB_DEVICE = os.getenv("LINKY_USB_DEVICE", "/dev/null")
@@ -31,6 +38,13 @@ class LinkyData(object):
     """
 
     def __init__(self):
+        # Openweather
+        if OPENWEATHER_API_KEY is not None:
+            self.temperature_manager = TemperatureManager(OPENWEATHER_API_KEY, OPENWEATHER_LATITUDE, OPENWEATHER_LONGITUDE)
+        else:
+            logging.warning("OPENWEATHER_API_KEY is not set. Temperature will not be retrieved.")
+            self.temperature_manager = None
+
         # Initialize Linky USB device
         logging.info(f"Connecting to Linky through USB device: {LINKY_USB_DEVICE}")
         self.serial_port = serial.Serial(port=LINKY_USB_DEVICE, baudrate=LINKY_BAUDRATE, parity=serial.PARITY_EVEN, stopbits=serial.STOPBITS_ONE, bytesize=serial.SEVENBITS, timeout=1)
@@ -83,12 +97,18 @@ class LinkyData(object):
                     # Log the received packet information
                     logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])}]")
 
+                    # Gettting current temperature from OpenWeather API
+                    if self.temperature_manager is not None:
+                        current_temperature = self.temperature_manager.get_current_temperature()
+                    else:
+                        current_temperature = None
+
                     # Write the received data to the database
                     with self.engine.begin() as connection:
                         # Prepare the SQL query to insert the data into the table
                         sql_query = f"""
-                            INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP)
-                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']})
+                            INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature)
+                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']}, {current_temperature})
                         """
                         # Execute the SQL query
                         connection.execute(sa.sql.text(sql_query))
@@ -165,7 +185,7 @@ class LinkyDataFromProd(object):
         """
         while True:
             with self.production_engine.connect() as con:
-                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC FROM linky_realtime ORDER BY time DESC LIMIT 1"))
+                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature FROM linky_realtime ORDER BY time DESC LIMIT 1"))
                 row = list(rs)[0]
 
             if self.last_linky_data == row:
@@ -174,10 +194,10 @@ class LinkyDataFromProd(object):
 
             with self.engine.connect() as con:
                 try:
-                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC) VALUES (:time, :PAPP, :HCHP, :HCHC)")
-                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3])
+                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature)")
+                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4])
                     params = stmt.compile().params
-                    logging.info(f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}")
+                    logging.info(f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}")
                     con.execute(stmt)
                     con.commit()
                 except sa.exc.IntegrityError as e:
