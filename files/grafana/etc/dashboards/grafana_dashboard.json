@@ -1077,6 +1077,7 @@
           }
         }
       ],
+      "transparent": true,
       "type": "timeseries"
     },
     {
