@@ -126,7 +126,7 @@ delimiter ;;
 CREATE EVENT IF NOT EXISTS clean_realtime ON SCHEDULE EVERY 1 MINUTE 
 DO
 BEGIN
-	DELETE FROM linky_realtime WHERE time < NOW() - INTERVAL 7 DAY;
+	DELETE FROM linky_realtime WHERE time < NOW() - INTERVAL 2 DAY;
 END;;
 delimiter ;
 "

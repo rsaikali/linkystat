@@ -2392,7 +2392,7 @@
       "type": "row"
     }
   ],
-  "preload": true,
+  "preload": false,
   "refresh": "2s",
   "schemaVersion": 40,
   "tags": [],
