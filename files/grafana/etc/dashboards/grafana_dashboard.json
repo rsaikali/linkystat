@@ -172,6 +172,7 @@
             "fixedColor": "text",
             "mode": "fixed"
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
