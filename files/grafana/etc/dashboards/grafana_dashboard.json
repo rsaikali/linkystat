@@ -61,7 +61,7 @@
               },
               {
                 "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}"
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}\n\ndiv:has(> div[data-testid='data-testid dashboard controls']) {\n    background-color: rgb(24, 27, 31);\n}"
                 },
                 "type": "style"
               },
@@ -76,7 +76,7 @@
         ]
       },
       "pluginVersion": "0.2.1",
-      "title": "Linky",
+      "title": "",
       "transparent": true,
       "type": "yesoreyeram-boomtheme-panel"
     },
@@ -110,7 +110,7 @@
       },
       "gridPos": {
         "h": 1,
-        "w": 12,
+        "w": 6,
         "x": 0,
         "y": 1
       },
@@ -151,7 +151,110 @@
         {
           "id": "formatTime",
           "options": {
-            "outputFormat": "dddd DD MMMM HH:mm:ss",
+            "outputFormat": "HH:mm:ss",
+            "timeField": "time",
+            "timezone": "browser",
+            "useTimezone": true
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "°C"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 44,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Température extérieure$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 24
+        },
+        "textMode": "value",
+        "wideLayout": false
+      },
+      "pluginVersion": "11.3.1",
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT temperature as \"Température extérieure\" FROM linky.linky_realtime ORDER BY time DESC LIMIT 1;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "DD/MM/YYYY HH:mm:ss",
             "timeField": "time",
             "useTimezone": true
           }
@@ -260,7 +363,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  PAPP * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
+          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  ROUND(PAPP * (SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime) / 10, 0) * 10 AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -819,13 +922,14 @@
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "semi-dark-red",
-                  "mode": "fixed"
+                  "fixedColor": "blue",
+                  "mode": "continuous-YlBl",
+                  "seriesBy": "last"
                 }
               },
               {
                 "id": "custom.gradientMode",
-                "value": "opacity"
+                "value": "scheme"
               },
               {
                 "id": "displayName",
@@ -834,6 +938,22 @@
               {
                 "id": "unit",
                 "value": "celsius"
+              },
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
+              },
+              {
+                "id": "min",
+                "value": -30
+              },
+              {
+                "id": "max",
+                "value": -5
               }
             ]
           },
@@ -2495,8 +2615,8 @@
       },
       {
         "current": {
-          "text": "2043",
-          "value": "2043"
+          "text": "2044",
+          "value": "2044"
         },
         "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
         "hide": 2,
