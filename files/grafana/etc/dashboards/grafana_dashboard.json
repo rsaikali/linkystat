@@ -130,7 +130,7 @@
         },
         "showPercentChange": false,
         "text": {
-          "valueSize": 24
+          "valueSize": 30
         },
         "textMode": "value",
         "wideLayout": true
@@ -213,7 +213,7 @@
         },
         "showPercentChange": false,
         "text": {
-          "valueSize": 24
+          "valueSize": 30
         },
         "textMode": "value",
         "wideLayout": false
@@ -792,6 +792,7 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
+      "description": "ATTENTION - La courbe de température est inversée (froid vers le haut) pour améliorer la lisibilité des périodes hivernales.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2616,8 +2617,8 @@
       },
       {
         "current": {
-          "text": "2044",
-          "value": "2044"
+          "text": "2045",
+          "value": "2045"
         },
         "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
         "hide": 2,
