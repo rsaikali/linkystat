@@ -46,17 +46,17 @@ mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE TABLE IF NOT EXISTS linky_realtime (
     time DATETIME NOT NULL,
-    PAPP DOUBLE NOT NULL,
-    HCHP DOUBLE NOT NULL,
-    HCHC DOUBLE NOT NULL,
+    PAPP SMALLINT UNSIGNED NOT NULL,
+    HCHP INTEGER UNSIGNED NOT NULL,
+    HCHC INTEGER UNSIGNED NOT NULL,
     temperature double,
     PRIMARY KEY (time)
 );
 
 CREATE TABLE IF NOT EXISTS linky_history (
     time datetime NOT NULL,
-    HCHC double DEFAULT 0,
-    HCHP double DEFAULT 0,
+    HCHC INTEGER UNSIGNED DEFAULT 0,
+    HCHP INTEGER UNSIGNED DEFAULT 0,
     temperature double,
     PRIMARY KEY (time)
 );
