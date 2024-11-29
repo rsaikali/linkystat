@@ -17,7 +17,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 2,
+  "graphTooltip": 0,
   "id": 1,
   "links": [],
   "panels": [
@@ -2617,8 +2617,8 @@
       },
       {
         "current": {
-          "text": "2045",
-          "value": "2045"
+          "text": "2046",
+          "value": "2046"
         },
         "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
         "hide": 2,
