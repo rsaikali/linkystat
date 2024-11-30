@@ -1817,8 +1817,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -2216,8 +2215,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -2426,8 +2424,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -2774,8 +2771,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -3394,23 +3390,23 @@
         },
         {
           "current": {
-            "text": "12:30:30",
-            "value": "12:30:30"
+            "text": "13:22:47",
+            "value": "13:22:47"
           },
-          "definition": "SELECT DATE_FORMAT(time, '%h:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
           "hide": 2,
           "name": "last_update",
           "options": [],
-          "query": "SELECT DATE_FORMAT(time, '%h:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "query": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "refresh": 2,
           "regex": "",
           "type": "query"
         },
         {
           "current": {
-            "text": "5",
-            "value": "5"
+            "text": "9.3",
+            "value": "9.3"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
