@@ -31,7 +31,7 @@
         },
         "id": 46,
         "panels": [],
-        "title": "Linky $last_update ($last_temperature°C)",
+        "title": "Instantané Linky $last_update ($last_temperature°C)",
         "type": "row"
       },
       {
@@ -212,6 +212,7 @@
               "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
+              "axisGridShow": false,
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 0,
@@ -631,7 +632,7 @@
               "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
-              "axisGridShow": true,
+              "axisGridShow": false,
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 1,
@@ -676,7 +677,7 @@
                 }
               ]
             },
-            "unit": "Wh"
+            "unit": "W"
           },
           "overrides": [
             {
@@ -799,7 +800,7 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "mode": "fixed"
             },
             "custom": {
               "hideFrom": {
@@ -873,7 +874,7 @@
           },
           "tooltip": {
             "mode": "multi",
-            "sort": "none"
+            "sort": "asc"
           }
         },
         "pluginVersion": "11.3.1",
@@ -905,6 +906,7 @@
           }
         ],
         "title": "",
+        "transparent": true,
         "type": "piechart"
       },
       {
@@ -1161,10 +1163,562 @@
           "x": 0,
           "y": 19
         },
+        "id": 54,
+        "panels": [],
+        "title": "Historique du mois",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-GrYlRd",
+              "seriesBy": "last"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisGridShow": false,
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 1,
+              "barWidthFactor": 0.6,
+              "drawStyle": "bars",
+              "fillOpacity": 100,
+              "gradientMode": "scheme",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "smooth",
+              "lineWidth": 0,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Température"
+              },
+              "properties": [
+                {
+                  "id": "custom.drawStyle",
+                  "value": "line"
+                },
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "right"
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                },
+                {
+                  "id": "custom.lineWidth",
+                  "value": 2
+                },
+                {
+                  "id": "unit",
+                  "value": "celsius"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "purple",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.lineInterpolation",
+                  "value": "smooth"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "dateTimeAsLocal"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 20
+        },
+        "hideTimeOverride": true,
+        "id": 55,
+        "interval": "3h",
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "asc"
+          }
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "dataset": "linky",
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT time, LEAD(HCHP) OVER (ORDER BY HCHP) - HCHP  + LEAD(HCHC) OVER (ORDER BY HCHC) - HCHC AS \"Consommation\", temperature AS \"Température\" FROM linky.linky_history WHERE time > (NOW() - INTERVAL 1 MONTH)",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [
+                    {
+                      "name": "time",
+                      "type": "functionParameter"
+                    }
+                  ],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            },
+            "table": "linky_realtime"
+          }
+        ],
+        "timeFrom": "1M",
+        "title": "",
+        "transparent": true,
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "fixed"
+            },
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              }
+            },
+            "decimals": 0,
+            "fieldMinMax": false,
+            "mappings": [],
+            "unit": "percent"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Heures pleines"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "semi-dark-red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Heures creuses"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 6,
+          "x": 12,
+          "y": 20
+        },
+        "id": 56,
+        "options": {
+          "displayLabels": [
+            "name",
+            "value"
+          ],
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
+          },
+          "pieType": "donut",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "asc"
+          }
+        },
+        "pluginVersion": "11.3.1",
+        "targets": [
+          {
+            "dataset": "linky",
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT\r\n    ((MAX(HCHP) - MIN(HCHP)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures pleines\",\r\n    ((MAX(HCHC) - MIN(HCHC)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures creuses\"\r\nFROM linky.linky_history\r\nWHERE\r\n    time > (NOW() - INTERVAL 1 MONTH)",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
+          }
+        ],
+        "title": "",
+        "transparent": true,
+        "type": "piechart"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 20
+        },
+        "id": 33,
+        "options": {
+          "baseValueField": "base",
+          "baseValueFontSize": "14px",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 0,
+          "percentageValueDecimals": 0,
+          "percentageValueField": "current",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": false,
+          "referenceText": "comparé au mois dernier",
+          "referenceTextFontSize": "10px",
+          "unit": "W"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "(SELECT \"current\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
+          }
+        ],
+        "title": "Puissance moyenne mois",
+        "transformations": [
+          {
+            "id": "rowsToFields",
+            "options": {
+              "mappings": [
+                {
+                  "fieldName": "current",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "t",
+                  "handlerKey": "field.value"
+                }
+              ]
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 29
+        },
         "id": 45,
         "panels": [],
         "title": "Historique par mois",
         "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 23
+        },
+        "id": 40,
+        "options": {
+          "baseValueField": "base",
+          "baseValueFontSize": "14px",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 2,
+          "percentageValueDecimals": 0,
+          "percentageValueField": "current",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": false,
+          "referenceText": "comparé à hier",
+          "referenceTextFontSize": "10px",
+          "unit": "kWh"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "\r\n(SELECT\r\n  \"current\",\r\n  total_kwh as t\r\nFROM monthly_history\r\nORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \r\n\"base\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL 1 DAY)",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
+          }
+        ],
+        "title": "Consommation du mois",
+        "transformations": [
+          {
+            "id": "rowsToFields",
+            "options": {
+              "mappings": [
+                {
+                  "fieldName": "current",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "t",
+                  "handlerKey": "field.value"
+                }
+              ]
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 26
+        },
+        "id": 36,
+        "options": {
+          "baseValueField": "base",
+          "baseValueFontSize": "14px",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 0,
+          "percentageValueDecimals": 0,
+          "percentageValueField": "current",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": false,
+          "referenceText": "comparé au mois dernier",
+          "referenceTextFontSize": "10px",
+          "unit": "€"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "(SELECT \"current\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
+          }
+        ],
+        "title": "Coût du mois",
+        "transformations": [
+          {
+            "id": "rowsToFields",
+            "options": {
+              "mappings": [
+                {
+                  "fieldName": "current",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "t",
+                  "handlerKey": "field.value"
+                }
+              ]
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
       },
       {
         "datasource": {
@@ -1182,6 +1736,7 @@
               "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
+              "axisGridShow": false,
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 0,
@@ -1372,7 +1927,7 @@
           "h": 9,
           "w": 12,
           "x": 0,
-          "y": 20
+          "y": 30
         },
         "hideTimeOverride": true,
         "id": 43,
@@ -1672,9 +2227,9 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 6,
+          "w": 12,
           "x": 12,
-          "y": 20
+          "y": 30
         },
         "id": 8,
         "options": {
@@ -1748,258 +2303,12 @@
         "type": "table"
       },
       {
-        "datasource": {
-          "type": "mysql",
-          "uid": "P211906C1C32DB77E"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 18,
-          "y": 20
-        },
-        "id": 33,
-        "options": {
-          "baseValueField": "base",
-          "baseValueFontSize": "14px",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 0,
-          "percentageValueDecimals": 0,
-          "percentageValueField": "current",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": false,
-          "referenceText": "comparé au mois dernier",
-          "referenceTextFontSize": "10px",
-          "unit": "W"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
-          {
-            "dataset": "linky",
-            "datasource": {
-              "type": "mysql",
-              "uid": "P211906C1C32DB77E"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "(SELECT \"current\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", total_kwh * 1000 / 24 / getNbDaysCurrentPeriod() as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Puissance moyenne mois",
-        "transformations": [
-          {
-            "id": "rowsToFields",
-            "options": {
-              "mappings": [
-                {
-                  "fieldName": "current",
-                  "handlerKey": "field.name"
-                },
-                {
-                  "fieldName": "t",
-                  "handlerKey": "field.value"
-                }
-              ]
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "nikosc-percenttrend-panel"
-      },
-      {
-        "datasource": {
-          "type": "mysql",
-          "uid": "P211906C1C32DB77E"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 18,
-          "y": 23
-        },
-        "id": 40,
-        "options": {
-          "baseValueField": "base",
-          "baseValueFontSize": "14px",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 2,
-          "percentageValueDecimals": 0,
-          "percentageValueField": "current",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": false,
-          "referenceText": "comparé à hier",
-          "referenceTextFontSize": "10px",
-          "unit": "kWh"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
-          {
-            "dataset": "linky",
-            "datasource": {
-              "type": "mysql",
-              "uid": "P211906C1C32DB77E"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "\r\n(SELECT\r\n  \"current\",\r\n  total_kwh as t\r\nFROM monthly_history\r\nORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \r\n\"base\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW() - INTERVAL 1 DAY)",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Consommation du mois",
-        "transformations": [
-          {
-            "id": "rowsToFields",
-            "options": {
-              "mappings": [
-                {
-                  "fieldName": "current",
-                  "handlerKey": "field.name"
-                },
-                {
-                  "fieldName": "t",
-                  "handlerKey": "field.value"
-                }
-              ]
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "nikosc-percenttrend-panel"
-      },
-      {
-        "datasource": {
-          "type": "mysql",
-          "uid": "P211906C1C32DB77E"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 18,
-          "y": 26
-        },
-        "id": 36,
-        "options": {
-          "baseValueField": "base",
-          "baseValueFontSize": "14px",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 0,
-          "percentageValueDecimals": 0,
-          "percentageValueField": "current",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": false,
-          "referenceText": "comparé au mois dernier",
-          "referenceTextFontSize": "10px",
-          "unit": "€"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
-          {
-            "dataset": "linky",
-            "datasource": {
-              "type": "mysql",
-              "uid": "P211906C1C32DB77E"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "(SELECT \"current\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1)\r\nUNION\r\n(SELECT \"base\", $abonnement + (total_hp_kwh * $prix_hp) + (total_hc_kwh * $prix_hc) as t FROM monthly_history ORDER BY provider_time DESC LIMIT 1 OFFSET 1)\r\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Coût du mois",
-        "transformations": [
-          {
-            "id": "rowsToFields",
-            "options": {
-              "mappings": [
-                {
-                  "fieldName": "current",
-                  "handlerKey": "field.name"
-                },
-                {
-                  "fieldName": "t",
-                  "handlerKey": "field.value"
-                }
-              ]
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "nikosc-percenttrend-panel"
-      },
-      {
         "collapsed": false,
         "gridPos": {
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 29
+          "y": 39
         },
         "id": 47,
         "panels": [],
@@ -2021,6 +2330,7 @@
               "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
+              "axisGridShow": false,
               "axisLabel": "",
               "axisPlacement": "auto",
               "fillOpacity": 100,
@@ -2102,7 +2412,7 @@
           "h": 9,
           "w": 12,
           "x": 0,
-          "y": 30
+          "y": 40
         },
         "id": 13,
         "options": {
@@ -2452,7 +2762,7 @@
           "h": 7,
           "w": 6,
           "x": 12,
-          "y": 30
+          "y": 40
         },
         "id": 12,
         "options": {
@@ -2512,7 +2822,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 30
+          "y": 40
         },
         "id": 37,
         "options": {
@@ -2594,7 +2904,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 33
+          "y": 43
         },
         "id": 35,
         "options": {
@@ -2676,7 +2986,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 36
+          "y": 46
         },
         "id": 41,
         "options": {
@@ -2751,7 +3061,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 39
+          "y": 49
         },
         "id": 24,
         "panels": [
@@ -2773,7 +3083,8 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green"
+                      "color": "green",
+                      "value": null
                     },
                     {
                       "color": "red",
@@ -2848,7 +3159,7 @@
               "h": 6,
               "w": 12,
               "x": 0,
-              "y": 242
+              "y": 50
             },
             "id": 25,
             "options": {
@@ -3009,8 +3320,8 @@
         },
         {
           "current": {
-            "text": "11:08:11",
-            "value": "11:08:11"
+            "text": "11:36:11",
+            "value": "11:36:11"
           },
           "definition": "SELECT DATE_FORMAT(time, '%h:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3024,8 +3335,8 @@
         },
         {
           "current": {
-            "text": "3",
-            "value": "3"
+            "text": "7.7",
+            "value": "7.7"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
