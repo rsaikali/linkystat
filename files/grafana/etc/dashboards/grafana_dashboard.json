@@ -1228,7 +1228,7 @@
                 }
               ]
             },
-            "unit": "W"
+            "unit": "kWh"
           },
           "overrides": [
             {
@@ -1312,7 +1312,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT time, LEAD(HCHP) OVER (ORDER BY HCHP) - HCHP  + LEAD(HCHC) OVER (ORDER BY HCHC) - HCHC AS \"Consommation\", temperature AS \"Température\" FROM linky.linky_history WHERE time > (NOW() - INTERVAL 1 MONTH)",
+            "rawSql": "SELECT\r\n  MAX(time) as time,\r\n  SUM(c) / 1000 AS \"Consommation\"\r\nFROM\r\n  (\r\n    SELECT\r\n      time,\r\n      LEAD(HCHP) OVER (\r\n        ORDER BY\r\n          HCHP\r\n      ) - HCHP + LEAD(HCHC) OVER (\r\n        ORDER BY\r\n          HCHC\r\n      ) - HCHC AS c\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      time > (NOW() - INTERVAL 1 MONTH)\r\n      AND DATE(time) <> DATE(NOW())\r\n  ) AS f\r\nGROUP BY\r\n  DATE(time)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1337,10 +1337,55 @@
               "limit": 50
             },
             "table": "linky_realtime"
+          },
+          {
+            "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "hide": false,
+            "rawQuery": true,
+            "rawSql": "SELECT\r\n  MAX(time),\r\n  DATE(time) AS d,\r\n  HOUR(time) DIV 6 AS h,\r\n  AVG(temperature) as \"Température\"\r\nFROM\r\n  linky.linky_history\r\nWHERE\r\n  time > (NOW() - INTERVAL 1 MONTH)\r\n  AND DATE(time) <> DATE(NOW())\r\nGROUP BY\r\n  h,\r\n  d",
+            "refId": "B",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
           }
         ],
         "timeFrom": "1M",
         "title": "",
+        "transformations": [
+          {
+            "id": "filterFieldsByName",
+            "options": {
+              "include": {
+                "names": [
+                  "time",
+                  "Consommation",
+                  "Température",
+                  "MAX(time)"
+                ]
+              }
+            }
+          }
+        ],
         "transparent": true,
         "type": "timeseries"
       },
@@ -1544,19 +1589,6 @@
         "type": "nikosc-percenttrend-panel"
       },
       {
-        "collapsed": false,
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 29
-        },
-        "id": 45,
-        "panels": [],
-        "title": "Historique par mois",
-        "type": "row"
-      },
-      {
         "datasource": {
           "type": "mysql",
           "uid": "P211906C1C32DB77E"
@@ -1719,6 +1751,19 @@
         ],
         "transparent": true,
         "type": "nikosc-percenttrend-panel"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 29
+        },
+        "id": 45,
+        "panels": [],
+        "title": "Historique par mois",
+        "type": "row"
       },
       {
         "datasource": {
@@ -2214,12 +2259,34 @@
                   "id": "color",
                   "value": {
                     "fixedColor": "text",
-                    "mode": "fixed"
+                    "mode": "continuous-GrYlRd"
                   }
                 },
                 {
                   "id": "decimals",
                   "value": 0
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Température"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "celsius"
+                },
+                {
+                  "id": "decimals",
+                  "value": 1
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "continuous-BlYlRd"
+                  }
                 }
               ]
             }
@@ -2268,7 +2335,8 @@
                 "names": [
                   "Date",
                   "Consommation",
-                  "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement"
+                  "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement",
+                  "Température"
                 ]
               }
             }
@@ -2278,7 +2346,12 @@
             "options": {
               "excludeByName": {},
               "includeByName": {},
-              "indexByName": {},
+              "indexByName": {
+                "Consommation": 1,
+                "Date": 0,
+                "Température": 3,
+                "total_hp_kwh * prix_hp + total_hc_kwh * prix_hc + abonnement": 2
+              },
               "renameByName": {
                 "Consommation": "",
                 "provider_time": "Date",
@@ -2292,7 +2365,7 @@
           {
             "id": "formatTime",
             "options": {
-              "outputFormat": "MMMM YYYY",
+              "outputFormat": "MM/YYYY",
               "timeField": "Date",
               "timezone": "browser",
               "useTimezone": true
@@ -2751,7 +2824,7 @@
                   "id": "color",
                   "value": {
                     "fixedColor": "text",
-                    "mode": "fixed"
+                    "mode": "continuous-GrYlRd"
                   }
                 }
               ]
@@ -3083,8 +3156,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -3320,8 +3392,8 @@
         },
         {
           "current": {
-            "text": "11:36:11",
-            "value": "11:36:11"
+            "text": "12:29:11",
+            "value": "12:29:11"
           },
           "definition": "SELECT DATE_FORMAT(time, '%h:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3335,8 +3407,8 @@
         },
         {
           "current": {
-            "text": "7.7",
-            "value": "7.7"
+            "text": "5",
+            "value": "5"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
