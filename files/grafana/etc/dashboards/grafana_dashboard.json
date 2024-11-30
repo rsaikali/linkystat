@@ -1312,7 +1312,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  MAX(time) as time,\r\n  SUM(c) / 1000 AS \"Consommation\"\r\nFROM\r\n  (\r\n    SELECT\r\n      time,\r\n      LEAD(HCHP) OVER (\r\n        ORDER BY\r\n          HCHP\r\n      ) - HCHP + LEAD(HCHC) OVER (\r\n        ORDER BY\r\n          HCHC\r\n      ) - HCHC AS c\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      time > (NOW() - INTERVAL 1 MONTH)\r\n      AND DATE(time) <> DATE(NOW())\r\n  ) AS f\r\nGROUP BY\r\n  DATE(time)",
+            "rawSql": "SELECT\r\n  MAX(time) as time,\r\n  SUM(c) / 1000 AS \"Consommation\"\r\nFROM\r\n  (\r\n    SELECT\r\n      time,\r\n      LEAD(HCHP) OVER (\r\n        ORDER BY\r\n          HCHP\r\n      ) - HCHP + LEAD(HCHC) OVER (\r\n        ORDER BY\r\n          HCHC\r\n      ) - HCHC AS c\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      DATE(time) > (NOW() - INTERVAL 1 MONTH - INTERVAL 1 DAY)\r\n      AND DATE(time) <> DATE(NOW())\r\n  ) AS f\r\nGROUP BY\r\n  DATE(time)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -3392,8 +3392,8 @@
         },
         {
           "current": {
-            "text": "12:29:11",
-            "value": "12:29:11"
+            "text": "12:30:30",
+            "value": "12:30:30"
           },
           "definition": "SELECT DATE_FORMAT(time, '%h:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
