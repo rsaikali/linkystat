@@ -42,7 +42,7 @@
         "fieldConfig": {
           "defaults": {
             "decimals": 0,
-            "fieldMinMax": true,
+            "fieldMinMax": false,
             "mappings": [],
             "thresholds": {
               "mode": "percentage",
@@ -53,7 +53,7 @@
                 },
                 {
                   "color": "red",
-                  "value": 33
+                  "value": 300
                 }
               ]
             },
@@ -71,7 +71,7 @@
         "options": {
           "allowNeedleCrossLimits": false,
           "animateNeedleValueTransition": true,
-          "animateNeedleValueTransitionSpeed": 250,
+          "animateNeedleValueTransitionSpeed": 500,
           "edgeWidth": 0.01,
           "gaugeRadius": 0,
           "innerColor": "#181b1f",
@@ -81,7 +81,7 @@
           "markerStartShape": "circle",
           "maxNeedleAngle": 320,
           "maxTickAngle": 300,
-          "maxValue": 600,
+          "maxValue": 500,
           "minValue": 0,
           "needleColor": "dark-red",
           "needleCrossLimitDegrees": 10,
@@ -134,6 +134,14 @@
           }
         ],
         "title": "",
+        "transformations": [
+          {
+            "id": "limit",
+            "options": {
+              "limitField": "1"
+            }
+          }
+        ],
         "transparent": true,
         "type": "briangann-gauge-panel"
       },
@@ -383,7 +391,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL 2 DAY AND (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)",
+            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 2 DAY AND NOW() - INTERVAL 1 DAY)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -470,7 +478,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > (SELECT MAX(time) FROM linky_realtime) - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) + ($abonnement / getNbDaysCurrentPeriod())  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN (SELECT MAX(time) FROM linky_realtime) - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) + ($abonnement / getNbDaysCurrentPeriod())  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2651,7 +2659,7 @@
               "h": 6,
               "w": 12,
               "x": 0,
-              "y": 40
+              "y": 76
             },
             "id": 25,
             "options": {
@@ -2752,7 +2760,7 @@
       }
     ],
     "preload": false,
-    "refresh": "2s",
+    "refresh": "auto",
     "schemaVersion": 40,
     "tags": [],
     "templating": {
@@ -2812,8 +2820,8 @@
         },
         {
           "current": {
-            "text": "12:32:18",
-            "value": "12:32:18"
+            "text": "13:46:51",
+            "value": "13:46:51"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2827,8 +2835,8 @@
         },
         {
           "current": {
-            "text": "12.5",
-            "value": "12.5"
+            "text": "14.1",
+            "value": "14.1"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2843,8 +2851,8 @@
         },
         {
           "current": {
-            "text": "0.94271",
-            "value": "0.94271"
+            "text": "0.9420948",
+            "value": "0.9420948"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -2874,6 +2882,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 87,
+    "version": 93,
     "weekStart": "monday"
   }
