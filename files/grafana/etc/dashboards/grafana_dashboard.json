@@ -2760,7 +2760,7 @@
       }
     ],
     "preload": false,
-    "refresh": "auto",
+    "refresh": "2s",
     "schemaVersion": 40,
     "tags": [],
     "templating": {
@@ -2820,8 +2820,8 @@
         },
         {
           "current": {
-            "text": "13:46:51",
-            "value": "13:46:51"
+            "text": "13:47:56",
+            "value": "13:47:56"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2851,8 +2851,8 @@
         },
         {
           "current": {
-            "text": "0.9420948",
-            "value": "0.9420948"
+            "text": "0.94210077",
+            "value": "0.94210077"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
