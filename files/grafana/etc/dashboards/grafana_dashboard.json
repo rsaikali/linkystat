@@ -136,6 +136,18 @@
         "title": "",
         "transformations": [
           {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "time"
+                }
+              ]
+            }
+          },
+          {
             "id": "limit",
             "options": {
               "limitField": "1"
@@ -2820,8 +2832,8 @@
         },
         {
           "current": {
-            "text": "13:47:56",
-            "value": "13:47:56"
+            "text": "14:51:54",
+            "value": "14:51:54"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2835,8 +2847,8 @@
         },
         {
           "current": {
-            "text": "14.1",
-            "value": "14.1"
+            "text": "15.4",
+            "value": "15.4"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2851,8 +2863,8 @@
         },
         {
           "current": {
-            "text": "0.94210077",
-            "value": "0.94210077"
+            "text": "0.94137635",
+            "value": "0.94137635"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -2882,6 +2894,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 93,
+    "version": 95,
     "weekStart": "monday"
   }
