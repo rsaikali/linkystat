@@ -309,7 +309,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval, previous), \r\n  ROUND(PAPP * $cosphi / 10, 0) * 10 AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
+            "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval), \r\n  ROUND(PAPP * $cosphi / 10, 0) * 10 AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2812,8 +2812,8 @@
         },
         {
           "current": {
-            "text": "11:44:31",
-            "value": "11:44:31"
+            "text": "12:32:18",
+            "value": "12:32:18"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2827,8 +2827,8 @@
         },
         {
           "current": {
-            "text": "11.4",
-            "value": "11.4"
+            "text": "12.5",
+            "value": "12.5"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2843,8 +2843,8 @@
         },
         {
           "current": {
-            "text": "0.94291044",
-            "value": "0.94291044"
+            "text": "0.94271",
+            "value": "0.94271"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -2874,6 +2874,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 84,
+    "version": 87,
     "weekStart": "monday"
   }
