@@ -719,7 +719,7 @@
                 },
                 {
                   "id": "custom.lineWidth",
-                  "value": 3
+                  "value": 2
                 },
                 {
                   "id": "unit",
@@ -1294,7 +1294,7 @@
                 },
                 {
                   "id": "custom.barWidthFactor",
-                  "value": 0.2
+                  "value": 0.4
                 },
                 {
                   "id": "color",
@@ -1349,7 +1349,7 @@
                 },
                 {
                   "id": "custom.lineWidth",
-                  "value": 3
+                  "value": 2
                 },
                 {
                   "id": "color",
@@ -2818,8 +2818,8 @@
         },
         {
           "current": {
-            "text": "2048",
-            "value": "2048"
+            "text": "2067",
+            "value": "2067"
           },
           "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
           "hide": 2,
@@ -2832,8 +2832,8 @@
         },
         {
           "current": {
-            "text": "14:51:54",
-            "value": "14:51:54"
+            "text": "10:02:15",
+            "value": "10:02:15"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2847,8 +2847,8 @@
         },
         {
           "current": {
-            "text": "15.4",
-            "value": "15.4"
+            "text": "3.2",
+            "value": "3.2"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2863,8 +2863,8 @@
         },
         {
           "current": {
-            "text": "0.94137635",
-            "value": "0.94137635"
+            "text": "0.96730636",
+            "value": "0.96730636"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
