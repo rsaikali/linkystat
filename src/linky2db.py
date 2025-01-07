@@ -8,9 +8,7 @@ import sqlalchemy as sa
 
 from weather import TemperatureManager
 
-logging.basicConfig(format="[%(asctime)s %(levelname)s/%(module)s] %(message)s",
-                    datefmt="%Y-%m-%d %H:%M:%S",
-                    level=logging.INFO)
+logging.basicConfig(format="[%(asctime)s %(levelname)s/%(module)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
 
 # MySQL database
 MYSQL_HOST = os.getenv("MYSQL_HOST")
@@ -142,10 +140,12 @@ class LinkyData(object):
         # Check if the computed checksum matches the expected checksum
         is_valid = checksum == computed_checksum
 
-        # If the checksum is not valid, log a warning message with the current time, the key-value pair, and the expected and actual checksums
+        # If the checksum is not valid, log an error message with the current time, the key-value pair, and the expected and actual checksums
+        now = datetime.now().strftime("%H:%M:%S")
         if not is_valid:
-            now = datetime.now().strftime("%H:%M:%S")
-            logging.warning(f"Invalid Linky data checksum at {now} for {key}={value} -> Expected {checksum} got {chr(computed_sum)}")
+            logging.error(f"Invalid Linky data checksum at {now} for {key}={value} -> Expected '{checksum}' got '{chr(computed_sum)}'")
+        else:
+            logging.info(f"Valid Linky data checksum at {now} for {key}={value} -> Checksum is '{chr(computed_sum)}'")
         return is_valid
 
 
@@ -176,7 +176,7 @@ class LinkyDataFromProd(object):
         Retrieves the latest data from a production database (self.prod_engine).
 
         It does so by executing a SQL query on production database to get the latest data from a table named 'linky_realtime'.
-        If the production database is unavailable, the method logs a warning message and waits for 5 seconds before retrying.
+        If the production database is unavailable, the method logs a warning message.
 
         If the retrieved data is equivalent to the last saved data (self.last_linky_data), the method waits before starting the loop again.
 
@@ -189,7 +189,7 @@ class LinkyDataFromProd(object):
                 row = list(rs)[0]
 
             if self.last_linky_data == row:
-                time.sleep(0.1)
+                time.sleep(1)
                 continue
 
             with self.engine.connect() as con:
@@ -197,14 +197,16 @@ class LinkyDataFromProd(object):
                     stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature)")
                     stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4])
                     params = stmt.compile().params
-                    logging.info(f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}")
+                    logging.info(
+                        f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}"
+                    )
                     con.execute(stmt)
                     con.commit()
                 except sa.exc.IntegrityError as e:
                     logging.error(e)
 
             self.last_linky_data = row
-            time.sleep(0.1)
+            time.sleep(1)
 
 
 if __name__ == "__main__":
