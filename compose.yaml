@@ -35,7 +35,7 @@ services:
       - ./files/mysql/init-script.sh:/docker-entrypoint-initdb.d/init-script.sh
       - dbdata:/var/lib/mysql
     healthcheck:
-      test: mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} --database ${MYSQL_DATABASE} -e 'SHOW TABLES' | [ $(wc -l) -gt 4 ]
+      test: mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} --database ${MYSQL_DATABASE} -e 'SHOW TABLES' | [ $(wc -l) -gt $(grep -E 'CREATE.*TABLE|CREATE.*VIEW' /docker-entrypoint-initdb.d/init-script.sh | wc -l) ]
       interval: 1s
       retries: 120
 
