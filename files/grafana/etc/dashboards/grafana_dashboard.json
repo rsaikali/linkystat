@@ -782,7 +782,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  MIN(time) as ptime,\r\n  SUM(c) / 1000 AS \"Consommation\",\r\n  ROUND(AVG(temperature), 1) AS \"Température\"\r\nFROM\r\n  (\r\n    SELECT\r\n      time,\r\n      LEAD(HCHP) OVER (\r\n        ORDER BY\r\n          HCHP\r\n      ) - HCHP + LEAD(HCHC) OVER (\r\n        ORDER BY\r\n          HCHC\r\n      ) - HCHC AS c,\r\n      temperature\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n  ) AS f\r\nGROUP BY\r\n  DATE(time)",
+            "rawSql": "(SELECT\r\n DATE(MAX(time)) as ptime,\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"Consommation\",\r\n ROUND(AVG(temperature), 1) AS \"Température\"\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(\r\nSELECT\r\n  MIN(time) as ptime,\r\n  SUM(c) / 1000 AS \"Consommation\",\r\n  ROUND(AVG(temperature), 1) AS \"Température\"\r\nFROM\r\n  (\r\n    SELECT\r\n      time,\r\n      LEAD(HCHP) OVER (\r\n        ORDER BY\r\n          HCHP\r\n      ) - HCHP + LEAD(HCHC) OVER (\r\n        ORDER BY\r\n          HCHC\r\n      ) - HCHC AS c,\r\n      temperature\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n      AND\r\n      DATE(time) <> DATE(NOW())\r\n\tORDER BY DATE(time) DESC\r\n  ) AS f\r\nGROUP BY\r\n  DATE(time)\r\n)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -2818,8 +2818,8 @@
         },
         {
           "current": {
-            "text": "2085",
-            "value": "2085"
+            "text": "2089",
+            "value": "2089"
           },
           "definition": "SELECT DATEDIFF(MAX(time),MIN(time)) FROM linky.linky_history;",
           "hide": 2,
@@ -2832,8 +2832,8 @@
         },
         {
           "current": {
-            "text": "15:13:31",
-            "value": "15:13:31"
+            "text": "12:14:26",
+            "value": "12:14:26"
           },
           "definition": "SELECT DATE_FORMAT(time, '%H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2847,8 +2847,8 @@
         },
         {
           "current": {
-            "text": "9.9",
-            "value": "9.9"
+            "text": "2.7",
+            "value": "2.7"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -2863,8 +2863,8 @@
         },
         {
           "current": {
-            "text": "0.96675883",
-            "value": "0.96675883"
+            "text": "0.95994642",
+            "value": "0.95994642"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
