@@ -22,13 +22,6 @@ CREATE FUNCTION getNbDaysCurrentPeriod() RETURNS INT DETERMINISTIC NO SQL
 				ELSE DAYOFMONTH(LAST_DAY(date_add(current_date, interval ${DAYS_OFFSET} - DAYOFMONTH(current_date) day)))
 			END;
     END;;
-
-CREATE FUNCTION getNbDaysCurrentYear() RETURNS INT DETERMINISTIC
-    BEGIN
-        RETURN DAYOFYEAR(CONCAT(YEAR(LAST_DAY(DATE_ADD(DATE_SUB(NOW(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH))),'-12-31'));
-    END;;
-
-DELIMITER ;
 "
 
 echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
@@ -37,7 +30,6 @@ mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
 GRANT SELECT, SHOW VIEW, EXECUTE ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
 GRANT EXECUTE ON FUNCTION ${MYSQL_DATABASE}.getNbDaysCurrentPeriod TO '${GRAFANA_MYSQL_USER}';
-GRANT EXECUTE ON FUNCTION ${MYSQL_DATABASE}.getNbDaysCurrentYear TO '${GRAFANA_MYSQL_USER}';
 FLUSH PRIVILEGES;
 "
 
@@ -60,53 +52,6 @@ CREATE TABLE IF NOT EXISTS linky_history (
     temperature double,
     PRIMARY KEY (time)
 );
-"
-
-echo "************** Creating views *************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-CREATE OR REPLACE VIEW monthly_history AS
-    SELECT
-	    DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y-%m') AS provider_time,
-        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
-        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
-	    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh,
-        AVG(temperature) as temperature
-    FROM linky_history
-    WHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
-    UNION
-    SELECT
-        DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y-%m') AS provider_time,
-        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
-        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
-        (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh,
-        AVG(temperature) as temperature
-    FROM linky_history
-    WHERE DATE_FORMAT(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m') < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL ${DAYS_OFFSET} DAY), '%Y-%m')
-    GROUP BY MONTH(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY)), YEAR(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY))
-    ORDER BY provider_time DESC;
-
-CREATE OR REPLACE VIEW yearly_history AS
-    SELECT
-        DATE_FORMAT(DATE_ADD(DATE_SUB(now(), INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH), '%Y') AS provider_time,
-        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
-        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
-        (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh,
-        AVG(temperature) as temperature
-    FROM linky_history
-    WHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentYear() DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 HOUR
-    UNION
-    SELECT
-        DATE_FORMAT(MIN(DATE_ADD(time, INTERVAL ${DAYS_OFFSET} DAY)), '%Y') AS provider_time,
-        (MAX(HCHP) - MIN(HCHP)) / 1000 AS total_hp_kwh,
-        (MAX(HCHC) - MIN(HCHC)) / 1000 AS total_hc_kwh,
-        (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 AS total_kwh,
-        AVG(temperature) as temperature
-    FROM linky_history
-    GROUP BY YEAR(DATE_ADD(DATE_SUB(time, INTERVAL ${DAYS_OFFSET} DAY), INTERVAL 1 MONTH))
-    HAVING MIN(time) < DATE_SUB(NOW(), INTERVAL 1 YEAR)
-    AND MONTH(MIN(time)) = 12
-    ORDER BY provider_time DESC;
 "
 
 echo "************ Creating triggers ************"
