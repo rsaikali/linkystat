@@ -31,7 +31,7 @@
         },
         "id": 46,
         "panels": [],
-        "title": "Instantané Linky $last_update ($last_temperature°C)",
+        "title": "Linky $last_update ($last_temperature°C)",
         "type": "row"
       },
       {
@@ -715,6 +715,17 @@
                   "value": "Température"
                 }
               ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "timestamp"
+              },
+              "properties": [
+                {
+                  "id": "unit"
+                }
+              ]
             }
           ]
         },
@@ -824,6 +835,15 @@
               ],
               "match": "any",
               "type": "exclude"
+            }
+          },
+          {
+            "id": "formatTime",
+            "options": {
+              "outputFormat": "DD/MM",
+              "timeField": "timestamp",
+              "timezone": "browser",
+              "useTimezone": true
             }
           }
         ],
@@ -964,11 +984,11 @@
         },
         "id": 33,
         "options": {
-          "baseValueField": "0",
+          "baseValueField": "1",
           "baseValueFontSize": "14px",
           "interpretAsTrend": true,
-          "percentageNrDecimals": 0,
-          "percentageValueField": "1",
+          "percentageNrDecimals": 2,
+          "percentageValueField": "0",
           "percentageValueFontSize": "80%",
           "positiveIsGood": false,
           "referenceText": "comparé au mois dernier",
@@ -984,11 +1004,24 @@
             },
             "panelId": 58,
             "refId": "A",
-            "withTransforms": false
+            "withTransforms": true
           }
         ],
         "title": "Puissance moyenne mois",
         "transformations": [
+          {
+            "id": "convertFieldType",
+            "options": {
+              "conversions": [
+                {
+                  "dateFormat": "MM/YYYY",
+                  "destinationType": "time",
+                  "targetField": "Date"
+                }
+              ],
+              "fields": {}
+            }
+          },
           {
             "id": "sortBy",
             "options": {
@@ -996,7 +1029,7 @@
               "sort": [
                 {
                   "desc": true,
-                  "field": "timestamp"
+                  "field": "Date"
                 }
               ]
             }
@@ -1010,36 +1043,11 @@
           {
             "id": "calculateField",
             "options": {
-              "alias": "total_kwh",
               "binary": {
                 "left": {
                   "matcher": {
                     "id": "byName",
-                    "options": "total_kwh_HCHP"
-                  }
-                },
-                "operator": "+",
-                "right": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "total_kwh_HCHC"
-                  }
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "total_kwh"
+                    "options": "Consommation"
                   }
                 },
                 "operator": "*",
@@ -1060,7 +1068,7 @@
                 "left": {
                   "matcher": {
                     "id": "byName",
-                    "options": "total_kwh * 1000"
+                    "options": "Consommation * 1000"
                   }
                 },
                 "operator": "/",
@@ -1080,12 +1088,11 @@
           {
             "id": "calculateField",
             "options": {
-              "alias": "avg_power",
               "binary": {
                 "left": {
                   "matcher": {
                     "id": "byName",
-                    "options": "total_kwh * 1000 / nb_days_period"
+                    "options": "Consommation * 1000 / nb_days_period"
                   }
                 },
                 "operator": "/",
@@ -1096,25 +1103,12 @@
               "mode": "binary",
               "reduce": {
                 "reducer": "sum"
-              },
-              "replaceFields": false
+              }
             }
           },
           {
             "id": "calculateField",
             "options": {
-              "alias": "a",
-              "binary": {
-                "left": {
-                  "fixed": ""
-                },
-                "right": {
-                  "fixed": ""
-                }
-              },
-              "index": {
-                "asPercentile": false
-              },
               "mode": "index",
               "reduce": {
                 "reducer": "sum"
@@ -1126,40 +1120,28 @@
             "options": {
               "mappings": [
                 {
-                  "fieldName": "avg_power",
+                  "fieldName": "Row",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "Consommation * 1000 / nb_days_period / 24",
                   "handlerKey": "field.value"
                 },
                 {
-                  "fieldName": "timestamp",
+                  "fieldName": "Date",
                   "handlerKey": "__ignore"
                 },
                 {
-                  "fieldName": "total_kwh_HCHP",
+                  "fieldName": "Consommation",
                   "handlerKey": "__ignore"
                 },
                 {
-                  "fieldName": "total_kwh_HCHC",
+                  "fieldName": "Consommation * 1000",
                   "handlerKey": "__ignore"
                 },
                 {
-                  "fieldName": "Temperature",
+                  "fieldName": "Consommation * 1000 / nb_days_period",
                   "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "total_kwh",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "total_kwh * 1000",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "total_kwh * 1000 / nb_days_period",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "a",
-                  "handlerKey": "field.name"
                 }
               ]
             }
@@ -1270,7 +1252,7 @@
           "baseValueField": "0",
           "baseValueFontSize": "14px",
           "interpretAsTrend": true,
-          "percentageNrDecimals": 0,
+          "percentageNrDecimals": 2,
           "percentageValueDecimals": 0,
           "percentageValueField": "1",
           "percentageValueFontSize": "80%",
@@ -1312,6 +1294,29 @@
             }
           },
           {
+            "id": "filterByValue",
+            "options": {
+              "filters": [
+                {
+                  "config": {
+                    "id": "isNotNull",
+                    "options": {}
+                  },
+                  "fieldName": "total_kwh_HCHP"
+                },
+                {
+                  "config": {
+                    "id": "isNotNull",
+                    "options": {}
+                  },
+                  "fieldName": "total_kwh_HCHC"
+                }
+              ],
+              "match": "all",
+              "type": "include"
+            }
+          },
+          {
             "id": "calculateField",
             "options": {
               "alias": "cout_hp",
@@ -1333,7 +1338,8 @@
               "mode": "binary",
               "reduce": {
                 "reducer": "sum"
-              }
+              },
+              "replaceFields": false
             }
           },
           {
@@ -1422,16 +1428,16 @@
             "options": {
               "mappings": [
                 {
-                  "fieldName": "timestamp",
-                  "handlerKey": "__ignore"
-                },
-                {
                   "fieldName": "Row",
                   "handlerKey": "field.name"
                 },
                 {
                   "fieldName": "cout_hors_abo + abonnement",
                   "handlerKey": "field.value"
+                },
+                {
+                  "fieldName": "timestamp",
+                  "handlerKey": "__ignore"
                 },
                 {
                   "fieldName": "total_kwh_HCHP",
@@ -1615,7 +1621,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-24 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = 24 AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1645,7 +1651,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n      TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-24 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n\tGROUP BY MONTH(time), YEAR(time)",
+            "rawSql": "SELECT\r\n      TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n\tGROUP BY MONTH(time), YEAR(time)",
             "refId": "B",
             "sql": {
               "columns": [
@@ -1821,6 +1827,10 @@
                   "value": {
                     "mode": "continuous-BlYlRd"
                   }
+                },
+                {
+                  "id": "noValue",
+                  "value": "N/A"
                 }
               ]
             },
@@ -2172,7 +2182,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-24 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 YEAR - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = 24 AND MONTH(time) = 12 AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 YEAR - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND MONTH(time) = 12 AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -3270,6 +3280,24 @@
       "list": [
         {
           "current": {
+            "text": "24",
+            "value": "24"
+          },
+          "description": "Jour de relevé du compteur électrique par votre fournisseur",
+          "hide": 2,
+          "name": "jour_releve_compteur",
+          "options": [
+            {
+              "selected": true,
+              "text": "24",
+              "value": "24"
+            }
+          ],
+          "query": "24",
+          "type": "textbox"
+        },
+        {
+          "current": {
             "text": "16.70",
             "value": "16.70"
           },
@@ -3309,8 +3337,8 @@
         },
         {
           "current": {
-            "text": "23/01/2025 13:45:43",
-            "value": "23/01/2025 13:45:43"
+            "text": "24/01/2025 11:25:19",
+            "value": "24/01/2025 11:25:19"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3324,8 +3352,8 @@
         },
         {
           "current": {
-            "text": "9.3",
-            "value": "9.3"
+            "text": "9.9",
+            "value": "9.9"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3340,8 +3368,8 @@
         },
         {
           "current": {
-            "text": "0.97052946",
-            "value": "0.97052946"
+            "text": "0.95758241",
+            "value": "0.95758241"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3384,6 +3412,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 95,
+    "version": 36,
     "weekStart": "monday"
   }
