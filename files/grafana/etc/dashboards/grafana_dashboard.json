@@ -2121,6 +2121,24 @@
                 "total_kwh": "Consommation"
               }
             }
+          },
+          {
+            "id": "filterByValue",
+            "options": {
+              "filters": [
+                {
+                  "config": {
+                    "id": "equal",
+                    "options": {
+                      "value": "0"
+                    }
+                  },
+                  "fieldName": "Consommation"
+                }
+              ],
+              "match": "any",
+              "type": "exclude"
+            }
           }
         ],
         "transparent": true,
@@ -3157,8 +3175,7 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "green",
-                      "value": null
+                      "color": "green"
                     },
                     {
                       "color": "red",
@@ -3368,8 +3385,8 @@
         },
         {
           "current": {
-            "text": "24/01/2025 11:54:00",
-            "value": "24/01/2025 11:54:00"
+            "text": "25/01/2025 10:02:35",
+            "value": "25/01/2025 10:02:35"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3383,8 +3400,8 @@
         },
         {
           "current": {
-            "text": "9.3",
-            "value": "9.3"
+            "text": "10.4",
+            "value": "10.4"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3399,8 +3416,8 @@
         },
         {
           "current": {
-            "text": "0.9568587",
-            "value": "0.9568587"
+            "text": "0.96007649",
+            "value": "0.96007649"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
