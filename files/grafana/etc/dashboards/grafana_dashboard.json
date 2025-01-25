@@ -798,10 +798,10 @@
         "id": 57,
         "options": {
           "barRadius": 0.5,
-          "barWidth": 0.75,
+          "barWidth": 0.8,
           "colorByField": "total_kwh",
           "fullHighlight": false,
-          "groupWidth": 0.7,
+          "groupWidth": 0.75,
           "legend": {
             "calcs": [],
             "displayMode": "list",
@@ -809,7 +809,7 @@
             "showLegend": false
           },
           "orientation": "vertical",
-          "showValue": "always",
+          "showValue": "never",
           "stacking": "none",
           "tooltip": {
             "mode": "multi",
@@ -817,7 +817,7 @@
           },
           "xField": "timestamp",
           "xTickLabelRotation": 0,
-          "xTickLabelSpacing": -200
+          "xTickLabelSpacing": -100
         },
         "pluginVersion": "11.4.0",
         "targets": [
@@ -900,7 +900,7 @@
           {
             "id": "formatTime",
             "options": {
-              "outputFormat": "DD/MM",
+              "outputFormat": "DD",
               "timeField": "timestamp",
               "timezone": "browser",
               "useTimezone": true
@@ -1653,7 +1653,7 @@
         "id": 58,
         "options": {
           "barRadius": 0.5,
-          "barWidth": 0.75,
+          "barWidth": 0.8,
           "colorByField": "total_kwh",
           "fullHighlight": false,
           "groupWidth": 0.7,
@@ -1664,7 +1664,7 @@
             "showLegend": false
           },
           "orientation": "vertical",
-          "showValue": "always",
+          "showValue": "never",
           "stacking": "none",
           "tooltip": {
             "mode": "multi",
@@ -1672,7 +1672,7 @@
           },
           "xField": "Date",
           "xTickLabelRotation": 0,
-          "xTickLabelSpacing": -100
+          "xTickLabelSpacing": -200
         },
         "pluginVersion": "11.4.0",
         "targets": [
@@ -1780,7 +1780,7 @@
           {
             "id": "formatTime",
             "options": {
-              "outputFormat": "MM/YYYY",
+              "outputFormat": "YYYY",
               "timeField": "timestamp",
               "timezone": "browser",
               "useTimezone": true
@@ -3385,8 +3385,8 @@
         },
         {
           "current": {
-            "text": "25/01/2025 10:02:35",
-            "value": "25/01/2025 10:02:35"
+            "text": "25/01/2025 10:11:15",
+            "value": "25/01/2025 10:11:15"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3400,8 +3400,8 @@
         },
         {
           "current": {
-            "text": "10.4",
-            "value": "10.4"
+            "text": "9.9",
+            "value": "9.9"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3416,8 +3416,8 @@
         },
         {
           "current": {
-            "text": "0.96007649",
-            "value": "0.96007649"
+            "text": "0.95967797",
+            "value": "0.95967797"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3449,6 +3449,7 @@
       "to": "now"
     },
     "timepicker": {
+      "hidden": true,
       "nowDelay": "",
       "refresh_intervals": [
         "2s",
