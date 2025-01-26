@@ -136,6 +136,12 @@
         "title": "",
         "transformations": [
           {
+            "id": "filterByRefId",
+            "options": {
+              "include": "A"
+            }
+          },
+          {
             "id": "sortBy",
             "options": {
               "fields": {},
@@ -377,7 +383,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval), \r\n  ROUND(PAPP * $cosphi / 10, 0) * 10 AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
+            "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval), \r\n  ROUND(PAPP * $cosphi / 5) * 5 AS \"Puissance apparente\" \r\nFROM linky.linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -415,7 +421,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  MAX(time),\r\n  ROUND(MIN(PAPP) * $cosphi) AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
+            "rawSql": "SELECT\r\n  MAX(time),\r\n  ROUND(MIN(PAPP) * $cosphi / 5) * 5 AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
             "refId": "B",
             "sql": {
               "columns": [
@@ -736,7 +742,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT ROUND(MIN(PAPP) * $cosphi) AS \"Consommation veille\" FROM linky.linky_realtime;",
+            "rawSql": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 AS \"Consommation veille\" FROM linky.linky_realtime;",
             "refId": "A",
             "sql": {
               "columns": [
@@ -3471,8 +3477,8 @@
         },
         {
           "current": {
-            "text": "26/01/2025 10:07:17",
-            "value": "26/01/2025 10:07:17"
+            "text": "26/01/2025 10:21:54",
+            "value": "26/01/2025 10:21:54"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3502,8 +3508,8 @@
         },
         {
           "current": {
-            "text": "0.95920678",
-            "value": "0.95920678"
+            "text": "0.95924237",
+            "value": "0.95924237"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
