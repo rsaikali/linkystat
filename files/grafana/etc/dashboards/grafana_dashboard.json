@@ -250,7 +250,7 @@
               "lineStyle": {
                 "fill": "solid"
               },
-              "lineWidth": 1,
+              "lineWidth": 0,
               "pointSize": 1,
               "scaleDistribution": {
                 "type": "linear"
@@ -294,6 +294,51 @@
                   "value": "dateTimeAsLocalNoDateIfToday"
                 }
               ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Consommation veille"
+              },
+              "properties": [
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "auto"
+                },
+                {
+                  "id": "custom.transform",
+                  "value": "constant"
+                },
+                {
+                  "id": "custom.drawStyle",
+                  "value": "line"
+                },
+                {
+                  "id": "custom.lineWidth",
+                  "value": 2
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-blue",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                },
+                {
+                  "id": "custom.lineStyle",
+                  "value": {
+                    "dash": [
+                      10,
+                      10
+                    ],
+                    "fill": "dash"
+                  }
+                }
+              ]
             }
           ]
         },
@@ -312,6 +357,9 @@
             "placement": "bottom",
             "showLegend": false
           },
+          "timezone": [
+            "browser"
+          ],
           "tooltip": {
             "maxHeight": 600,
             "mode": "multi",
@@ -356,49 +404,19 @@
               "limit": 50
             },
             "table": "linky_realtime"
-          }
-        ],
-        "title": "",
-        "transparent": true,
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "mysql",
-          "uid": "P211906C1C32DB77E"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 2,
-          "w": 6,
-          "x": 6,
-          "y": 2
-        },
-        "id": 63,
-        "options": {
-          "baseValueField": "",
-          "baseValueFontSize": "0",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 2,
-          "percentageValueField": "Consommation veille",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": true,
-          "referenceText": "Consommation en veille",
-          "referenceTextFontSize": "12px",
-          "unit": "W"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
+          },
           {
             "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
             "editorMode": "code",
             "format": "table",
+            "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT ROUND(MIN(PAPP) * $cosphi) AS \"Consommation veille\" FROM linky.linky_realtime;",
-            "refId": "A",
+            "rawSql": "SELECT\r\n  MAX(time),\r\n  ROUND(MIN(PAPP) * $cosphi) AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
+            "refId": "B",
             "sql": {
               "columns": [
                 {
@@ -420,7 +438,7 @@
         ],
         "title": "",
         "transparent": true,
-        "type": "nikosc-percenttrend-panel"
+        "type": "timeseries"
       },
       {
         "datasource": {
@@ -436,7 +454,7 @@
           "h": 2,
           "w": 6,
           "x": 6,
-          "y": 4
+          "y": 2
         },
         "id": 30,
         "options": {
@@ -524,7 +542,7 @@
           "h": 2,
           "w": 6,
           "x": 6,
-          "y": 6
+          "y": 4
         },
         "id": 28,
         "options": {
@@ -610,7 +628,7 @@
           "h": 2,
           "w": 6,
           "x": 6,
-          "y": 8
+          "y": 6
         },
         "id": 42,
         "options": {
@@ -680,6 +698,66 @@
             }
           }
         ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
+      },
+      {
+        "datasource": {
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 6,
+          "x": 6,
+          "y": 8
+        },
+        "id": 63,
+        "options": {
+          "baseValueField": "",
+          "baseValueFontSize": "0",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 2,
+          "percentageValueField": "Consommation veille",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": true,
+          "referenceText": "Consommation en veille",
+          "referenceTextFontSize": "12px",
+          "unit": "W"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "dataset": "linky",
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT ROUND(MIN(PAPP) * $cosphi) AS \"Consommation veille\" FROM linky.linky_realtime;",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
+          }
+        ],
+        "title": "",
         "transparent": true,
         "type": "nikosc-percenttrend-panel"
       },
@@ -1002,7 +1080,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT\r\n    ((MAX(HCHP) - MIN(HCHP)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures pleines\",\r\n    ((MAX(HCHC) - MIN(HCHC)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures creuses\"\r\nFROM linky.linky_history\r\nWHERE\r\n    time > (NOW() - INTERVAL 1 MONTH)",
+            "rawSql": "SELECT\r\n    ((MAX(HCHP) - MIN(HCHP)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures pleines\",\r\n    ((MAX(HCHC) - MIN(HCHC)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures creuses\"\r\nFROM linky.linky_history\r\nWHERE\r\n    time >= (NOW() - INTERVAL 1 MONTH)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1029,189 +1107,6 @@
       },
       {
         "datasource": {
-          "type": "datasource",
-          "uid": "-- Dashboard --"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 18,
-          "y": 11
-        },
-        "id": 33,
-        "options": {
-          "baseValueField": "1",
-          "baseValueFontSize": "14px",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 2,
-          "percentageValueField": "0",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": false,
-          "referenceText": "comparé au mois dernier",
-          "referenceTextFontSize": "10px",
-          "unit": "W"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
-          {
-            "datasource": {
-              "type": "datasource",
-              "uid": "-- Dashboard --"
-            },
-            "panelId": 58,
-            "refId": "A",
-            "withTransforms": true
-          }
-        ],
-        "title": "Puissance moyenne mois",
-        "transformations": [
-          {
-            "id": "convertFieldType",
-            "options": {
-              "conversions": [
-                {
-                  "dateFormat": "MM/YYYY",
-                  "destinationType": "time",
-                  "targetField": "Date"
-                }
-              ],
-              "fields": {}
-            }
-          },
-          {
-            "id": "sortBy",
-            "options": {
-              "fields": {},
-              "sort": [
-                {
-                  "desc": true,
-                  "field": "Date"
-                }
-              ]
-            }
-          },
-          {
-            "id": "limit",
-            "options": {
-              "limitField": "2"
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Consommation"
-                  }
-                },
-                "operator": "*",
-                "right": {
-                  "fixed": "1000"
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Consommation * 1000"
-                  }
-                },
-                "operator": "/",
-                "right": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "$nb_days_period"
-                  }
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Consommation * 1000 / nb_days_period"
-                  }
-                },
-                "operator": "/",
-                "right": {
-                  "fixed": "24"
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "mode": "index",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "rowsToFields",
-            "options": {
-              "mappings": [
-                {
-                  "fieldName": "Row",
-                  "handlerKey": "field.name"
-                },
-                {
-                  "fieldName": "Consommation * 1000 / nb_days_period / 24",
-                  "handlerKey": "field.value"
-                },
-                {
-                  "fieldName": "Date",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "Consommation",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "Consommation * 1000",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "Consommation * 1000 / nb_days_period",
-                  "handlerKey": "__ignore"
-                }
-              ]
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "nikosc-percenttrend-panel"
-      },
-      {
-        "datasource": {
           "type": "mysql",
           "uid": "P211906C1C32DB77E"
         },
@@ -1223,7 +1118,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 14
+          "y": 11
         },
         "id": 40,
         "options": {
@@ -1305,7 +1200,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 17
+          "y": 14
         },
         "id": 36,
         "options": {
@@ -1531,6 +1426,197 @@
         "type": "nikosc-percenttrend-panel"
       },
       {
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- Dashboard --"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 17
+        },
+        "id": 33,
+        "options": {
+          "baseValueField": "1",
+          "baseValueFontSize": "14px",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 2,
+          "percentageValueField": "0",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": false,
+          "referenceText": "comparé au mois dernier",
+          "referenceTextFontSize": "10px",
+          "unit": "W"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "-- Dashboard --"
+            },
+            "panelId": 58,
+            "refId": "A",
+            "withTransforms": true
+          }
+        ],
+        "title": "Puissance moyenne mois",
+        "transformations": [
+          {
+            "id": "convertFieldType",
+            "options": {
+              "conversions": [
+                {
+                  "dateFormat": "MM/YYYY",
+                  "destinationType": "time",
+                  "targetField": "Date"
+                }
+              ],
+              "fields": {}
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "Date"
+                }
+              ]
+            }
+          },
+          {
+            "id": "limit",
+            "options": {
+              "limitField": "2"
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Consommation"
+                  }
+                },
+                "operator": "*",
+                "right": {
+                  "fixed": "1000"
+                }
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Consommation * 1000"
+                  }
+                },
+                "operator": "/",
+                "right": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "$nb_days_period"
+                  }
+                }
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Consommation * 1000 / nb_days_period"
+                  }
+                },
+                "operator": "/",
+                "right": {
+                  "fixed": "24"
+                }
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "fixed": ""
+                },
+                "right": {
+                  "fixed": ""
+                }
+              },
+              "mode": "index",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "rowsToFields",
+            "options": {
+              "mappings": [
+                {
+                  "fieldName": "Consommation",
+                  "handlerKey": "__ignore"
+                },
+                {
+                  "fieldName": "Consommation * 1000",
+                  "handlerKey": "__ignore"
+                },
+                {
+                  "fieldName": "Date",
+                  "handlerKey": "__ignore"
+                },
+                {
+                  "fieldName": "Consommation * 1000 / nb_days_period / 24",
+                  "handlerKey": "field.value"
+                },
+                {
+                  "fieldName": "Row",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "Consommation * 1000 / nb_days_period",
+                  "handlerKey": "__ignore"
+                }
+              ]
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
+      },
+      {
         "collapsed": false,
         "gridPos": {
           "h": 1,
@@ -1672,7 +1758,7 @@
           },
           "xField": "Date",
           "xTickLabelRotation": 0,
-          "xTickLabelSpacing": -200
+          "xTickLabelSpacing": 100
         },
         "pluginVersion": "11.4.0",
         "targets": [
@@ -1780,7 +1866,7 @@
           {
             "id": "formatTime",
             "options": {
-              "outputFormat": "YYYY",
+              "outputFormat": "MM/YYYY",
               "timeField": "timestamp",
               "timezone": "browser",
               "useTimezone": true
@@ -2701,143 +2787,6 @@
       },
       {
         "datasource": {
-          "type": "datasource",
-          "uid": "-- Dashboard --"
-        },
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 3,
-          "w": 6,
-          "x": 18,
-          "y": 31
-        },
-        "id": 37,
-        "options": {
-          "baseValueField": "1",
-          "baseValueFontSize": "14px",
-          "interpretAsTrend": true,
-          "percentageNrDecimals": 0,
-          "percentageValueField": "0",
-          "percentageValueFontSize": "80%",
-          "positiveIsGood": false,
-          "referenceText": "comparé à l'année dernière",
-          "referenceTextFontSize": "10px",
-          "unit": "W"
-        },
-        "pluginVersion": "1.0.8",
-        "targets": [
-          {
-            "datasource": {
-              "type": "datasource",
-              "uid": "-- Dashboard --"
-            },
-            "panelId": 59,
-            "refId": "A",
-            "withTransforms": true
-          }
-        ],
-        "title": "Puissance moyenne année",
-        "transformations": [
-          {
-            "id": "sortBy",
-            "options": {
-              "fields": {},
-              "sort": [
-                {
-                  "desc": true,
-                  "field": "Date"
-                }
-              ]
-            }
-          },
-          {
-            "id": "limit",
-            "options": {
-              "limitField": "2"
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Date"
-                  }
-                },
-                "operator": "*",
-                "right": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Date"
-                  }
-                }
-              },
-              "index": {
-                "asPercentile": false
-              },
-              "mode": "index",
-              "reduce": {
-                "include": [],
-                "reducer": "lastNotNull"
-              },
-              "replaceFields": false
-            }
-          },
-          {
-            "id": "calculateField",
-            "options": {
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Consommation"
-                  }
-                },
-                "operator": "/",
-                "right": {
-                  "fixed": "8.760"
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "rowsToFields",
-            "options": {
-              "mappings": [
-                {
-                  "fieldName": "Row",
-                  "handlerKey": "field.name"
-                },
-                {
-                  "fieldName": "Consommation / 8.760",
-                  "handlerKey": "field.value"
-                },
-                {
-                  "fieldName": "Date",
-                  "handlerKey": "__ignore"
-                },
-                {
-                  "fieldName": "Consommation",
-                  "handlerKey": "__ignore"
-                }
-              ]
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "nikosc-percenttrend-panel"
-      },
-      {
-        "datasource": {
           "type": "mysql",
           "uid": "P211906C1C32DB77E"
         },
@@ -2849,7 +2798,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 34
+          "y": 31
         },
         "id": 60,
         "options": {
@@ -2931,7 +2880,7 @@
           "h": 3,
           "w": 6,
           "x": 18,
-          "y": 37
+          "y": 34
         },
         "id": 61,
         "options": {
@@ -3138,6 +3087,143 @@
                 },
                 {
                   "fieldName": "timestamp",
+                  "handlerKey": "__ignore"
+                }
+              ]
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "nikosc-percenttrend-panel"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- Dashboard --"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 18,
+          "y": 37
+        },
+        "id": 37,
+        "options": {
+          "baseValueField": "1",
+          "baseValueFontSize": "14px",
+          "interpretAsTrend": true,
+          "percentageNrDecimals": 0,
+          "percentageValueField": "0",
+          "percentageValueFontSize": "80%",
+          "positiveIsGood": false,
+          "referenceText": "comparé à l'année dernière",
+          "referenceTextFontSize": "10px",
+          "unit": "W"
+        },
+        "pluginVersion": "1.0.8",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "-- Dashboard --"
+            },
+            "panelId": 59,
+            "refId": "A",
+            "withTransforms": true
+          }
+        ],
+        "title": "Puissance moyenne année",
+        "transformations": [
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "Date"
+                }
+              ]
+            }
+          },
+          {
+            "id": "limit",
+            "options": {
+              "limitField": "2"
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Date"
+                  }
+                },
+                "operator": "*",
+                "right": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Date"
+                  }
+                }
+              },
+              "index": {
+                "asPercentile": false
+              },
+              "mode": "index",
+              "reduce": {
+                "include": [],
+                "reducer": "lastNotNull"
+              },
+              "replaceFields": false
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Consommation"
+                  }
+                },
+                "operator": "/",
+                "right": {
+                  "fixed": "8.760"
+                }
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "rowsToFields",
+            "options": {
+              "mappings": [
+                {
+                  "fieldName": "Row",
+                  "handlerKey": "field.name"
+                },
+                {
+                  "fieldName": "Consommation / 8.760",
+                  "handlerKey": "field.value"
+                },
+                {
+                  "fieldName": "Date",
+                  "handlerKey": "__ignore"
+                },
+                {
+                  "fieldName": "Consommation",
                   "handlerKey": "__ignore"
                 }
               ]
@@ -3385,8 +3471,8 @@
         },
         {
           "current": {
-            "text": "25/01/2025 10:11:15",
-            "value": "25/01/2025 10:11:15"
+            "text": "26/01/2025 10:07:17",
+            "value": "26/01/2025 10:07:17"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3400,8 +3486,8 @@
         },
         {
           "current": {
-            "text": "9.9",
-            "value": "9.9"
+            "text": "4.9",
+            "value": "4.9"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3416,8 +3502,8 @@
         },
         {
           "current": {
-            "text": "0.95967797",
-            "value": "0.95967797"
+            "text": "0.95920678",
+            "value": "0.95920678"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3461,6 +3547,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 36,
+    "version": 59,
     "weekStart": "monday"
   }
