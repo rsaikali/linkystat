@@ -242,7 +242,7 @@
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 0,
-              "barWidthFactor": 0.6,
+              "barWidthFactor": 0.7,
               "drawStyle": "line",
               "fillOpacity": 100,
               "gradientMode": "scheme",
@@ -252,7 +252,7 @@
                 "viz": false
               },
               "insertNulls": false,
-              "lineInterpolation": "smooth",
+              "lineInterpolation": "stepBefore",
               "lineStyle": {
                 "fill": "solid"
               },
@@ -271,6 +271,7 @@
                 "mode": "off"
               }
             },
+            "fieldMinMax": true,
             "mappings": [],
             "min": 0,
             "thresholds": {
@@ -326,7 +327,7 @@
                 {
                   "id": "color",
                   "value": {
-                    "fixedColor": "dark-blue",
+                    "fixedColor": "#08028b",
                     "mode": "fixed"
                   }
                 },
@@ -355,7 +356,7 @@
           "y": 1
         },
         "id": 1,
-        "interval": "1s",
+        "interval": "2s",
         "options": {
           "legend": {
             "calcs": [],
@@ -421,7 +422,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  MAX(time),\r\n  ROUND(MIN(PAPP) * $cosphi / 5) * 5 AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
+            "rawSql": "SELECT\r\n  MAX(time),\r\n  $consommation_veille AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
             "refId": "B",
             "sql": {
               "columns": [
@@ -739,10 +740,14 @@
         "targets": [
           {
             "dataset": "linky",
+            "datasource": {
+              "type": "mysql",
+              "uid": "P211906C1C32DB77E"
+            },
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 AS \"Consommation veille\" FROM linky.linky_realtime;",
+            "rawSql": "SELECT $consommation_veille as \"Consommation veille\"",
             "refId": "A",
             "sql": {
               "columns": [
@@ -3477,8 +3482,8 @@
         },
         {
           "current": {
-            "text": "27/01/2025 09:57:17",
-            "value": "27/01/2025 09:57:17"
+            "text": "27/01/2025 11:43:06",
+            "value": "27/01/2025 11:43:06"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3492,8 +3497,8 @@
         },
         {
           "current": {
-            "text": "11",
-            "value": "11"
+            "text": "9.7",
+            "value": "9.7"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3508,8 +3513,8 @@
         },
         {
           "current": {
-            "text": "0.96009246",
-            "value": "0.96009246"
+            "text": "0.96090497",
+            "value": "0.96090497"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3533,11 +3538,25 @@
           "refresh": 1,
           "regex": "",
           "type": "query"
+        },
+        {
+          "current": {
+            "text": "110",
+            "value": "110"
+          },
+          "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
+          "hide": 2,
+          "name": "consommation_veille",
+          "options": [],
+          "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
+          "refresh": 2,
+          "regex": "",
+          "type": "query"
         }
       ]
     },
     "time": {
-      "from": "now-15m",
+      "from": "now-10m",
       "to": "now"
     },
     "timepicker": {
