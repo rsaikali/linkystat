@@ -7,29 +7,11 @@ echo "*********************************"
 echo "*** Creating Linkystat schema ***"
 echo "*********************************"
 
-echo "*********** Creating functions ************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-DELIMITER ;;
-
-CREATE FUNCTION getNbDaysCurrentPeriod() RETURNS INT DETERMINISTIC NO SQL
-    BEGIN
-		RETURN 
-			CASE WHEN DAYOFMONTH(current_date) <= ${DAYS_OFFSET}
-				THEN DAYOFMONTH(LAST_DAY(DATE_ADD(
-						DATE_SUB(current_date, interval 1 month), 
-						interval ${DAYS_OFFSET} - DAYOFMONTH(current_date) day)))                     
-				ELSE DAYOFMONTH(LAST_DAY(date_add(current_date, interval ${DAYS_OFFSET} - DAYOFMONTH(current_date) day)))
-			END;
-    END;;
-"
-
 echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
 CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
 GRANT SELECT, SHOW VIEW, EXECUTE ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
-GRANT EXECUTE ON FUNCTION ${MYSQL_DATABASE}.getNbDaysCurrentPeriod TO '${GRAFANA_MYSQL_USER}';
 FLUSH PRIVILEGES;
 "
 
