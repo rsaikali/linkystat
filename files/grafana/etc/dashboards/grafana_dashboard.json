@@ -574,7 +574,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / getNbDaysCurrentPeriod()) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / getNbDaysCurrentPeriod()) + ($abonnement / getNbDaysCurrentPeriod())  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY AND NOW())",
+            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / $nb_days_period) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / $nb_days_period) + ($abonnement / $nb_days_period)  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY AND NOW())",
             "refId": "A",
             "sql": {
               "columns": [
@@ -661,7 +661,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / getNbDaysCurrentPeriod() / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL getNbDaysCurrentPeriod() DAY)",
+            "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -910,7 +910,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n\tDATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION ALL\r\n(\r\nSELECT\r\n      time as \"timestamp\", \r\n      IFNULL(LEAD(counter) OVER (ORDER BY time) - counter, 0) AS \"total_kwh\"\r\nFROM\r\n    (SELECT time, (HCHP + HCHC) / 1000 as counter FROM linky_history\r\n\t WHERE DATE(time) >= NOW() - INTERVAL 1 MONTH AND HOUR(time) = 0 AND MINUTE(time) = 0) B\r\n)\r\nORDER BY timestamp",
+            "rawSql": "(\r\n  SELECT\r\n    DATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION\r\nALL (\r\n  SELECT\r\n    time as \"timestamp\",\r\n    IFNULL(\r\n      LEAD(counter) OVER (\r\n        ORDER BY\r\n          time\r\n      ) - counter,\r\n      0\r\n    ) AS \"total_kwh\"\r\n  FROM\r\n    (\r\n      SELECT\r\n        time,\r\n        (HCHP + HCHC) / 1000 as counter\r\n      FROM\r\n        linky_history\r\n      WHERE\r\n        DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n        AND HOUR(time) = 0\r\n        AND MINUTE(time) = 0\r\n        AND DATE(time) <> DATE(time + INTERVAL 1 DAY)\r\n    ) B\r\n)\r\nORDER BY\r\n  timestamp",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1151,7 +1151,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(SELECT \r\n  \"current\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW())\r\nUNION\r\n(SELECT \r\n  \"base\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 DAY)",
+            "rawSql": "(SELECT \r\n  \"current\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR AND NOW())\r\nUNION\r\n(SELECT \r\n  \"base\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 DAY)",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1773,7 +1773,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL getNbDaysCurrentPeriod() DAY - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -3477,8 +3477,8 @@
         },
         {
           "current": {
-            "text": "26/01/2025 10:21:54",
-            "value": "26/01/2025 10:21:54"
+            "text": "27/01/2025 09:57:17",
+            "value": "27/01/2025 09:57:17"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3492,8 +3492,8 @@
         },
         {
           "current": {
-            "text": "4.9",
-            "value": "4.9"
+            "text": "11",
+            "value": "11"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3508,8 +3508,8 @@
         },
         {
           "current": {
-            "text": "0.95924237",
-            "value": "0.95924237"
+            "text": "0.96009246",
+            "value": "0.96009246"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3525,12 +3525,12 @@
             "text": "31",
             "value": "31"
           },
-          "definition": "SELECT getNbDaysCurrentPeriod()",
+          "definition": "SELECT\n    CASE WHEN DAYOFMONTH(current_date) <= $jour_releve_compteur\n\tTHEN \n        DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(current_date, interval 1 month), interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))                     \n    ELSE\n        DAYOFMONTH(LAST_DAY(date_add(current_date, interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))\n    END",
           "hide": 2,
           "name": "nb_days_period",
           "options": [],
-          "query": "SELECT getNbDaysCurrentPeriod()",
-          "refresh": 2,
+          "query": "SELECT\n    CASE WHEN DAYOFMONTH(current_date) <= $jour_releve_compteur\n\tTHEN \n        DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(current_date, interval 1 month), interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))                     \n    ELSE\n        DAYOFMONTH(LAST_DAY(date_add(current_date, interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))\n    END",
+          "refresh": 1,
           "regex": "",
           "type": "query"
         }
