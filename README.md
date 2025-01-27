@@ -37,27 +37,17 @@ git clone https://github.com/rsaikali/linkystat.git
 
 # Change directory
 cd linkystat
+```
 
+### Configuration file
+
+```bash
 # Copy the example environment file
 cp env/.env.example .env
 
 # Edit the environment file (see next section for details)
 nano .env
-
-# Build and start the containers
-docker compose --env-file ./.env up -d
-# or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
-docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
-
-# Open Grafana in your browser
-http://<raspberry_ip_address>:3000
-# or if you use HTTPS with a domain name
-https://<your_domain_name>
 ```
-
-## Configuration
-
-### Environment file
 
 | Name | Description | Default value |
 | ---- | ----------- | :-------------: |
@@ -84,6 +74,58 @@ Keep variables empty to use in a simple environment (Grafana will be available o
 | `VIRTUAL_PORT` | Port used for exposed application |
 | `LETSENCRYPT_HOST` | LetsEncrypt domain name (should be identical to `VIRTUAL_HOST`) |
 | `LETSENCRYPT_EMAIL` | LetsEncrypt email used for certificate generation |
+
+```bash
+# Build and start the containers
+docker compose --env-file ./.env up -d
+# or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
+docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
+
+# Open Grafana in your browser
+http://<raspberry_ip_address>:3000
+# or if you use HTTPS with a domain name
+https://<your_domain_name>
+```
+
+### Docker
+
+Launch `docker compose` using the previously edited `.env` file.
+
+```bash
+# Build and start the containers
+docker compose --env-file ./.env up -d
+# or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
+docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
+```
+
+### Configuration in Grafana
+
+Open Grafana in your browser: `http://<raspberry_ip_address>:3000` (or if you use HTTPS with a domain name: `https://<your_domain_name>`) and login with the previously created admin user:
+
+<img
+  src="./files/images/linkystat_grafana_login.png"
+  alt="Linkystat Grafana login page"
+  title="Linkystat Grafana login page"
+  style="display: inline-block; margin: 0 auto; max-width: 1200px">
+
+Then go to `Settings`>`Variables` to setup personalized variables for your installation:
+
+<img
+  src="./files/images/linkystat_grafana_variables.png"
+  alt="Linkystat Grafana variables"
+  title="Linkystat Grafana variables"
+  style="display: inline-block; margin: 0 auto; max-width: 1200px">
+
+Here you have to setup the first four variables (keep the others to their default values):
+
+| Name | Description |
+| ---- | ----------- |
+| `jour_releve_compteur` | Day of provider meter reading |
+| `abonnement` | Subscription price |
+| `prix_hp` | Peak hours kWh price |
+| `prix_hc` | Off-peak hours kWh price |
+
+You can now enjoy your Linkystat Grafana dashboard!
 
 ## License
 
