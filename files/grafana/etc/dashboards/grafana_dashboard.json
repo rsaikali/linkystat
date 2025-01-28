@@ -825,12 +825,8 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
+                  "color": "super-light-green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             },
@@ -917,7 +913,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT \r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY",
+            "rawSql": "SELECT \r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as \"Moyenne mois\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY",
             "refId": "B",
             "sql": {
               "columns": [
@@ -977,10 +973,10 @@
               "configRefId": "B",
               "mappings": [
                 {
-                  "fieldName": "total_kwh",
+                  "fieldName": "Moyenne mois",
                   "handlerArguments": {
                     "threshold": {
-                      "color": "blue"
+                      "color": "semi-dark-blue"
                     }
                   },
                   "handlerKey": "threshold1"
@@ -3475,8 +3471,8 @@
         },
         {
           "current": {
-            "text": "28/01/2025 11:41:33",
-            "value": "28/01/2025 11:41:33"
+            "text": "28/01/2025 12:24:44",
+            "value": "28/01/2025 12:24:44"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3490,8 +3486,8 @@
         },
         {
           "current": {
-            "text": "9.9",
-            "value": "9.9"
+            "text": "11.6",
+            "value": "11.6"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3506,8 +3502,8 @@
         },
         {
           "current": {
-            "text": "0.96260865",
-            "value": "0.96260865"
+            "text": "0.96193454",
+            "value": "0.96193454"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3565,6 +3561,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 17,
+    "version": 3,
     "weekStart": "monday"
   }
