@@ -45,15 +45,15 @@
             "fieldMinMax": false,
             "mappings": [],
             "thresholds": {
-              "mode": "percentage",
+              "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
+                  "color": "dark-green",
                   "value": null
                 },
                 {
-                  "color": "red",
-                  "value": 300
+                  "color": "#EAB839",
+                  "value": 0
                 }
               ]
             },
@@ -88,15 +88,15 @@
           "needleLengthNeg": 0,
           "needleTickGap": 0.05,
           "needleWidth": 10,
-          "operatorName": "lastNotNull",
+          "operatorName": "last",
           "outerEdgeColor": "#7c7c87",
           "padding": 0.05,
           "pivotColor": "text",
           "pivotRadius": 0.1,
           "showThresholdBandLowerRange": true,
-          "showThresholdBandMiddleRange": true,
-          "showThresholdBandOnGauge": false,
-          "showThresholdBandUpperRange": true,
+          "showThresholdBandMiddleRange": false,
+          "showThresholdBandOnGauge": true,
+          "showThresholdBandUpperRange": false,
           "showThresholdStateOnBackground": false,
           "showThresholdStateOnValue": false,
           "tickEdgeGap": 0.05,
@@ -422,7 +422,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  MAX(time),\r\n  $consommation_veille AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
+            "rawSql": "SELECT\r\n  MAX(time),\r\n  ${consommation_veille:raw} AS \"Consommation veille\"\r\nFROM\r\n  linky.linky_realtime;",
             "refId": "B",
             "sql": {
               "columns": [
@@ -814,7 +814,7 @@
                 "type": "linear"
               },
               "thresholdsStyle": {
-                "mode": "off"
+                "mode": "dashed"
               }
             },
             "decimals": 1,
@@ -837,34 +837,6 @@
             "unit": "kwatth"
           },
           "overrides": [
-            {
-              "matcher": {
-                "id": "byFrameRefID",
-                "options": "B"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "celsius"
-                },
-                {
-                  "id": "custom.hideFrom",
-                  "value": {
-                    "legend": true,
-                    "tooltip": false,
-                    "viz": true
-                  }
-                },
-                {
-                  "id": "decimals",
-                  "value": 1
-                },
-                {
-                  "id": "displayName",
-                  "value": "Température"
-                }
-              ]
-            },
             {
               "matcher": {
                 "id": "byName",
@@ -945,7 +917,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n      MIN(time) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n    WHERE\r\n      DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n\tGROUP BY DATE(time)",
+            "rawSql": "SELECT \r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY",
             "refId": "B",
             "sql": {
               "columns": [
@@ -989,10 +961,31 @@
           {
             "id": "formatTime",
             "options": {
-              "outputFormat": "DD",
+              "outputFormat": "DD.MM",
               "timeField": "timestamp",
               "timezone": "browser",
               "useTimezone": true
+            }
+          },
+          {
+            "id": "configFromData",
+            "options": {
+              "applyTo": {
+                "id": "byFrameRefID",
+                "options": "A"
+              },
+              "configRefId": "B",
+              "mappings": [
+                {
+                  "fieldName": "total_kwh",
+                  "handlerArguments": {
+                    "threshold": {
+                      "color": "blue"
+                    }
+                  },
+                  "handlerKey": "threshold1"
+                }
+              ]
             }
           }
         ],
@@ -3482,8 +3475,8 @@
         },
         {
           "current": {
-            "text": "27/01/2025 11:43:06",
-            "value": "27/01/2025 11:43:06"
+            "text": "28/01/2025 11:41:33",
+            "value": "28/01/2025 11:41:33"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3497,8 +3490,8 @@
         },
         {
           "current": {
-            "text": "9.7",
-            "value": "9.7"
+            "text": "9.9",
+            "value": "9.9"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3513,8 +3506,8 @@
         },
         {
           "current": {
-            "text": "0.96090497",
-            "value": "0.96090497"
+            "text": "0.96260865",
+            "value": "0.96260865"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3556,7 +3549,7 @@
       ]
     },
     "time": {
-      "from": "now-10m",
+      "from": "now-5m",
       "to": "now"
     },
     "timepicker": {
@@ -3572,6 +3565,6 @@
     "timezone": "browser",
     "title": "Linky",
     "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445a8",
-    "version": 59,
+    "version": 17,
     "weekStart": "monday"
   }
