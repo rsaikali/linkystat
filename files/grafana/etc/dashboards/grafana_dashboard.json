@@ -1771,7 +1771,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1801,7 +1801,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n      TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n\tGROUP BY MONTH(time), YEAR(time)",
+            "rawSql": "(SELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur<15, 0, 1) DAY, '%Y-%m-24 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\nWHERE time >= NOW() - INTERVAL $jour_releve_compteur DAY - INTERVAL 1 HOUR\r\n\t)\r\nUNION\r\n(SELECT\r\n      TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n\tGROUP BY MONTH(time), YEAR(time))",
             "refId": "B",
             "sql": {
               "columns": [
@@ -3476,8 +3476,8 @@
         },
         {
           "current": {
-            "text": "30/01/2025 09:49:04",
-            "value": "30/01/2025 09:49:04"
+            "text": "30/01/2025 10:37:55",
+            "value": "30/01/2025 10:37:55"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3491,8 +3491,8 @@
         },
         {
           "current": {
-            "text": "4.9",
-            "value": "4.9"
+            "text": "6.4",
+            "value": "6.4"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3507,8 +3507,8 @@
         },
         {
           "current": {
-            "text": "0.96143943",
-            "value": "0.96143943"
+            "text": "0.96318005",
+            "value": "0.96318005"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
