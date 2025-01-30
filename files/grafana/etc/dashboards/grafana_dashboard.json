@@ -368,12 +368,13 @@
             "browser"
           ],
           "tooltip": {
+            "hideZeros": false,
             "maxHeight": 600,
             "mode": "multi",
             "sort": "none"
           }
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "dataset": "linky",
@@ -869,6 +870,7 @@
           "showValue": "never",
           "stacking": "none",
           "tooltip": {
+            "hideZeros": false,
             "mode": "multi",
             "sort": "none"
           },
@@ -876,7 +878,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": -100
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "dataset": "linky",
@@ -976,7 +978,7 @@
                   "fieldName": "Moyenne mois",
                   "handlerArguments": {
                     "threshold": {
-                      "color": "semi-dark-blue"
+                      "color": "blue"
                     }
                   },
                   "handlerKey": "threshold1"
@@ -1035,7 +1037,7 @@
                 {
                   "id": "color",
                   "value": {
-                    "fixedColor": "semi-dark-green",
+                    "fixedColor": "semi-dark-blue",
                     "mode": "fixed"
                   }
                 }
@@ -1069,11 +1071,12 @@
             "values": false
           },
           "tooltip": {
+            "hideZeros": false,
             "mode": "multi",
             "sort": "asc"
           }
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "dataset": "linky",
@@ -1753,6 +1756,7 @@
           "showValue": "never",
           "stacking": "none",
           "tooltip": {
+            "hideZeros": false,
             "mode": "multi",
             "sort": "none"
           },
@@ -1760,7 +1764,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": 100
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "dataset": "linky",
@@ -2018,7 +2022,7 @@
           "showHeader": false,
           "sortBy": []
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "datasource": {
@@ -2332,6 +2336,7 @@
           "showValue": "never",
           "stacking": "none",
           "tooltip": {
+            "hideZeros": false,
             "mode": "multi",
             "sort": "none"
           },
@@ -2339,7 +2344,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": -100
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "dataset": "linky",
@@ -2546,7 +2551,7 @@
           "showHeader": false,
           "sortBy": []
         },
-        "pluginVersion": "11.4.0",
+        "pluginVersion": "11.5.0",
         "targets": [
           {
             "datasource": {
@@ -3471,8 +3476,8 @@
         },
         {
           "current": {
-            "text": "28/01/2025 12:24:44",
-            "value": "28/01/2025 12:24:44"
+            "text": "30/01/2025 09:49:04",
+            "value": "30/01/2025 09:49:04"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3486,8 +3491,8 @@
         },
         {
           "current": {
-            "text": "11.6",
-            "value": "11.6"
+            "text": "4.9",
+            "value": "4.9"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3502,15 +3507,15 @@
         },
         {
           "current": {
-            "text": "0.96193454",
-            "value": "0.96193454"
+            "text": "0.96143943",
+            "value": "0.96143943"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
           "name": "cosphi",
           "options": [],
           "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
-          "refresh": 2,
+          "refresh": 1,
           "regex": "",
           "type": "query"
         },
@@ -3538,14 +3543,14 @@
           "name": "consommation_veille",
           "options": [],
           "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
-          "refresh": 2,
+          "refresh": 1,
           "regex": "",
           "type": "query"
         }
       ]
     },
     "time": {
-      "from": "now-5m",
+      "from": "now-10m",
       "to": "now"
     },
     "timepicker": {
