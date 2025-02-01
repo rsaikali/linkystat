@@ -374,7 +374,7 @@
             "sort": "none"
           }
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "dataset": "linky",
@@ -878,7 +878,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": -100
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "dataset": "linky",
@@ -1076,7 +1076,7 @@
             "sort": "asc"
           }
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "dataset": "linky",
@@ -1764,7 +1764,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": 100
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "dataset": "linky",
@@ -2022,7 +2022,7 @@
           "showHeader": false,
           "sortBy": []
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "datasource": {
@@ -2344,7 +2344,7 @@
           "xTickLabelRotation": 0,
           "xTickLabelSpacing": -100
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "dataset": "linky",
@@ -2551,7 +2551,7 @@
           "showHeader": false,
           "sortBy": []
         },
-        "pluginVersion": "11.5.0",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
             "datasource": {
@@ -3437,47 +3437,47 @@
         },
         {
           "current": {
-            "text": "16.70",
-            "value": "16.70"
+            "text": "18.01",
+            "value": "18.01"
           },
           "description": "Abonnement mensuel TTC (en €)",
           "hide": 2,
           "label": "Abonnement mensuel",
           "name": "abonnement",
-          "query": "16.70",
+          "query": "18.01",
           "skipUrlSync": true,
           "type": "constant"
         },
         {
           "current": {
-            "text": "0.2795",
-            "value": "0.2795"
+            "text": "0.224",
+            "value": "0.224"
           },
           "description": "Prix Heures Pleines (en €/kWh)",
           "hide": 2,
           "label": "Prix Heures Pleines",
           "name": "prix_hp",
-          "query": "0.2795",
+          "query": "0.224",
           "skipUrlSync": true,
           "type": "constant"
         },
         {
           "current": {
-            "text": "0.1927",
-            "value": "0.1927"
+            "text": "0.1555",
+            "value": "0.1555"
           },
           "description": "Prix Heures Creuses (en €/kWh)",
           "hide": 2,
           "label": "Prix Heures Creuses",
           "name": "prix_hc",
-          "query": "0.1927",
+          "query": "0.1555",
           "skipUrlSync": true,
           "type": "constant"
         },
         {
           "current": {
-            "text": "30/01/2025 10:37:55",
-            "value": "30/01/2025 10:37:55"
+            "text": "01/02/2025 09:56:48",
+            "value": "01/02/2025 09:56:48"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3491,8 +3491,8 @@
         },
         {
           "current": {
-            "text": "6.4",
-            "value": "6.4"
+            "text": "2.1",
+            "value": "2.1"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3507,8 +3507,8 @@
         },
         {
           "current": {
-            "text": "0.96318005",
-            "value": "0.96318005"
+            "text": "0.9739726",
+            "value": "0.9739726"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3535,8 +3535,8 @@
         },
         {
           "current": {
-            "text": "110",
-            "value": "110"
+            "text": "115",
+            "value": "115"
           },
           "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
           "hide": 2,
