@@ -3476,8 +3476,8 @@
         },
         {
           "current": {
-            "text": "01/02/2025 09:56:48",
-            "value": "01/02/2025 09:56:48"
+            "text": "01/02/2025 10:21:29",
+            "value": "01/02/2025 10:21:29"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3491,8 +3491,8 @@
         },
         {
           "current": {
-            "text": "2.1",
-            "value": "2.1"
+            "text": "2.7",
+            "value": "2.7"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3507,15 +3507,15 @@
         },
         {
           "current": {
-            "text": "0.9739726",
-            "value": "0.9739726"
+            "text": "0.97470388",
+            "value": "0.97470388"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
           "name": "cosphi",
           "options": [],
           "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
-          "refresh": 1,
+          "refresh": 2,
           "regex": "",
           "type": "query"
         },
@@ -3529,7 +3529,7 @@
           "name": "nb_days_period",
           "options": [],
           "query": "SELECT\n    CASE WHEN DAYOFMONTH(current_date) <= $jour_releve_compteur\n\tTHEN \n        DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(current_date, interval 1 month), interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))                     \n    ELSE\n        DAYOFMONTH(LAST_DAY(date_add(current_date, interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))\n    END",
-          "refresh": 1,
+          "refresh": 2,
           "regex": "",
           "type": "query"
         },
@@ -3543,7 +3543,7 @@
           "name": "consommation_veille",
           "options": [],
           "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
-          "refresh": 1,
+          "refresh": 2,
           "regex": "",
           "type": "query"
         }
