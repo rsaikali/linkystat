@@ -50,10 +50,6 @@
                 {
                   "color": "dark-green",
                   "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 0
                 }
               ]
             },
@@ -69,15 +65,15 @@
         },
         "id": 39,
         "options": {
-          "allowNeedleCrossLimits": false,
+          "allowNeedleCrossLimits": true,
           "animateNeedleValueTransition": true,
           "animateNeedleValueTransitionSpeed": 500,
           "edgeWidth": 0.01,
           "gaugeRadius": 0,
           "innerColor": "#181b1f",
           "markerEndEnabled": false,
-          "markerEndShape": "stub",
-          "markerStartEnabled": false,
+          "markerEndShape": "arrow-inverse",
+          "markerStartEnabled": true,
           "markerStartShape": "circle",
           "maxNeedleAngle": 320,
           "maxTickAngle": 300,
@@ -88,14 +84,14 @@
           "needleLengthNeg": 0,
           "needleTickGap": 0.05,
           "needleWidth": 10,
-          "operatorName": "last",
+          "operatorName": "lastNotNull",
           "outerEdgeColor": "#7c7c87",
           "padding": 0.05,
           "pivotColor": "text",
           "pivotRadius": 0.1,
           "showThresholdBandLowerRange": true,
           "showThresholdBandMiddleRange": false,
-          "showThresholdBandOnGauge": true,
+          "showThresholdBandOnGauge": false,
           "showThresholdBandUpperRange": false,
           "showThresholdStateOnBackground": false,
           "showThresholdStateOnValue": false,
@@ -3476,8 +3472,8 @@
         },
         {
           "current": {
-            "text": "01/02/2025 10:21:29",
-            "value": "01/02/2025 10:21:29"
+            "text": "02/02/2025 10:23:26",
+            "value": "02/02/2025 10:23:26"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3491,8 +3487,8 @@
         },
         {
           "current": {
-            "text": "2.7",
-            "value": "2.7"
+            "text": "1",
+            "value": "1"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3507,8 +3503,8 @@
         },
         {
           "current": {
-            "text": "0.97470388",
-            "value": "0.97470388"
+            "text": "0.97785667",
+            "value": "0.97785667"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
