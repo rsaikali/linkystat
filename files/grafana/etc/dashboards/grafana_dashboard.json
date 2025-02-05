@@ -31,7 +31,7 @@
         },
         "id": 46,
         "panels": [],
-        "title": "Linky $last_update ($last_temperature°C)",
+        "title": "$libelle_tarif $last_update ($last_temperature°C)",
         "type": "row"
       },
       {
@@ -881,7 +881,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\n  SELECT\r\n    DATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION\r\nALL (\r\n  SELECT\r\n    time as \"timestamp\",\r\n    IFNULL(\r\n      LEAD(counter) OVER (\r\n        ORDER BY\r\n          time\r\n      ) - counter,\r\n      0\r\n    ) AS \"total_kwh\"\r\n  FROM\r\n    (\r\n      SELECT\r\n        time,\r\n        (HCHP + HCHC) / 1000 as counter\r\n      FROM\r\n        linky_history\r\n      WHERE\r\n        DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n        AND HOUR(time) = 0\r\n        AND MINUTE(time) = 0\r\n        AND DATE(time) <> DATE(time + INTERVAL 1 DAY)\r\n    ) B\r\n)\r\nORDER BY\r\n  timestamp",
+            "rawSql": "(\r\n  SELECT\r\n    DATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION\r\n(\r\n  SELECT\r\n    time as \"timestamp\",\r\n    IFNULL(\r\n      LEAD(counter) OVER (\r\n        ORDER BY\r\n          time\r\n      ) - counter,\r\n      0\r\n    ) AS \"total_kwh\"\r\n  FROM\r\n    (\r\n      SELECT\r\n        time,\r\n        (HCHP + HCHC) / 1000 as counter\r\n      FROM\r\n        linky_history\r\n      WHERE\r\n        DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n        AND HOUR(time) = 0\r\n        AND MINUTE(time) = 0\r\n        AND DATE(time) <> DATE(time + INTERVAL 1 DAY)\r\n    ) B\r\n)\r\nORDER BY\r\n  timestamp",
             "refId": "A",
             "sql": {
               "columns": [
@@ -911,7 +911,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT \r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as \"Moyenne mois\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY",
+            "rawSql": "SELECT\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as \"Moyenne mois\"\r\nFROM\r\n  linky_history\r\nWHERE\r\n  time >= NOW() - INTERVAL $nb_days_period DAY",
             "refId": "B",
             "sql": {
               "columns": [
@@ -3337,7 +3337,7 @@
               "h": 6,
               "w": 12,
               "x": 0,
-              "y": 41
+              "y": 50
             },
             "id": 25,
             "options": {
@@ -3472,51 +3472,6 @@
         },
         {
           "current": {
-            "text": "02/02/2025 10:23:26",
-            "value": "02/02/2025 10:23:26"
-          },
-          "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
-          "description": "",
-          "hide": 2,
-          "name": "last_update",
-          "options": [],
-          "query": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
-          "refresh": 2,
-          "regex": "",
-          "type": "query"
-        },
-        {
-          "current": {
-            "text": "1",
-            "value": "1"
-          },
-          "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
-          "description": "",
-          "hide": 2,
-          "name": "last_temperature",
-          "options": [],
-          "query": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
-          "refresh": 2,
-          "regex": "",
-          "sort": 1,
-          "type": "query"
-        },
-        {
-          "current": {
-            "text": "0.97785667",
-            "value": "0.97785667"
-          },
-          "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
-          "hide": 2,
-          "name": "cosphi",
-          "options": [],
-          "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
-          "refresh": 2,
-          "regex": "",
-          "type": "query"
-        },
-        {
-          "current": {
             "text": "31",
             "value": "31"
           },
@@ -3531,14 +3486,73 @@
         },
         {
           "current": {
-            "text": "115",
-            "value": "115"
+            "text": "120",
+            "value": "120"
           },
           "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
           "hide": 2,
           "name": "consommation_veille",
           "options": [],
           "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
+          "refresh": 2,
+          "regex": "",
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "0.98344441",
+            "value": "0.98344441"
+          },
+          "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
+          "hide": 2,
+          "name": "cosphi",
+          "options": [],
+          "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
+          "refresh": 2,
+          "regex": "",
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "05/02/2025 11:16:04",
+            "value": "05/02/2025 11:16:04"
+          },
+          "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "description": "",
+          "hide": 2,
+          "name": "last_update",
+          "options": [],
+          "query": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "refresh": 2,
+          "regex": "",
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "6",
+            "value": "6"
+          },
+          "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "description": "",
+          "hide": 2,
+          "name": "last_temperature",
+          "options": [],
+          "query": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "refresh": 2,
+          "regex": "",
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "HEURE PLEINE",
+            "value": "HEURE PLEINE"
+          },
+          "definition": "SELECT libelle_tarif FROM linky.linky_realtime ORDER BY time DESC LIMIT 1",
+          "hide": 2,
+          "name": "libelle_tarif",
+          "options": [],
+          "query": "SELECT libelle_tarif FROM linky.linky_realtime ORDER BY time DESC LIMIT 1",
           "refresh": 2,
           "regex": "",
           "type": "query"
