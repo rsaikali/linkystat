@@ -26,7 +26,7 @@ OPENWEATHER_LONGITUDE = float(os.getenv("OPENWEATHER_LONGITUDE"))
 # Port serial
 LINKY_USB_DEVICE = os.getenv("LINKY_USB_DEVICE", "/dev/null")
 LINKY_BAUDRATE = int(os.getenv("LINKY_BAUDRATE", 9600))
-KEEP_KEYS = {"DATE": "DATE", "SINSTS": "PAPP", "EASF01": "HCHC", "EASF02": "HCHP"}
+KEEP_KEYS = {"DATE": "DATE", "SINSTS": "PAPP", "EASF01": "HCHC", "EASF02": "HCHP", "LTARF": "LTARF"}
 
 
 class LinkyData(object):
@@ -72,18 +72,18 @@ class LinkyData(object):
                 arr = line.decode("ascii").strip().split()
 
                 # Check if the array has the expected number of elements
-                if len(arr) != 3:
+                if len(arr) < 3:
                     # Skip this line and continue to the next one
                     continue
 
                 # Extract the key, value, and checksum from the array
-                key, value, checksum = arr
+                key, value, checksum = arr[0], " ".join(arr[1:-1]), arr[-1]
 
                 # Check if the key is one of the expected ones and if the checksum is correct
-                if key not in KEEP_KEYS.keys() or not self.verify_checksum(key, value, checksum):
+                if key not in KEEP_KEYS.keys() or not LinkyData.verify_checksum(key, value, checksum):
                     continue
 
-                # Store value in curretn dataframe
+                # Store value in current dataframe
                 data[KEEP_KEYS[key]] = value
 
                 # Check if all expected keys have been processed
@@ -93,7 +93,7 @@ class LinkyData(object):
                     timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
 
                     # Log the received packet information
-                    logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])}]")
+                    logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])} LTARF={data['LTARF']}]")
 
                     # Gettting current temperature from OpenWeather API
                     if self.temperature_manager is not None:
@@ -105,13 +105,14 @@ class LinkyData(object):
                     with self.engine.begin() as connection:
                         # Prepare the SQL query to insert the data into the table
                         sql_query = f"""
-                            INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature)
-                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']}, {current_temperature})
+                            INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
+                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']}, {current_temperature}, '{data['LTARF']}')
                         """
                         # Execute the SQL query
                         connection.execute(sa.sql.text(sql_query))
 
-    def verify_checksum(self, key, value, checksum):
+    @staticmethod
+    def verify_checksum(key, value, checksum):
         """
         Verify the checksum of the provided key-value pair.
 
@@ -185,7 +186,7 @@ class LinkyDataFromProd(object):
         """
         while True:
             with self.production_engine.connect() as con:
-                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature FROM linky_realtime ORDER BY time DESC LIMIT 1"))
+                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature, libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1"))
                 row = list(rs)[0]
 
             if self.last_linky_data == row:
@@ -194,11 +195,11 @@ class LinkyDataFromProd(object):
 
             with self.engine.connect() as con:
                 try:
-                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature)")
-                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4])
+                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature, libelle_tarif) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature, :libelle_tarif)")
+                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4], libelle_tarif=row[5])
                     params = stmt.compile().params
                     logging.info(
-                        f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}"
+                        f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}, libelle_tarif={params['libelle_tarif']}"
                     )
                     con.execute(stmt)
                     con.commit()

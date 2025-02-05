@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS linky_realtime (
     HCHP INTEGER UNSIGNED NOT NULL,
     HCHC INTEGER UNSIGNED NOT NULL,
     temperature double,
+    libelle_tarif VARCHAR(16),
     PRIMARY KEY (time)
 );
 
