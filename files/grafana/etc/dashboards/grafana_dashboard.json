@@ -31,7 +31,7 @@
         },
         "id": 46,
         "panels": [],
-        "title": "$libelle_tarif $last_update ($last_temperature°C)",
+        "title": "$last_update / $libelle_tarif ($last_temperature°C)",
         "type": "row"
       },
       {
@@ -3337,7 +3337,7 @@
               "h": 6,
               "w": 12,
               "x": 0,
-              "y": 50
+              "y": 59
             },
             "id": 25,
             "options": {
@@ -3500,8 +3500,8 @@
         },
         {
           "current": {
-            "text": "0.98344441",
-            "value": "0.98344441"
+            "text": "0.9849347",
+            "value": "0.9849347"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3514,8 +3514,8 @@
         },
         {
           "current": {
-            "text": "05/02/2025 11:16:04",
-            "value": "05/02/2025 11:16:04"
+            "text": "05/02/2025 12:33:58",
+            "value": "05/02/2025 12:33:58"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3529,8 +3529,8 @@
         },
         {
           "current": {
-            "text": "6",
-            "value": "6"
+            "text": "7.6",
+            "value": "7.6"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
