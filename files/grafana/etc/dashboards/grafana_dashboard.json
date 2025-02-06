@@ -31,7 +31,7 @@
         },
         "id": 46,
         "panels": [],
-        "title": "$last_update / $libelle_tarif ($last_temperature°C)",
+        "title": "$libelle_tarif / $last_update ($last_temperature°C)",
         "type": "row"
       },
       {
@@ -3486,8 +3486,8 @@
         },
         {
           "current": {
-            "text": "120",
-            "value": "120"
+            "text": "115",
+            "value": "115"
           },
           "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
           "hide": 2,
@@ -3500,8 +3500,8 @@
         },
         {
           "current": {
-            "text": "0.9849347",
-            "value": "0.9849347"
+            "text": "0.98377644",
+            "value": "0.98377644"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3514,23 +3514,23 @@
         },
         {
           "current": {
-            "text": "05/02/2025 12:33:58",
-            "value": "05/02/2025 12:33:58"
+            "text": "06.02 10:32:27",
+            "value": "06.02 10:32:27"
           },
-          "definition": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
           "hide": 2,
           "name": "last_update",
           "options": [],
-          "query": "SELECT DATE_FORMAT(time, '%d/%m/%Y %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+          "query": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "refresh": 2,
           "regex": "",
           "type": "query"
         },
         {
           "current": {
-            "text": "7.6",
-            "value": "7.6"
+            "text": "3.8",
+            "value": "3.8"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
