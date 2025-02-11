@@ -1,6 +1,6 @@
 cachetools==5.5.0
 cffi==1.16.0
-cryptography==43.0.1
+cryptography==44.0.1
 greenlet==3.0.2
 pycparser==2.21
 PyMySQL==1.1.1
