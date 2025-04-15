@@ -27,7 +27,6 @@
     "customizations": {
         "vscode": {
             "settings": {
-                "tabby.api.endpoint": "http://host.docker.internal:8080",
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
                 "python.formatting.provider": "black",
                 "python.linting.enabled": true,
@@ -57,9 +56,7 @@
                 "ms-python.flake8",
                 "ms-python.vscode-pylance",
                 "ms-python.python",
-                "ms-python.debugpy",
-                "tabbyml.vscode-tabby",
-                "nicollasr.vscode-streamdeck"
+                "ms-python.debugpy"
             ]
         }
     },

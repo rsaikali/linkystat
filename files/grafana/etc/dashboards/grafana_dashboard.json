@@ -36,128 +36,104 @@
       },
       {
         "datasource": {
-          "type": "datasource",
-          "uid": "-- Dashboard --"
+          "type": "mysql",
+          "uid": "P211906C1C32DB77E"
         },
         "fieldConfig": {
           "defaults": {
-            "decimals": 0,
-            "fieldMinMax": false,
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 5,
             "mappings": [],
+            "max": 0.5,
+            "min": -0.5,
             "thresholds": {
               "mode": "absolute",
               "steps": [
                 {
                   "color": "dark-green",
                   "value": null
+                },
+                {
+                  "color": "dark-green",
+                  "value": -1
+                },
+                {
+                  "color": "dark-red",
+                  "value": 0
+                },
+                {
+                  "color": "dark-red",
+                  "value": 1
                 }
               ]
             },
-            "unit": "W"
+            "unit": "short"
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 9,
+          "h": 1,
           "w": 6,
           "x": 0,
           "y": 1
         },
-        "id": 39,
+        "id": 65,
         "options": {
-          "allowNeedleCrossLimits": true,
-          "animateNeedleValueTransition": true,
-          "animateNeedleValueTransitionSpeed": 500,
-          "edgeWidth": 0.01,
-          "gaugeRadius": 0,
-          "innerColor": "#181b1f",
-          "markerEndEnabled": false,
-          "markerEndShape": "arrow-inverse",
-          "markerStartEnabled": true,
-          "markerStartShape": "circle",
-          "maxNeedleAngle": 320,
-          "maxTickAngle": 300,
-          "maxValue": 500,
-          "minValue": 0,
-          "needleColor": "dark-red",
-          "needleCrossLimitDegrees": 10,
-          "needleLengthNeg": 0,
-          "needleTickGap": 0.05,
-          "needleWidth": 10,
-          "operatorName": "lastNotNull",
-          "outerEdgeColor": "#7c7c87",
-          "padding": 0.05,
-          "pivotColor": "text",
-          "pivotRadius": 0.1,
-          "showThresholdBandLowerRange": true,
-          "showThresholdBandMiddleRange": false,
-          "showThresholdBandOnGauge": false,
-          "showThresholdBandUpperRange": false,
-          "showThresholdStateOnBackground": false,
-          "showThresholdStateOnValue": false,
-          "tickEdgeGap": 0.05,
-          "tickFont": "Inter",
-          "tickLabelColor": "text",
-          "tickLabelFontSize": 28,
-          "tickLengthMaj": 0.15,
-          "tickLengthMin": 0.05,
-          "tickMajorColor": "text",
-          "tickMapConfig": {
-            "tickMaps": []
+          "displayMode": "lcd",
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
           },
-          "tickMinorColor": "text",
-          "tickSpacingMajor": 100,
-          "tickSpacingMinor": 25,
-          "tickWidthMajor": 3,
-          "tickWidthMinor": 1,
-          "ticknessGaugeBasis": 200,
-          "unitsLabelColor": "text",
-          "valueFont": "Inter",
-          "valueFontSize": 54,
-          "valueYOffset": 0,
-          "zeroNeedleAngle": 40,
-          "zeroTickAngle": 60
+          "maxVizHeight": 300,
+          "minVizHeight": 16,
+          "minVizWidth": 8,
+          "namePlacement": "hidden",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^LEAD\\(today\\) OVER \\(ORDER BY t\\) \\- today$/",
+            "values": false
+          },
+          "showUnfilled": true,
+          "sizing": "auto",
+          "valueMode": "color"
         },
-        "pluginVersion": "2.0.1",
+        "pluginVersion": "11.4.0",
         "targets": [
           {
-            "datasource": {
-              "type": "datasource",
-              "uid": "-- Dashboard --"
-            },
-            "panelId": 1,
-            "refId": "A"
+            "dataset": "linky",
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D",
+            "refId": "A",
+            "sql": {
+              "columns": [
+                {
+                  "parameters": [],
+                  "type": "function"
+                }
+              ],
+              "groupBy": [
+                {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": "groupBy"
+                }
+              ],
+              "limit": 50
+            }
           }
         ],
         "title": "",
-        "transformations": [
-          {
-            "id": "filterByRefId",
-            "options": {
-              "include": "A"
-            }
-          },
-          {
-            "id": "sortBy",
-            "options": {
-              "fields": {},
-              "sort": [
-                {
-                  "desc": true,
-                  "field": "time"
-                }
-              ]
-            }
-          },
-          {
-            "id": "limit",
-            "options": {
-              "limitField": "1"
-            }
-          }
-        ],
-        "transparent": true,
-        "type": "briangann-gauge-panel"
+        "type": "bargauge"
       },
       {
         "description": "",
@@ -443,6 +419,131 @@
         "title": "",
         "transparent": true,
         "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- Dashboard --"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "W"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 0,
+          "y": 2
+        },
+        "id": 39,
+        "options": {
+          "allowNeedleCrossLimits": true,
+          "animateNeedleValueTransition": true,
+          "animateNeedleValueTransitionSpeed": 500,
+          "edgeWidth": 0.01,
+          "gaugeRadius": 0,
+          "innerColor": "#181b1f",
+          "markerEndEnabled": false,
+          "markerEndShape": "arrow-inverse",
+          "markerStartEnabled": true,
+          "markerStartShape": "circle",
+          "maxNeedleAngle": 320,
+          "maxTickAngle": 300,
+          "maxValue": 500,
+          "minValue": 0,
+          "needleColor": "dark-red",
+          "needleCrossLimitDegrees": 10,
+          "needleLengthNeg": 0,
+          "needleTickGap": 0.05,
+          "needleWidth": 10,
+          "operatorName": "lastNotNull",
+          "outerEdgeColor": "#7c7c87",
+          "padding": 0.05,
+          "pivotColor": "text",
+          "pivotRadius": 0.1,
+          "showThresholdBandLowerRange": true,
+          "showThresholdBandMiddleRange": false,
+          "showThresholdBandOnGauge": false,
+          "showThresholdBandUpperRange": false,
+          "showThresholdStateOnBackground": false,
+          "showThresholdStateOnValue": false,
+          "tickEdgeGap": 0.05,
+          "tickFont": "Inter",
+          "tickLabelColor": "text",
+          "tickLabelFontSize": 28,
+          "tickLengthMaj": 0.15,
+          "tickLengthMin": 0.05,
+          "tickMajorColor": "text",
+          "tickMapConfig": {
+            "tickMaps": []
+          },
+          "tickMinorColor": "text",
+          "tickSpacingMajor": 100,
+          "tickSpacingMinor": 25,
+          "tickWidthMajor": 3,
+          "tickWidthMinor": 1,
+          "ticknessGaugeBasis": 200,
+          "unitsLabelColor": "text",
+          "valueFont": "Inter",
+          "valueFontSize": 54,
+          "valueYOffset": 0,
+          "zeroNeedleAngle": 40,
+          "zeroTickAngle": 60
+        },
+        "pluginVersion": "2.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "-- Dashboard --"
+            },
+            "panelId": 1,
+            "refId": "A"
+          }
+        ],
+        "title": "",
+        "transformations": [
+          {
+            "id": "filterByRefId",
+            "options": {
+              "include": "A"
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "time"
+                }
+              ]
+            }
+          },
+          {
+            "id": "limit",
+            "options": {
+              "limitField": "1"
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "briangann-gauge-panel"
       },
       {
         "datasource": {
@@ -3486,8 +3587,8 @@
         },
         {
           "current": {
-            "text": "120",
-            "value": "120"
+            "text": "130",
+            "value": "130"
           },
           "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
           "hide": 2,
@@ -3500,8 +3601,8 @@
         },
         {
           "current": {
-            "text": "0.9188816",
-            "value": "0.9188816"
+            "text": "0.88693716",
+            "value": "0.88693716"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3514,8 +3615,8 @@
         },
         {
           "current": {
-            "text": "22.02 12:42:14",
-            "value": "22.02 12:42:14"
+            "text": "14.04 13:40:16",
+            "value": "14.04 13:40:16"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3529,8 +3630,8 @@
         },
         {
           "current": {
-            "text": "12.5",
-            "value": "12.5"
+            "text": "16.4",
+            "value": "16.4"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
