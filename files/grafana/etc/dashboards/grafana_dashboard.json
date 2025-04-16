@@ -44,9 +44,32 @@
             "color": {
               "mode": "thresholds"
             },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": true,
+              "axisColorMode": "text",
+              "axisGridShow": true,
+              "axisLabel": "",
+              "axisPlacement": "hidden",
+              "axisSoftMax": 1,
+              "axisSoftMin": -1,
+              "fillOpacity": 80,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "area"
+              }
+            },
+            "decimals": 1,
             "mappings": [],
-            "max": 1,
-            "min": -1,
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -73,30 +96,29 @@
           "x": 0,
           "y": 1
         },
-        "id": 64,
+        "id": 65,
         "options": {
-          "displayMode": "lcd",
+          "barRadius": 0,
+          "barWidth": 0.97,
+          "colorByField": "LEAD(today) OVER (ORDER BY t) - today",
+          "fullHighlight": false,
+          "groupWidth": 0.7,
           "legend": {
             "calcs": [],
             "displayMode": "list",
             "placement": "bottom",
             "showLegend": false
           },
-          "maxVizHeight": 300,
-          "minVizHeight": 16,
-          "minVizWidth": 8,
-          "namePlacement": "hidden",
           "orientation": "horizontal",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "/^LEAD\\(today\\) OVER \\(ORDER BY t\\) \\- today$/",
-            "values": false
+          "showValue": "never",
+          "stacking": "none",
+          "tooltip": {
+            "mode": "none",
+            "sort": "none"
           },
-          "showUnfilled": true,
-          "sizing": "auto",
-          "valueMode": "text"
+          "xField": "a",
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
         },
         "pluginVersion": "11.4.0",
         "targets": [
@@ -105,7 +127,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D",
+            "rawSql": "SELECT \"a\", LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D LIMIT 1",
             "refId": "A",
             "sql": {
               "columns": [
@@ -128,7 +150,7 @@
         ],
         "title": "",
         "transparent": true,
-        "type": "bargauge"
+        "type": "barchart"
       },
       {
         "description": "",
@@ -3582,8 +3604,8 @@
         },
         {
           "current": {
-            "text": "125",
-            "value": "125"
+            "text": "130",
+            "value": "130"
           },
           "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
           "hide": 2,
@@ -3596,8 +3618,8 @@
         },
         {
           "current": {
-            "text": "0.89244476",
-            "value": "0.89244476"
+            "text": "0.91957298",
+            "value": "0.91957298"
           },
           "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
           "hide": 2,
@@ -3610,8 +3632,8 @@
         },
         {
           "current": {
-            "text": "15.04 08:57:20",
-            "value": "15.04 08:57:20"
+            "text": "16.04 10:23:20",
+            "value": "16.04 10:23:20"
           },
           "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
@@ -3625,8 +3647,8 @@
         },
         {
           "current": {
-            "text": "11.6",
-            "value": "11.6"
+            "text": "10.2",
+            "value": "10.2"
           },
           "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
           "description": "",
