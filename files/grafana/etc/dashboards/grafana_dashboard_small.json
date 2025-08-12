@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -36,40 +36,207 @@
     },
     {
       "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "W"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 39,
+      "options": {
+        "allowNeedleCrossLimits": true,
+        "animateNeedleValueTransition": true,
+        "animateNeedleValueTransitionSpeed": 500,
+        "edgeWidth": 0.01,
+        "gaugeRadius": 0,
+        "innerColor": "#181b1f",
+        "markerEndEnabled": false,
+        "markerEndShape": "arrow-inverse",
+        "markerStartEnabled": true,
+        "markerStartShape": "circle",
+        "maxNeedleAngle": 320,
+        "maxTickAngle": 300,
+        "maxValue": 500,
+        "minValue": 0,
+        "needleColor": "dark-red",
+        "needleCrossLimitDegrees": 10,
+        "needleLengthNeg": 0,
+        "needleTickGap": 0.05,
+        "needleWidth": 10,
+        "operatorName": "lastNotNull",
+        "outerEdgeColor": "#7c7c87",
+        "padding": 0.05,
+        "pivotColor": "text",
+        "pivotRadius": 0.1,
+        "showThresholdBandLowerRange": true,
+        "showThresholdBandMiddleRange": false,
+        "showThresholdBandOnGauge": false,
+        "showThresholdBandUpperRange": false,
+        "showThresholdStateOnBackground": false,
+        "showThresholdStateOnValue": false,
+        "tickEdgeGap": 0.05,
+        "tickFont": "Inter",
+        "tickLabelColor": "text",
+        "tickLabelFontSize": 28,
+        "tickLengthMaj": 0.15,
+        "tickLengthMin": 0.05,
+        "tickMajorColor": "text",
+        "tickMapConfig": {
+          "tickMaps": []
+        },
+        "tickMinorColor": "text",
+        "tickSpacingMajor": 100,
+        "tickSpacingMinor": 25,
+        "tickWidthMajor": 3,
+        "tickWidthMinor": 1,
+        "ticknessGaugeBasis": 200,
+        "unitsLabelColor": "text",
+        "valueFont": "Inter",
+        "valueFontSize": 54,
+        "valueYOffset": 0,
+        "zeroNeedleAngle": 40,
+        "zeroTickAngle": 60
+      },
+      "pluginVersion": "2.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterByRefId",
+          "options": {
+            "include": "A"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": "1"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "briangann-gauge-panel"
+    },
+    {
+      "datasource": {
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": true,
-            "axisColorMode": "text",
-            "axisGridShow": true,
-            "axisLabel": "",
-            "axisPlacement": "hidden",
-            "axisSoftMax": 1,
-            "axisSoftMin": -1,
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "area"
-            }
+            "neutral": 0
           },
-          "decimals": 1,
-          "mappings": [],
+          "decimals": 0,
+          "displayName": "Tendance",
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-blue",
+                  "index": 0,
+                  "text": "Neutre"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": -10,
+                "result": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Bon"
+                },
+                "to": -0.5
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": -0.5,
+                "result": {
+                  "color": "green",
+                  "index": 2,
+                  "text": "Pas mal"
+                },
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "dark-yellow",
+                  "index": 3,
+                  "text": "Attention"
+                },
+                "to": 0.5
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 0.5,
+                "result": {
+                  "color": "dark-red",
+                  "index": 4,
+                  "text": "Mauvais"
+                },
+                "to": 10
+              },
+              "type": "range"
+            }
+          ],
+          "max": 1,
+          "min": -1,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -91,36 +258,28 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 1,
+        "h": 9,
         "w": 6,
-        "x": 0,
+        "x": 6,
         "y": 1
       },
-      "id": 65,
+      "id": 66,
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "colorByField": "LEAD(today) OVER (ORDER BY t) - today",
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
+        "minVizHeight": 68,
+        "minVizWidth": 75,
         "orientation": "horizontal",
-        "showValue": "never",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "none",
-          "sort": "none"
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "xField": "a",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false,
+        "sizing": "auto"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.8",
       "targets": [
         {
           "dataset": "linky",
@@ -150,66 +309,7 @@
       ],
       "title": "",
       "transparent": true,
-      "type": "barchart"
-    },
-    {
-      "description": "",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 6,
-        "x": 6,
-        "y": 1
-      },
-      "id": 11,
-      "options": {
-        "activeTheme": "Linkystat",
-        "disableThemePicker": true,
-        "themes": [
-          {
-            "name": "Linkystat",
-            "styles": [
-              {
-                "props": {
-                  "theme": "dark"
-                },
-                "type": "basetheme"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "bgimage"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "url"
-              },
-              {
-                "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}\n\ndiv:has(> div[data-testid='data-testid dashboard controls']) {\n    background-color: rgb(24, 27, 31);\n}"
-                },
-                "type": "style"
-              },
-              {
-                "props": {
-                  "color": ""
-                },
-                "type": "panel-container-bg-color"
-              }
-            ]
-          }
-        ]
-      },
-      "pluginVersion": "0.2.1",
-      "title": "",
-      "transparent": true,
-      "type": "yesoreyeram-boomtheme-panel"
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -339,7 +439,7 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 5,
         "w": 12,
         "x": 12,
         "y": 1
@@ -363,7 +463,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.8",
       "targets": [
         {
           "dataset": "linky",
@@ -439,131 +539,6 @@
     },
     {
       "datasource": {
-        "type": "datasource",
-        "uid": "-- Dashboard --"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "decimals": 0,
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "W"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 2
-      },
-      "id": 39,
-      "options": {
-        "allowNeedleCrossLimits": true,
-        "animateNeedleValueTransition": true,
-        "animateNeedleValueTransitionSpeed": 500,
-        "edgeWidth": 0.01,
-        "gaugeRadius": 0,
-        "innerColor": "#181b1f",
-        "markerEndEnabled": false,
-        "markerEndShape": "arrow-inverse",
-        "markerStartEnabled": true,
-        "markerStartShape": "circle",
-        "maxNeedleAngle": 320,
-        "maxTickAngle": 300,
-        "maxValue": 500,
-        "minValue": 0,
-        "needleColor": "dark-red",
-        "needleCrossLimitDegrees": 10,
-        "needleLengthNeg": 0,
-        "needleTickGap": 0.05,
-        "needleWidth": 10,
-        "operatorName": "lastNotNull",
-        "outerEdgeColor": "#7c7c87",
-        "padding": 0.05,
-        "pivotColor": "text",
-        "pivotRadius": 0.1,
-        "showThresholdBandLowerRange": true,
-        "showThresholdBandMiddleRange": false,
-        "showThresholdBandOnGauge": false,
-        "showThresholdBandUpperRange": false,
-        "showThresholdStateOnBackground": false,
-        "showThresholdStateOnValue": false,
-        "tickEdgeGap": 0.05,
-        "tickFont": "Inter",
-        "tickLabelColor": "text",
-        "tickLabelFontSize": 28,
-        "tickLengthMaj": 0.15,
-        "tickLengthMin": 0.05,
-        "tickMajorColor": "text",
-        "tickMapConfig": {
-          "tickMaps": []
-        },
-        "tickMinorColor": "text",
-        "tickSpacingMajor": 100,
-        "tickSpacingMinor": 25,
-        "tickWidthMajor": 3,
-        "tickWidthMinor": 1,
-        "ticknessGaugeBasis": 200,
-        "unitsLabelColor": "text",
-        "valueFont": "Inter",
-        "valueFontSize": 54,
-        "valueYOffset": 0,
-        "zeroNeedleAngle": 40,
-        "zeroTickAngle": 60
-      },
-      "pluginVersion": "2.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "-- Dashboard --"
-          },
-          "panelId": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "",
-      "transformations": [
-        {
-          "id": "filterByRefId",
-          "options": {
-            "include": "A"
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "time"
-              }
-            ]
-          }
-        },
-        {
-          "id": "limit",
-          "options": {
-            "limitField": "1"
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "briangann-gauge-panel"
-    },
-    {
-      "datasource": {
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
@@ -575,8 +550,8 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 6,
-        "y": 2
+        "x": 12,
+        "y": 6
       },
       "id": 30,
       "options": {
@@ -651,6 +626,93 @@
     },
     {
       "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 42,
+      "options": {
+        "baseValueField": "base",
+        "baseValueFontSize": "14px",
+        "interpretAsTrend": true,
+        "percentageNrDecimals": 0,
+        "percentageValueDecimals": 1,
+        "percentageValueField": "current",
+        "percentageValueFontSize": "80%",
+        "positiveIsGood": false,
+        "referenceText": "comparé à la moyenne du mois",
+        "referenceTextFontSize": "10px",
+        "unit": "kWh/j"
+      },
+      "pluginVersion": "1.0.8",
+      "targets": [
+        {
+          "dataset": "linky",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "provider_time",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "total_kwh",
+                "handlerKey": "field.value"
+              },
+              {
+                "fieldName": "current",
+                "handlerKey": "field.name"
+              }
+            ]
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "nikosc-percenttrend-panel"
+    },
+    {
+      "datasource": {
         "default": true,
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
@@ -663,8 +725,8 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 6,
-        "y": 4
+        "x": 12,
+        "y": 8
       },
       "id": 28,
       "options": {
@@ -741,7 +803,6 @@
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -749,93 +810,7 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 6,
-        "y": 6
-      },
-      "id": 42,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 1,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé à la moyenne du mois",
-        "referenceTextFontSize": "10px",
-        "unit": "kWh/j"
-      },
-      "pluginVersion": "1.0.8",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "provider_time",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "total_kwh",
-                "handlerKey": "field.value"
-              },
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 6,
-        "x": 6,
+        "x": 18,
         "y": 8
       },
       "id": 63,
@@ -888,12 +863,71 @@
       "type": "nikosc-percenttrend-panel"
     },
     {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 6,
+        "x": 6,
+        "y": 10
+      },
+      "id": 11,
+      "options": {
+        "activeTheme": "Linkystat",
+        "disableThemePicker": true,
+        "themes": [
+          {
+            "name": "Linkystat",
+            "styles": [
+              {
+                "props": {
+                  "theme": "dark"
+                },
+                "type": "basetheme"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "bgimage"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "url"
+              },
+              {
+                "props": {
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}\n\ndiv:has(> div[data-testid='data-testid dashboard controls']) {\n    background-color: rgb(24, 27, 31);\n}"
+                },
+                "type": "style"
+              },
+              {
+                "props": {
+                  "color": ""
+                },
+                "type": "panel-container-bg-color"
+              }
+            ]
+          }
+        ]
+      },
+      "pluginVersion": "0.2.1",
+      "title": "",
+      "transparent": true,
+      "type": "yesoreyeram-boomtheme-panel"
+    },
+    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 24,
       "panels": [
@@ -915,8 +949,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1154,8 +1187,8 @@
       },
       {
         "current": {
-          "text": "0.85311762",
-          "value": "0.85311762"
+          "text": "0.85290284",
+          "value": "0.85290284"
         },
         "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
         "hide": 2,
@@ -1168,8 +1201,8 @@
       },
       {
         "current": {
-          "text": "12.08 21:53:35",
-          "value": "12.08 21:53:35"
+          "text": "12.08 21:56:40",
+          "value": "12.08 21:56:40"
         },
         "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
         "description": "",
@@ -1231,6 +1264,6 @@
   "timezone": "browser",
   "title": "Linky small",
   "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445d8",
-  "version": 1,
+  "version": 3,
   "weekStart": "monday"
 }
