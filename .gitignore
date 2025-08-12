@@ -1,4 +1,5 @@
 .env
+.venv
 .vscode
 linkystat.code-workspace
 env/.env
