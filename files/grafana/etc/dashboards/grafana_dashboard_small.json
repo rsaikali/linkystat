@@ -35,6 +35,65 @@
       "type": "row"
     },
     {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "activeTheme": "Linkystat",
+        "disableThemePicker": true,
+        "themes": [
+          {
+            "name": "Linkystat",
+            "styles": [
+              {
+                "props": {
+                  "theme": "dark"
+                },
+                "type": "basetheme"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "bgimage"
+              },
+              {
+                "props": {
+                  "url": ""
+                },
+                "type": "url"
+              },
+              {
+                "props": {
+                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}\n\ndiv:has(> div[data-testid='data-testid dashboard controls']) {\n    background-color: rgb(24, 27, 31);\n}"
+                },
+                "type": "style"
+              },
+              {
+                "props": {
+                  "color": ""
+                },
+                "type": "panel-container-bg-color"
+              }
+            ]
+          }
+        ]
+      },
+      "pluginVersion": "0.2.1",
+      "title": "",
+      "transparent": true,
+      "type": "yesoreyeram-boomtheme-panel"
+    },
+    {
       "datasource": {
         "type": "datasource",
         "uid": "-- Dashboard --"
@@ -60,7 +119,7 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 0,
+        "x": 6,
         "y": 1
       },
       "id": 39,
@@ -158,158 +217,6 @@
       ],
       "transparent": true,
       "type": "briangann-gauge-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "custom": {
-            "neutral": 0
-          },
-          "decimals": 0,
-          "displayName": "Tendance",
-          "fieldMinMax": false,
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "dark-blue",
-                  "index": 0,
-                  "text": "Neutre"
-                }
-              },
-              "type": "value"
-            },
-            {
-              "options": {
-                "from": -10,
-                "result": {
-                  "color": "dark-green",
-                  "index": 1,
-                  "text": "Bon"
-                },
-                "to": -0.5
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": -0.5,
-                "result": {
-                  "color": "green",
-                  "index": 2,
-                  "text": "Pas mal"
-                },
-                "to": 0
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "color": "dark-yellow",
-                  "index": 3,
-                  "text": "Attention"
-                },
-                "to": 0.5
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 0.5,
-                "result": {
-                  "color": "dark-red",
-                  "index": 4,
-                  "text": "Mauvais"
-                },
-                "to": 10
-              },
-              "type": "range"
-            }
-          ],
-          "max": 1,
-          "min": -1,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
-              },
-              {
-                "color": "dark-red",
-                "value": 0
-              },
-              {
-                "color": "dark-red",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 6,
-        "y": 1
-      },
-      "id": 66,
-      "options": {
-        "minVizHeight": 68,
-        "minVizWidth": 75,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": false,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.5.8",
-      "targets": [
-        {
-          "dataset": "linky",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \"a\", LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D LIMIT 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "",
-      "transparent": true,
-      "type": "gauge"
     },
     {
       "datasource": {
@@ -439,7 +346,7 @@
         ]
       },
       "gridPos": {
-        "h": 5,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 1
@@ -550,95 +457,8 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 12,
-        "y": 6
-      },
-      "id": 30,
-      "options": {
-        "baseValueField": "base",
-        "baseValueFontSize": "14px",
-        "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
-        "percentageValueDecimals": 0,
-        "percentageValueField": "current",
-        "percentageValueFontSize": "80%",
-        "positiveIsGood": false,
-        "referenceText": "comparé aux 24h précédentes",
-        "referenceTextFontSize": "10px",
-        "unit": "W sur 24h"
-      },
-      "pluginVersion": "1.0.8",
-      "targets": [
-        {
-          "dataset": "linky",
-          "datasource": {
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 2 DAY AND NOW() - INTERVAL 1 DAY)",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "",
-      "transformations": [
-        {
-          "id": "rowsToFields",
-          "options": {
-            "mappings": [
-              {
-                "fieldName": "provider_time",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "total_kwh",
-                "handlerKey": "field.value"
-              },
-              {
-                "fieldName": "current",
-                "handlerKey": "field.name"
-              }
-            ]
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "nikosc-percenttrend-panel"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "P211906C1C32DB77E"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 6,
-        "x": 18,
-        "y": 6
+        "x": 0,
+        "y": 2
       },
       "id": 42,
       "options": {
@@ -713,11 +533,9 @@
     },
     {
       "datasource": {
-        "default": true,
         "type": "mysql",
         "uid": "P211906C1C32DB77E"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -725,21 +543,22 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 12,
-        "y": 8
+        "x": 0,
+        "y": 4
       },
-      "id": 28,
+      "id": 67,
       "options": {
         "baseValueField": "base",
         "baseValueFontSize": "14px",
         "interpretAsTrend": true,
-        "percentageNrDecimals": 0,
+        "percentageNrDecimals": 2,
+        "percentageValueDecimals": 0,
         "percentageValueField": "current",
         "percentageValueFontSize": "80%",
         "positiveIsGood": false,
-        "referenceText": "comparé à la moyenne du mois",
+        "referenceText": "comparé à hier",
         "referenceTextFontSize": "10px",
-        "unit": "€/j"
+        "unit": "kWh"
       },
       "pluginVersion": "1.0.8",
       "targets": [
@@ -752,7 +571,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / $nb_days_period) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 1 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / $nb_days_period) + ($abonnement / $nb_days_period)  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY AND NOW())",
+          "rawSql": "(SELECT \r\n  \"current\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR AND NOW())\r\nUNION\r\n(SELECT \r\n  \"base\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 DAY - INTERVAL 1 HOUR AND NOW() - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -780,16 +599,12 @@
           "options": {
             "mappings": [
               {
-                "fieldName": "provider_time",
-                "handlerKey": "field.name"
-              },
-              {
-                "fieldName": "total_kwh",
-                "handlerKey": "field.value"
-              },
-              {
                 "fieldName": "current",
                 "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "t",
+                "handlerKey": "field.value"
               }
             ]
           }
@@ -810,8 +625,8 @@
       "gridPos": {
         "h": 2,
         "w": 6,
-        "x": 18,
-        "y": 8
+        "x": 0,
+        "y": 6
       },
       "id": 63,
       "options": {
@@ -863,63 +678,123 @@
       "type": "nikosc-percenttrend-panel"
     },
     {
-      "description": "",
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": true,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "axisSoftMax": 1,
+            "axisSoftMin": -1,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 1
+              }
+            ]
+          }
+        },
         "overrides": []
       },
       "gridPos": {
         "h": 1,
         "w": 6,
-        "x": 6,
-        "y": 10
+        "x": 0,
+        "y": 8
       },
-      "id": 11,
+      "id": 68,
       "options": {
-        "activeTheme": "Linkystat",
-        "disableThemePicker": true,
-        "themes": [
-          {
-            "name": "Linkystat",
-            "styles": [
-              {
-                "props": {
-                  "theme": "dark"
-                },
-                "type": "basetheme"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "bgimage"
-              },
-              {
-                "props": {
-                  "url": ""
-                },
-                "type": "url"
-              },
-              {
-                "props": {
-                  "text": "body {\n    background-color: rgb(24, 27, 31);\n}\n\nh6[title=\"Linky\"] {\n    font-size: 1.5em;\n}\n\ndiv[data-testid='Panel'] span {\n    font-family: monospace;\n}\n\n.css-ghhp3m {\n    left: 0%;\n    transform: initial;\n    padding: 0px;\n    position: inherit;\n    top: 0%;\n}\n\ndiv:has(> div[data-testid='data-testid dashboard controls']) {\n    background-color: rgb(24, 27, 31);\n}"
-                },
-                "type": "style"
-              },
-              {
-                "props": {
-                  "color": ""
-                },
-                "type": "panel-container-bg-color"
-              }
-            ]
-          }
-        ]
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "colorByField": "LEAD(today) OVER (ORDER BY t) - today",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "none",
+          "sort": "none"
+        },
+        "xField": "a",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
-      "pluginVersion": "0.2.1",
+      "pluginVersion": "11.5.8",
+      "targets": [
+        {
+          "dataset": "linky",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"a\", LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 1 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
       "title": "",
       "transparent": true,
-      "type": "yesoreyeram-boomtheme-panel"
+      "type": "barchart"
     },
     {
       "collapsed": true,
@@ -927,7 +802,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 10
       },
       "id": 24,
       "panels": [
@@ -1024,7 +899,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 11
+            "y": 15
           },
           "id": 25,
           "options": {
@@ -1047,7 +922,7 @@
             "textMode": "value_and_name",
             "wideLayout": true
           },
-          "pluginVersion": "11.4.0",
+          "pluginVersion": "11.5.8",
           "targets": [
             {
               "dataset": "linky",
@@ -1120,45 +995,6 @@
       },
       {
         "current": {
-          "text": "18.01",
-          "value": "18.01"
-        },
-        "description": "Abonnement mensuel TTC (en €)",
-        "hide": 2,
-        "label": "Abonnement mensuel",
-        "name": "abonnement",
-        "query": "18.01",
-        "skipUrlSync": true,
-        "type": "constant"
-      },
-      {
-        "current": {
-          "text": "0.224",
-          "value": "0.224"
-        },
-        "description": "Prix Heures Pleines (en €/kWh)",
-        "hide": 2,
-        "label": "Prix Heures Pleines",
-        "name": "prix_hp",
-        "query": "0.224",
-        "skipUrlSync": true,
-        "type": "constant"
-      },
-      {
-        "current": {
-          "text": "0.1555",
-          "value": "0.1555"
-        },
-        "description": "Prix Heures Creuses (en €/kWh)",
-        "hide": 2,
-        "label": "Prix Heures Creuses",
-        "name": "prix_hc",
-        "query": "0.1555",
-        "skipUrlSync": true,
-        "type": "constant"
-      },
-      {
-        "current": {
           "text": "31",
           "value": "31"
         },
@@ -1173,8 +1009,8 @@
       },
       {
         "current": {
-          "text": "135",
-          "value": "135"
+          "text": "110",
+          "value": "110"
         },
         "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
         "hide": 2,
@@ -1187,8 +1023,8 @@
       },
       {
         "current": {
-          "text": "0.85290284",
-          "value": "0.85290284"
+          "text": "0.8703593",
+          "value": "0.8703593"
         },
         "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
         "hide": 2,
@@ -1201,8 +1037,8 @@
       },
       {
         "current": {
-          "text": "12.08 21:56:40",
-          "value": "12.08 21:56:40"
+          "text": "11.09 17:58:31",
+          "value": "11.09 17:58:31"
         },
         "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
         "description": "",
@@ -1216,8 +1052,8 @@
       },
       {
         "current": {
-          "text": "28",
-          "value": "28"
+          "text": "21.5",
+          "value": "21.5"
         },
         "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
         "description": "",
