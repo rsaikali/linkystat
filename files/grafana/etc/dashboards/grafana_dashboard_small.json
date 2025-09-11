@@ -795,178 +795,6 @@
       "title": "",
       "transparent": true,
       "type": "barchart"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 10
-      },
-      "id": 24,
-      "panels": [
-        {
-          "datasource": {
-            "default": true,
-            "type": "mysql",
-            "uid": "P211906C1C32DB77E"
-          },
-          "description": "",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "decimals": 3,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "kWh"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Cos φ"
-                },
-                "properties": [
-                  {
-                    "id": "unit"
-                  },
-                  {
-                    "id": "decimals"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "PAPP"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "VA"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Cos φ"
-                },
-                "properties": [
-                  {
-                    "id": "decimals",
-                    "value": 2
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Consommation veille"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "W"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 6,
-            "w": 12,
-            "x": 0,
-            "y": 15
-          },
-          "id": 25,
-          "options": {
-            "colorMode": "none",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "horizontal",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "/.*/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {
-              "valueSize": 22
-            },
-            "textMode": "value_and_name",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.5.8",
-          "targets": [
-            {
-              "dataset": "linky",
-              "datasource": {
-                "type": "mysql",
-                "uid": "P211906C1C32DB77E"
-              },
-              "editorMode": "code",
-              "format": "table",
-              "rawQuery": true,
-              "rawSql": "SELECT $cosphi as \"Cos φ\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
-              "refId": "A",
-              "sql": {
-                "columns": [
-                  {
-                    "parameters": [
-                      {
-                        "name": "PAPP",
-                        "type": "functionParameter"
-                      }
-                    ],
-                    "type": "function"
-                  }
-                ],
-                "groupBy": [
-                  {
-                    "property": {
-                      "type": "string"
-                    },
-                    "type": "groupBy"
-                  }
-                ],
-                "limit": 50
-              },
-              "table": "linky_realtime"
-            }
-          ],
-          "title": "",
-          "transparent": true,
-          "type": "stat"
-        }
-      ],
-      "title": "Informations",
-      "type": "row"
     }
   ],
   "preload": false,
@@ -1023,8 +851,8 @@
       },
       {
         "current": {
-          "text": "0.8703593",
-          "value": "0.8703593"
+          "text": "0.87084793",
+          "value": "0.87084793"
         },
         "definition": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
         "hide": 2,
@@ -1037,8 +865,8 @@
       },
       {
         "current": {
-          "text": "11.09 17:58:31",
-          "value": "11.09 17:58:31"
+          "text": "11.09 18:12:55",
+          "value": "11.09 18:12:55"
         },
         "definition": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
         "description": "",
@@ -1052,8 +880,8 @@
       },
       {
         "current": {
-          "text": "21.5",
-          "value": "21.5"
+          "text": "21",
+          "value": "21"
         },
         "definition": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
         "description": "",
@@ -1100,6 +928,6 @@
   "timezone": "browser",
   "title": "Linky small",
   "uid": "ce2bc2ee-bb6d-485a-863e-4bfa308445d8",
-  "version": 3,
+  "version": 4,
   "weekStart": "monday"
 }
