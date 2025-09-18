@@ -23,5 +23,3 @@ zcat backup.sql.gz | docker exec -i ${mysql_docker_id} /usr/bin/mysql -u root --
 # Remove SQL dump file
 echo "Cleaning up..."
 rm -Rf backup.sql.gz
-
-

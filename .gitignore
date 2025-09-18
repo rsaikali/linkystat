@@ -1,6 +1,7 @@
 .env
 .venv
 .vscode
+nohup.out
 linkystat.code-workspace
 env/.env
 env/.env.dev

@@ -19,7 +19,7 @@
 
     "shutdownAction": "stopCompose",  
     "initializeCommand": [".devcontainer/initializeCommand"],
-    "postStartCommand": "/app/scripts/sync_dev_db.sh",
+    "postStartCommand": ".devcontainer/postStartCommand.sh",
     
     "features": {
         "ghcr.io/devcontainers/features/git:1": {},
