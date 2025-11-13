@@ -65,26 +65,14 @@ nano .env
 | `GF_SECURITY_ADMIN_PASSWORD` | Grafana admin password | `admin` |
 | `GF_SECURITY_ADMIN_EMAIL` | Grafana admin email | |
 
-If used with domain name/HTTPS, LetsEncrypt certificates will be automatically generated. 
-Keep variables empty to use in a simple environment (Grafana will be available only on your local network).
-
-| Name | Description |
-| ---- | ----------- |
-| `VIRTUAL_HOST` | Domain name used for exposed application |
-| `VIRTUAL_PORT` | Port used for exposed application |
-| `LETSENCRYPT_HOST` | LetsEncrypt domain name (should be identical to `VIRTUAL_HOST`) |
-| `LETSENCRYPT_EMAIL` | LetsEncrypt email used for certificate generation |
+**Note**: Grafana will be exposed on port 3000. You should configure an external reverse proxy (Traefik, Caddy, nginx, etc.) to handle HTTPS and domain routing.
 
 ```bash
 # Build and start the containers
 docker compose --env-file ./.env up -d
-# or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
-docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
 
 # Open Grafana in your browser
 http://<raspberry_ip_address>:3000
-# or if you use HTTPS with a domain name
-https://<your_domain_name>
 ```
 
 ### Docker
@@ -94,13 +82,11 @@ Launch `docker compose` using the previously edited `.env` file.
 ```bash
 # Build and start the containers
 docker compose --env-file ./.env up -d
-# or if you want to use HTTPS with your domain name and LetsEncrypt certificates (need to be configured through .env file)
-docker compose --env-file ./.env -f compose.yaml -f compose.prod.yaml --profile https up -d
 ```
 
 ### Configuration in Grafana
 
-Open Grafana in your browser: `http://<raspberry_ip_address>:3000` (or if you use HTTPS with a domain name: `https://<your_domain_name>`) and login with the previously created admin user:
+Open Grafana in your browser: `http://<raspberry_ip_address>:3000` and login with the previously created admin user:
 
 <img
   src="./files/images/linkystat_grafana_login.png"
