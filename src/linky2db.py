@@ -31,11 +31,31 @@ KEEP_KEYS = {"DATE": "DATE", "SINSTS": "PAPP", "EASF01": "HCHC", "EASF02": "HCHP
 
 class LinkyData(object):
     """
-    This code is used to retrieve real-time data from a Linky device (French electricity meter).
-    The data is stored in a MySQL database.
+    Real-time data collection agent for Linky TéléInfo data.
+
+    This agent continuously reads data from the USB serial port connected to the Linky meter,
+    validates checksums, enriches with weather data and stores everything in MySQL database.
+
+    :param OPENWEATHER_API_KEY: OpenWeather API key to retrieve temperature
+    :type OPENWEATHER_API_KEY: str or None
+    :param LINKY_USB_DEVICE: USB serial port for meter connection
+    :type LINKY_USB_DEVICE: str
+    :param CONNECTION_STRING: MySQL connection string
+    :type CONNECTION_STRING: str
     """
 
     def __init__(self):
+        """
+        Initialize LinkyData agent with USB and database connections.
+
+        Configures:
+        - USB serial connection to Linky meter
+        - OpenWeather temperature manager (optional)
+        - MySQL database connection
+
+        :raises serial.SerialException: If USB connection fails
+        :raises sqlalchemy.exc.SQLAlchemyError: If DB connection fails
+        """
         # Openweather
         if OPENWEATHER_API_KEY is not None:
             self.temperature_manager = TemperatureManager(OPENWEATHER_API_KEY, OPENWEATHER_LATITUDE, OPENWEATHER_LONGITUDE)
@@ -55,7 +75,24 @@ class LinkyData(object):
 
     def get_data(self):
         """
-        This method reads data from the Linky device and stores it in the database.
+        Continuously read data from Linky meter and store in database.
+
+        Performs the following operations in infinite loop:
+
+        1. Read TéléInfo frames from serial port
+        2. Parse and validate checksums
+        3. Enrich with current temperature
+        4. Store in MySQL database
+
+        Collected data format:
+        - PAPP: Instantaneous apparent power (W)
+        - HCHC: Off-peak hours index (Wh)
+        - HCHP: Peak hours index (Wh)
+        - LTARF: Current tariff label
+        - DATE: Data timestamp
+
+        :raises serial.SerialException: On serial reading error
+        :raises sqlalchemy.exc.SQLAlchemyError: On database error
         """
         data = {}
 
@@ -95,34 +132,55 @@ class LinkyData(object):
                     # Log the received packet information
                     logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])} LTARF={data['LTARF']}]")
 
-                    # Gettting current temperature from OpenWeather API
+                    # Getting current temperature from OpenWeather API
+                    current_temperature = None
                     if self.temperature_manager is not None:
-                        current_temperature = self.temperature_manager.get_current_temperature()
-                    else:
-                        current_temperature = None
+                        try:
+                            current_temperature = self.temperature_manager.get_current_temperature()
+                        except Exception as e:
+                            logging.warning(f"Unable to retrieve temperature: {e}")
 
                     # Write the received data to the database
-                    with self.engine.begin() as connection:
-                        # Prepare the SQL query to insert the data into the table
-                        sql_query = f"""
-                            INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
-                            VALUES ('{timestamp}', {data['HCHC']}, {data['HCHP']}, {data['PAPP']}, {current_temperature}, '{data['LTARF']}')
-                        """
-                        # Execute the SQL query
-                        connection.execute(sa.sql.text(sql_query))
+                    try:
+                        with self.engine.begin() as connection:
+                            # Prepare the SQL query to insert the data into the table
+                            sql_query = sa.text(
+                                """
+                                INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
+                                VALUES (:timestamp, :hchc, :hchp, :papp, :temperature, :ltarf)
+                            """
+                            )
+                            # Execute the SQL query with parameterized values
+                            connection.execute(
+                                sql_query,
+                                {"timestamp": timestamp, "hchc": int(data["HCHC"]), "hchp": int(data["HCHP"]), "papp": int(data["PAPP"]), "temperature": current_temperature, "ltarf": data["LTARF"]},
+                            )
+                    except sa.exc.SQLAlchemyError as e:
+                        logging.error(f"Database insertion error: {e}")
+                        # Continue the loop despite the error to not stop data collection
+                        continue
 
     @staticmethod
     def verify_checksum(key, value, checksum):
         """
-        Verify the checksum of the provided key-value pair.
+        Verify the validity of a TéléInfo key-value pair checksum.
 
-        Parameters:
-        - key (str): The key of the data.
-        - value (str): The value of the data.
-        - checksum (str): The expected checksum.
+        Calculates checksum according to TéléInfo specification:
+        1. Sum of ASCII codes of key + TAB + value + TAB
+        2. Apply 0x3F mask on the 6 least significant bits
+        3. Add 0x20 to set the 7th bit
 
-        Returns:
-        - is_valid (bool): True if the checksum is valid, False otherwise.
+        :param key: TéléInfo data key (e.g. PAPP, HCHC)
+        :type key: str
+        :param value: Value associated with the key
+        :type value: str
+        :param checksum: Expected checksum (single character)
+        :type checksum: str
+        :return: True if checksum is valid, False otherwise
+        :rtype: bool
+
+        .. note::
+           Checksum is not verified for DATE key by convention.
         """
         # Don't verify checksum for DATE
         if key == "DATE":
@@ -151,7 +209,29 @@ class LinkyData(object):
 
 
 class LinkyDataFromProd(object):
+    """
+    Synchronization agent for development environment.
+
+    This agent is used only in development when no direct USB connection
+    to the Linky meter is available. It retrieves data from a production
+    database and replicates it to the local environment.
+
+    :param PRODUCTION_CONNECTION_STRING: Connection string to production DB
+    :type PRODUCTION_CONNECTION_STRING: str
+    :param CONNECTION_STRING: Connection string to local DB
+    :type CONNECTION_STRING: str
+    """
+
     def __init__(self):
+        """
+        Initialize synchronization agent with database connections.
+
+        Configures connections to:
+        - Production database (read-only)
+        - Local development database (write)
+
+        :raises sqlalchemy.exc.SQLAlchemyError: On connection error
+        """
         # Production MySQL database (for dev, we get data from production)
         PRODUCTION_DB_HOST = os.getenv("PRODUCTION_DB_HOST")
         PRODUCTION_DB_PORT = int(os.getenv("PRODUCTION_DB_PORT", 3306))
@@ -174,40 +254,60 @@ class LinkyDataFromProd(object):
 
     def get_data(self):
         """
-        Retrieves the latest data from a production database (self.prod_engine).
+        Retrieve and synchronize data from production database.
 
-        It does so by executing a SQL query on production database to get the latest data from a table named 'linky_realtime'.
-        If the production database is unavailable, the method logs a warning message.
+        Continuously performs:
 
-        If the retrieved data is equivalent to the last saved data (self.last_linky_data), the method waits before starting the loop again.
+        1. Retrieve latest data from production
+        2. Compare with last local data
+        3. Insert to local database if new data detected
+        4. Handle duplicates with integrity control
 
-        If there is new data, it is inserted into a table in development database.
-        Finally, the method pauses before starting the next iteration of the loop.
+        The loop pauses 1 second between each check to avoid excessive
+        load on the production database.
+
+        :raises sqlalchemy.exc.SQLAlchemyError: On database error
+        :raises sqlalchemy.exc.IntegrityError: On constraint violation
+
+        .. warning::
+           This method runs in infinite loop and must be interrupted
+           manually (Ctrl+C) or by system signal.
         """
         while True:
-            with self.production_engine.connect() as con:
-                rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature, libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1"))
-                row = list(rs)[0]
+            try:
+                with self.production_engine.connect() as con:
+                    rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature, libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1"))
+                    row = list(rs)[0]
 
-            if self.last_linky_data == row:
+                if self.last_linky_data == row:
+                    time.sleep(1)
+                    continue
+
+                with self.engine.connect() as con:
+                    try:
+                        stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature, libelle_tarif) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature, :libelle_tarif)")
+                        stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4], libelle_tarif=row[5])
+                        params = stmt.compile().params
+                        logging.info(
+                            f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}, libelle_tarif={params['libelle_tarif']}"
+                        )
+                        con.execute(stmt)
+                        con.commit()
+                    except sa.exc.IntegrityError as e:
+                        logging.error(f"Integrity error during insertion: {e}")
+                    except sa.exc.SQLAlchemyError as e:
+                        logging.error(f"Database error: {e}")
+
+                self.last_linky_data = row
                 time.sleep(1)
-                continue
 
-            with self.engine.connect() as con:
-                try:
-                    stmt = sa.text("INSERT INTO linky_realtime (time, PAPP, HCHP, HCHC, temperature, libelle_tarif) VALUES (:time, :PAPP, :HCHP, :HCHC, :temperature, :libelle_tarif)")
-                    stmt = stmt.bindparams(time=row[0], PAPP=row[1], HCHP=row[2], HCHC=row[3], temperature=row[4], libelle_tarif=row[5])
-                    params = stmt.compile().params
-                    logging.info(
-                        f"Got new Linky data from production environment at {params['time']}: PAPP={params['PAPP']} HCHP={params['HCHP']} HCHC={params['HCHC']}, temperature={params['temperature']}, libelle_tarif={params['libelle_tarif']}"
-                    )
-                    con.execute(stmt)
-                    con.commit()
-                except sa.exc.IntegrityError as e:
-                    logging.error(e)
-
-            self.last_linky_data = row
-            time.sleep(1)
+            except sa.exc.SQLAlchemyError as e:
+                logging.error(f"Database connection error: {e}")
+                logging.info("Attempting reconnection in 5 seconds...")
+                time.sleep(5)
+            except Exception as e:
+                logging.error(f"Unexpected error: {e}")
+                time.sleep(1)
 
 
 if __name__ == "__main__":
