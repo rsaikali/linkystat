@@ -22,8 +22,8 @@ jobs:
       - name: 'Create environment file'
         run: echo '${{ secrets.ENV_FILE }}' > .env
       - name: 'Build new Linkystat application'
-        run: docker compose --env-file .env -f compose.yaml -f compose.prod.yaml --profile https build --pull 
+        run: docker compose --env-file .env build --pull 
       - name: 'Stop previous Linkystat application'
-        run: docker compose --env-file .env -f compose.yaml -f compose.prod.yaml --profile https stop || true
+        run: docker compose --env-file .env stop || true
       - name: 'Start new Linkystat application'
-        run: docker compose --env-file .env -f compose.yaml -f compose.prod.yaml --profile https up -d
+        run: docker compose --env-file .env up -d
