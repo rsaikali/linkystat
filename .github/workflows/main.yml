@@ -22,8 +22,14 @@ jobs:
       - name: 'Create environment file'
         run: echo '${{ secrets.ENV_FILE }}' > .env
       - name: 'Build new Linkystat application'
-        run: docker compose --env-file .env build --pull 
-      - name: 'Stop previous Linkystat application'
-        run: docker compose --env-file .env stop || true
-      - name: 'Start new Linkystat application'
-        run: docker compose --env-file .env up -d
+        run: docker compose --env-file .env build --pull
+      - name: 'Deploy with rolling update'
+        run: docker compose --env-file .env up -d --force-recreate --remove-orphans
+      - name: 'Wait for services to be healthy'
+        run: sleep 15
+      - name: 'Verify deployment'
+        run: |
+          docker compose --env-file .env ps
+          curl -f http://localhost:3000/healthz || exit 1
+      - name: 'Cleanup old images (preserve volumes)'
+        run: docker image prune -af
