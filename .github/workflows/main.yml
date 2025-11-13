@@ -26,7 +26,7 @@ jobs:
       - name: 'Deploy with rolling update'
         run: docker compose --env-file .env up -d --force-recreate --remove-orphans
       - name: 'Wait for services to be healthy'
-        run: sleep 15
+        run: sleep 30
       - name: 'Verify deployment'
         run: |
           docker compose --env-file .env ps
