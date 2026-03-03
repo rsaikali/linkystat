@@ -32,7 +32,7 @@ else
     exit 1
 fi
 
-MYSQL_CONTAINER="${MYSQL_CONTAINER:-linky2db-mysql-1}"
+MYSQL_CONTAINER="${MYSQL_CONTAINER:-mysql}"
 
 # Check if MySQL container is running
 if ! docker ps --format '{{.Names}}' | grep -q "^${MYSQL_CONTAINER}$"; then
