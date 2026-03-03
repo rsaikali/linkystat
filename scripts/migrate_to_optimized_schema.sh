@@ -132,28 +132,15 @@ echo ""
 echo "[STEP 3/5] Populating monthly aggregates..."
 echo "[INFO] Using billing day: ${JOUR_RELEVE}"
 
-# Create temporary table with billing periods
-run_mysql "
-    DROP TEMPORARY TABLE IF EXISTS billing_periods;
-    
-    CREATE TEMPORARY TABLE billing_periods AS
+# Get distinct billing periods directly
+echo "[INFO] Detecting billing periods from historical data..."
+BILLING_PERIODS=$(run_mysql "
     SELECT DISTINCT
-        DATE_FORMAT(
-            DATE_ADD(
-                DATE(time),
-                INTERVAL (${JOUR_RELEVE} - DAY(time)) DAY
-            ),
-            '%Y-%m-${JOUR_RELEVE}'
-        ) as billing_month
+        DATE_FORMAT(DATE(time), '%Y-%m-${JOUR_RELEVE}') as billing_month
     FROM linky_history
     WHERE DAY(time) = ${JOUR_RELEVE} AND HOUR(time) = 0
     ORDER BY billing_month;
-"
-
-# Get billing periods and populate monthly aggregates
-echo "[INFO] Generating monthly aggregates for each billing period..."
-
-BILLING_PERIODS=$(run_mysql "SELECT billing_month FROM billing_periods;" | tail -n +2)
+" | tail -n +2)
 
 if [ -z "$BILLING_PERIODS" ]; then
     echo "[WARNING] No billing periods found! Make sure data exists for day ${JOUR_RELEVE}"
@@ -186,14 +173,14 @@ echo "[STEP 4/5] Verifying data integrity..."
 VERIFICATION=$(run_mysql "
     SELECT 
         'Daily' as table_name,
-        COUNT(*) as rows,
+        COUNT(*) as row_count,
         MIN(date) as min_date,
         MAX(date) as max_date
     FROM linky_daily
     UNION ALL
     SELECT 
         'Monthly' as table_name,
-        COUNT(*) as rows,
+        COUNT(*) as row_count,
         MIN(billing_month) as min_date,
         MAX(billing_month) as max_date
     FROM linky_monthly;
