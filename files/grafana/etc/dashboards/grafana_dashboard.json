@@ -999,7 +999,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\n  SELECT\r\n    DATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION\r\n(\r\n  SELECT\r\n    time as \"timestamp\",\r\n    IFNULL(\r\n      LEAD(counter) OVER (\r\n        ORDER BY\r\n          time\r\n      ) - counter,\r\n      0\r\n    ) AS \"total_kwh\"\r\n  FROM\r\n    (\r\n      SELECT\r\n        time,\r\n        (HCHP + HCHC) / 1000 as counter\r\n      FROM\r\n        linky_history\r\n      WHERE\r\n        DATE(time) >= NOW() - INTERVAL 1 MONTH\r\n        AND HOUR(time) = 0\r\n        AND MINUTE(time) = 0\r\n        AND DATE(time) <> DATE(time + INTERVAL 1 DAY)\r\n    ) B\r\n)\r\nORDER BY\r\n  timestamp",
+            "rawSql": "(\r\n  SELECT\r\n    DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00') as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 1 DAY\r\n)\r\nUNION\r\n(\r\n  SELECT\r\n    date as \"timestamp\",\r\n    total_kwh\r\n  FROM\r\n    linky_daily\r\n  WHERE\r\n    date >= CURDATE() - INTERVAL 1 MONTH\r\n    AND date < CURDATE()\r\n)\r\nORDER BY\r\n  timestamp",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1029,7 +1029,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "SELECT\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as \"Moyenne mois\"\r\nFROM\r\n  linky_history\r\nWHERE\r\n  time >= NOW() - INTERVAL $nb_days_period DAY",
+            "rawSql": "SELECT\r\n  AVG(total_kwh) as \"Moyenne mois\"\r\nFROM\r\n  linky_daily\r\nWHERE\r\n  date >= CURDATE() - INTERVAL $nb_days_period DAY",
             "refId": "B",
             "sql": {
               "columns": [
@@ -1885,7 +1885,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur>15, 0, 1) DAY, '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY - INTERVAL 1 HOUR\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "SELECT\r\n  billing_month as \"timestamp\",\r\n  hchp_kwh as \"total_kwh_HCHP\",\r\n  hchc_kwh as \"total_kwh_HCHC\"\r\nFROM\r\n  linky_monthly\r\nWHERE\r\n  reading_day = $jour_releve_compteur\r\nORDER BY\r\n  billing_month\r\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -1915,7 +1915,7 @@
             "format": "table",
             "hide": false,
             "rawQuery": true,
-            "rawSql": "(SELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time) - INTERVAL $jour_releve_compteur DAY + INTERVAL IF($jour_releve_compteur<15, 0, 1) MONTH + INTERVAL IF($jour_releve_compteur>15, 0, 1) DAY, '%Y-%m-24 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\nWHERE time >= NOW() - INTERVAL $jour_releve_compteur DAY - INTERVAL 1 HOUR\r\n\t)\r\nUNION\r\n(SELECT\r\n      TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n      ROUND(AVG(temperature), 1) as \"Temperature\"\r\n    FROM\r\n      linky.linky_history\r\n\tGROUP BY MONTH(time), YEAR(time))",
+            "rawSql": "SELECT\r\n  billing_month as \"timestamp\",\r\n  ROUND(avg_temp, 1) as \"Temperature\"\r\nFROM\r\n  linky_monthly\r\nWHERE\r\n  reading_day = $jour_releve_compteur\r\nORDER BY\r\n  billing_month",
             "refId": "B",
             "sql": {
               "columns": [
@@ -2465,7 +2465,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "(\r\nSELECT\r\n    TIMESTAMP(DATE_FORMAT(MAX(time), '%Y-%m-$jour_releve_compteur 00:00:00')) as \"timestamp\",\r\n\t(MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL 1 YEAR - INTERVAL 1 HOUR AND NOW()\r\n)\r\nUNION\r\n(SELECT\r\n      time as \"timestamp\", \r\n      IFNULL(counter_HCHP - LAG(counter_HCHP) OVER (ORDER BY time), 0) AS \"total_kwh_HCHP\",\r\n      IFNULL(counter_HCHC - LAG(counter_HCHC) OVER (ORDER BY time), 0) AS \"total_kwh_HCHC\"\r\nFROM\r\n    (SELECT time, HCHP / 1000 as counter_HCHP, HCHC / 1000 as counter_HCHC FROM linky_history\r\n\t WHERE DAY(time) = $jour_releve_compteur AND MONTH(time) = 12 AND HOUR(time) = 0 AND MINUTE(time) = 0) as A\r\n)\r\nORDER BY timestamp\r\n",
+            "rawSql": "SELECT\r\n  billing_month as \"timestamp\",\r\n  hchp_kwh as \"total_kwh_HCHP\",\r\n  hchc_kwh as \"total_kwh_HCHC\"\r\nFROM\r\n  linky_monthly\r\nWHERE\r\n  reading_day = $jour_releve_compteur\r\n  AND billing_month >= CURDATE() - INTERVAL 1 YEAR\r\nORDER BY\r\n  billing_month\r\n",
             "refId": "A",
             "sql": {
               "columns": [
