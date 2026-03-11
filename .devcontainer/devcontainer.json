@@ -2,25 +2,22 @@
     "name": "linkystat-dev",
     "workspaceFolder": "/app",
     "service": "linky2db",
-
     "dockerComposeFile": [
         "../compose.yaml",
         "../compose.dev.yaml"
     ],
-
     "forwardPorts": [
         "grafana:3000",
         "mysql:3306"
     ],
-
     "mounts": [
-        "type=bind,source=${localEnv:USERPROFILE}\\.ssh,target=/root/.ssh,readonly"
+        "type=bind,source=${localEnv:USERPROFILE}\\.ssh,target=/root/.ssh"
     ],
-
-    "shutdownAction": "stopCompose",  
-    "initializeCommand": [".devcontainer/initializeCommand"],
+    "shutdownAction": "stopCompose",
+    "initializeCommand": [
+        ".devcontainer/initializeCommand"
+    ],
     "postStartCommand": ".devcontainer/postStartCommand.sh",
-    
     "features": {
         "ghcr.io/devcontainers/features/git:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
@@ -68,7 +65,7 @@
                 "ms-python.flake8",
                 "ms-python.vscode-pylance",
                 "ms-python.python",
-                "ms-python.debugpy"            
+                "ms-python.debugpy"
             ]
         }
     }
