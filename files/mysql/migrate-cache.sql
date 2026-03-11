@@ -1,40 +1,5 @@
-#/bin/sh -xe
-
-unset MYSQL_HOST
-unset MYSQL_PORT
-
-echo "*********************************"
-echo "*** Creating Linkystat schema ***"
-echo "*********************************"
-
-echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
-GRANT SELECT, SHOW VIEW, EXECUTE ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
-FLUSH PRIVILEGES;
-"
-
-echo "************* Creating tables *************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-CREATE TABLE IF NOT EXISTS linky_realtime (
-    time DATETIME NOT NULL,
-    PAPP SMALLINT UNSIGNED NOT NULL,
-    HCHP INTEGER UNSIGNED NOT NULL,
-    HCHC INTEGER UNSIGNED NOT NULL,
-    temperature double,
-    libelle_tarif VARCHAR(16),
-    PRIMARY KEY (time)
-);
-
-CREATE TABLE IF NOT EXISTS linky_history (
-    time datetime NOT NULL,
-    HCHC INTEGER UNSIGNED DEFAULT 0,
-    HCHP INTEGER UNSIGNED DEFAULT 0,
-    temperature double,
-    PRIMARY KEY (time)
-);
+-- Migration script for existing LinkyStats databases.
+-- Apply manually on production without recreating the whole schema.
 
 CREATE TABLE IF NOT EXISTS linky_daily_cache (
     day_date DATE NOT NULL,
@@ -61,29 +26,9 @@ CREATE TABLE IF NOT EXISTS linky_period_cache (
 CREATE INDEX idx_linky_realtime_time_hchx ON linky_realtime (time, HCHP, HCHC);
 CREATE INDEX idx_linky_history_time_hchx ON linky_history (time, HCHP, HCHC);
 CREATE INDEX idx_linky_history_time_temp ON linky_history (time, temperature);
-"
 
-echo "************ Creating triggers ************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-delimiter ;;
-CREATE TRIGGER realtime_trigger AFTER INSERT ON linky_realtime FOR EACH ROW
-BEGIN
-	INSERT INTO linky_history (time, HCHC, HCHP, temperature)
-	VALUES(
-		STR_TO_DATE(DATE_FORMAT(DATE_ADD(now(), INTERVAL 1 HOUR), '%Y-%m-%d %H:00:00'), '%Y-%m-%d %T'),
-		new.HCHC,
-		new.HCHP,
-		new.temperature)
-    ON DUPLICATE KEY UPDATE HCHC=new.HCHC, HCHP=new.HCHP, temperature=new.temperature;
-END;;
-delimiter ;
-"
-
-echo "************* Creating events *************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
-delimiter ;;
+DROP PROCEDURE IF EXISTS refresh_linky_cache;
+DELIMITER ;;
 CREATE PROCEDURE refresh_linky_cache()
 BEGIN
     INSERT INTO linky_daily_cache (day_date, HCHC_delta, HCHP_delta, total_kwh, temperature_avg, updated_at)
@@ -159,23 +104,15 @@ BEGIN
         total_kwh = VALUES(total_kwh),
         updated_at = VALUES(updated_at);
 END;;
+DELIMITER ;
 
-CREATE EVENT IF NOT EXISTS clean_realtime ON SCHEDULE EVERY 1 MINUTE 
+DROP EVENT IF EXISTS refresh_linky_cache_event;
+DELIMITER ;;
+CREATE EVENT refresh_linky_cache_event ON SCHEDULE EVERY 5 MINUTE
 DO
 BEGIN
-	DELETE FROM linky_realtime WHERE time < NOW() - INTERVAL 2 DAY;
+    CALL refresh_linky_cache();
 END;;
-
-CREATE EVENT IF NOT EXISTS refresh_linky_cache_event ON SCHEDULE EVERY 5 MINUTE
-DO
-BEGIN
-	CALL refresh_linky_cache();
-END;;
+DELIMITER ;
 
 CALL refresh_linky_cache();
-delimiter ;
-"
-
-echo "*******************************************"
-echo "***** Done creating Linkystat schema ******"
-echo "*******************************************"

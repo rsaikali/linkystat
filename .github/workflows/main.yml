@@ -25,6 +25,12 @@ jobs:
         run: docker compose --env-file .env build --pull
       - name: 'Deploy with rolling update'
         run: docker compose --env-file .env up -d --force-recreate --remove-orphans
+      - name: 'Run database migration'
+        run: |
+          set -e
+          MYSQL_ROOT_PASSWORD=$(grep '^MYSQL_ROOT_PASSWORD=' .env | cut -d= -f2-)
+          MYSQL_DATABASE=$(grep '^MYSQL_DATABASE=' .env | cut -d= -f2-)
+          docker exec -i mysql mysql --force -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < files/mysql/migrate-cache.sql
       - name: 'Wait for services to be healthy'
         run: sleep 30
       - name: 'Verify deployment'
