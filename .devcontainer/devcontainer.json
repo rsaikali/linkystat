@@ -59,7 +59,6 @@
                 ]
             },
             "extensions": [
-                "eamodio.gitlens",
                 "ms-python.autopep8",
                 "ms-python.black-formatter",
                 "ms-python.flake8",
