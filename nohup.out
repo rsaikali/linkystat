@@ -1,0 +1,326 @@
+[2025-09-18 10:02:16 INFO/linky2db] Connecting to Linky through USB device: /dev/null
+[2025-09-18 10:02:16 WARNING/linky2db] Cannot establish direct USB connection to Linky device, getting data from production database...
+[2025-09-18 10:02:16 INFO/linky2db] Connecting to database on linky.local
+[2025-09-18 10:02:16 INFO/linky2db] Connected to database: mysql+pymysql://linky:***@linky.local:3306/linky
+[2025-09-18 10:02:16 INFO/linky2db] Connecting to database on mysql
+[2025-09-18 10:02:16 INFO/linky2db] Connected to database: mysql+pymysql://linky:***@mysql:3306/linky
+[2025-09-18 10:02:16 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:12: PAPP=530 HCHP=26402968 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:43 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:14: PAPP=542 HCHP=26402968 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:18 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:16: PAPP=530 HCHP=26402968 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:21 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:18: PAPP=530 HCHP=26402969 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:23 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:19: PAPP=518 HCHP=26402969 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:24 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:21: PAPP=509 HCHP=26402969 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:26 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:23: PAPP=511 HCHP=26402969 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:28 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:25: PAPP=514 HCHP=26402969 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:30 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:26: PAPP=514 HCHP=26402970 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:31 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:28: PAPP=489 HCHP=26402970 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:33 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:30: PAPP=489 HCHP=26402970 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:35 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:32: PAPP=490 HCHP=26402970 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:03 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:33: PAPP=499 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:38 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:35: PAPP=493 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:37: PAPP=491 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:42 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:39: PAPP=490 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:43 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:40: PAPP=481 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:45 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:42: PAPP=481 HCHP=26402971 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:47 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:44: PAPP=487 HCHP=26402972 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:49 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:46: PAPP=494 HCHP=26402972 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:50 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:47: PAPP=493 HCHP=26402972 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:52 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:49: PAPP=501 HCHP=26402972 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:54 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:51: PAPP=498 HCHP=26402973 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:56 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:53: PAPP=493 HCHP=26402973 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:57 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:54: PAPP=493 HCHP=26402973 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:02:59 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:56: PAPP=493 HCHP=26402973 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:01 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:02:58: PAPP=498 HCHP=26402973 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:02 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:00: PAPP=485 HCHP=26402974 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:04 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:01: PAPP=492 HCHP=26402974 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:06 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:03: PAPP=493 HCHP=26402974 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:08 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:05: PAPP=494 HCHP=26402974 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:09 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:07: PAPP=498 HCHP=26402974 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:11 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:09: PAPP=498 HCHP=26402975 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:13 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:10: PAPP=495 HCHP=26402975 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:15 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:12: PAPP=491 HCHP=26402975 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:16 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:14: PAPP=483 HCHP=26402975 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:19 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:16: PAPP=494 HCHP=26402975 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:21 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:17: PAPP=500 HCHP=26402976 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:22 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:19: PAPP=489 HCHP=26402976 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:24 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:21: PAPP=489 HCHP=26402976 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:26 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:23: PAPP=484 HCHP=26402976 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:28 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:24: PAPP=482 HCHP=26402976 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:29 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:26: PAPP=499 HCHP=26402977 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:31 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:28: PAPP=494 HCHP=26402977 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:33 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:30: PAPP=494 HCHP=26402977 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:35 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:31: PAPP=487 HCHP=26402977 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:36 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:33: PAPP=484 HCHP=26402977 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:38 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:35: PAPP=484 HCHP=26402978 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:37: PAPP=484 HCHP=26402978 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:41 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:38: PAPP=483 HCHP=26402978 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:43 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:40: PAPP=487 HCHP=26402978 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:45 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:42: PAPP=481 HCHP=26402978 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:13 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:44: PAPP=483 HCHP=26402979 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:48 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:45: PAPP=483 HCHP=26402979 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:50 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:47: PAPP=495 HCHP=26402979 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:52 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:49: PAPP=486 HCHP=26402979 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:54 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:51: PAPP=499 HCHP=26402979 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:55 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:52: PAPP=491 HCHP=26402980 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:57 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:54: PAPP=483 HCHP=26402980 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:03:59 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:56: PAPP=489 HCHP=26402980 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:00 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:58: PAPP=486 HCHP=26402980 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:02 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:03:59: PAPP=486 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:04 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:01: PAPP=482 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:06 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:03: PAPP=486 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:07 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:05: PAPP=488 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:09 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:06: PAPP=488 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:11 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:08: PAPP=484 HCHP=26402981 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:13 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:10: PAPP=484 HCHP=26402982 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:14 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:12: PAPP=484 HCHP=26402982 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:16 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:13: PAPP=492 HCHP=26402982 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:18 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:15: PAPP=492 HCHP=26402982 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:20 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:17: PAPP=486 HCHP=26402982 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:21 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:19: PAPP=486 HCHP=26402983 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:23 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:21: PAPP=488 HCHP=26402983 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:26 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:22: PAPP=490 HCHP=26402983 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:27 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:24: PAPP=492 HCHP=26402983 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:29 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:26: PAPP=491 HCHP=26402984 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:31 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:28: PAPP=490 HCHP=26402984 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:33 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:29: PAPP=487 HCHP=26402984 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:34 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:31: PAPP=482 HCHP=26402984 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:36 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:33: PAPP=488 HCHP=26402984 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:38 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:35: PAPP=488 HCHP=26402985 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:36: PAPP=486 HCHP=26402985 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:41 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:38: PAPP=501 HCHP=26402985 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:43 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:40: PAPP=504 HCHP=26402985 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:45 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:42: PAPP=508 HCHP=26402985 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:46 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:43: PAPP=505 HCHP=26402986 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:48 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:45: PAPP=505 HCHP=26402986 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:50 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:47: PAPP=507 HCHP=26402986 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:52 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:49: PAPP=507 HCHP=26402986 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:53 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:50: PAPP=503 HCHP=26402986 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:55 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:52: PAPP=502 HCHP=26402987 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:05:23 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:54: PAPP=502 HCHP=26402987 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:04:59 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:56: PAPP=503 HCHP=26402987 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:05:00 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:04:57: PAPP=510 HCHP=26402987 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:37 INFO/linky2db] Connecting to Linky through USB device: /dev/null
+[2025-09-18 10:06:37 WARNING/linky2db] Cannot establish direct USB connection to Linky device, getting data from production database...
+[2025-09-18 10:06:37 INFO/linky2db] Connecting to database on linky.local
+[2025-09-18 10:06:37 INFO/linky2db] Connected to database: mysql+pymysql://linky:***@linky.local:3306/linky
+[2025-09-18 10:06:37 INFO/linky2db] Connecting to database on mysql
+[2025-09-18 10:06:37 INFO/linky2db] Connected to database: mysql+pymysql://linky:***@mysql:3306/linky
+[2025-09-18 10:06:37 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:34: PAPP=530 HCHP=26402999 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:38 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:36: PAPP=527 HCHP=26402999 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:38: PAPP=521 HCHP=26402999 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:42 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:39: PAPP=512 HCHP=26402999 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:44 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:41: PAPP=500 HCHP=26403000 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:46 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:43: PAPP=511 HCHP=26403000 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:48 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:45: PAPP=512 HCHP=26403000 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:49 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:46: PAPP=513 HCHP=26403000 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:51 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:48: PAPP=497 HCHP=26403001 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:53 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:50: PAPP=492 HCHP=26403001 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:54 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:52: PAPP=492 HCHP=26403001 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:56 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:53: PAPP=495 HCHP=26403001 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:06:58 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:55: PAPP=498 HCHP=26403001 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:00 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:57: PAPP=497 HCHP=26403002 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:01 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:06:59: PAPP=497 HCHP=26403002 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:03 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:00: PAPP=484 HCHP=26403002 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:05 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:02: PAPP=495 HCHP=26403002 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:07 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:04: PAPP=497 HCHP=26403002 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:08 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:06: PAPP=486 HCHP=26403003 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:10 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:07: PAPP=486 HCHP=26403003 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:12 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:09: PAPP=491 HCHP=26403003 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:13 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:11: PAPP=487 HCHP=26403003 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:15 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:13: PAPP=490 HCHP=26403003 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:17 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:14: PAPP=490 HCHP=26403004 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:19 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:16: PAPP=499 HCHP=26403004 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:20 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:18: PAPP=496 HCHP=26403004 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:23 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:20: PAPP=489 HCHP=26403004 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:25 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:21: PAPP=491 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:27 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:23: PAPP=490 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:28 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:25: PAPP=495 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:30 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:27: PAPP=494 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:32 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:28: PAPP=499 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:33 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:30: PAPP=501 HCHP=26403005 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:35 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:32: PAPP=506 HCHP=26403006 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:37 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:34: PAPP=493 HCHP=26403006 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:39 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:35: PAPP=493 HCHP=26403006 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:37: PAPP=486 HCHP=26403006 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:42 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:39: PAPP=485 HCHP=26403007 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:44 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:41: PAPP=489 HCHP=26403007 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:46 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:42: PAPP=481 HCHP=26403007 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:47 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:44: PAPP=484 HCHP=26403007 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:49 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:46: PAPP=484 HCHP=26403007 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:51 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:48: PAPP=487 HCHP=26403008 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:53 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:50: PAPP=485 HCHP=26403008 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:54 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:51: PAPP=493 HCHP=26403008 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:56 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:53: PAPP=495 HCHP=26403008 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:58 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:55: PAPP=503 HCHP=26403008 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:07:59 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:57: PAPP=500 HCHP=26403009 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:01 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:07:58: PAPP=500 HCHP=26403009 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:03 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:00: PAPP=494 HCHP=26403009 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:05 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:02: PAPP=494 HCHP=26403009 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:06 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:04: PAPP=493 HCHP=26403009 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:08 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:05: PAPP=494 HCHP=26403010 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:10 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:07: PAPP=494 HCHP=26403010 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:12 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:09: PAPP=492 HCHP=26403010 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:13 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:11: PAPP=496 HCHP=26403010 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:15 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:12: PAPP=489 HCHP=26403010 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:17 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:14: PAPP=489 HCHP=26403011 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:18 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:16: PAPP=492 HCHP=26403011 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:21 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:18: PAPP=490 HCHP=26403011 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:23 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:19: PAPP=490 HCHP=26403011 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:25 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:21: PAPP=489 HCHP=26403011 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:26 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:23: PAPP=485 HCHP=26403012 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:28 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:25: PAPP=489 HCHP=26403012 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:29 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:26: PAPP=489 HCHP=26403012 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:31 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:28: PAPP=490 HCHP=26403012 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:33 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:30: PAPP=490 HCHP=26403012 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:35 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:32: PAPP=492 HCHP=26403013 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:36 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:33: PAPP=487 HCHP=26403013 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:38 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:35: PAPP=485 HCHP=26403013 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:40 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:37: PAPP=485 HCHP=26403013 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:41 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:39: PAPP=487 HCHP=26403013 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:43 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:40: PAPP=494 HCHP=26403014 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:46 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:42: PAPP=493 HCHP=26403014 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:47 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:44: PAPP=488 HCHP=26403014 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:49 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:46: PAPP=485 HCHP=26403014 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:51 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:47: PAPP=485 HCHP=26403014 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:53 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:49: PAPP=486 HCHP=26403015 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:54 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:51: PAPP=489 HCHP=26403015 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:56 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:53: PAPP=492 HCHP=26403015 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:58 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:55: PAPP=484 HCHP=26403015 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:08:59 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:56: PAPP=486 HCHP=26403015 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:09:01 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:08:58: PAPP=480 HCHP=26403016 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:09:03 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:09:00: PAPP=480 HCHP=26403016 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+[2025-09-18 10:09:05 INFO/linky2db] Got new Linky data from production environment at 2025-09-18 10:09:02: PAPP=480 HCHP=26403016 HCHC=18047385, temperature=16.57, libelle_tarif=HEURE PLEINE
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1968, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 920, in do_execute
+    cursor.execute(statement, parameters)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 825, in _read_query_result
+    result.read()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1053, 'Server shutdown in progress')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/src/linky2db.py", line 189, in get_data
+    rs = con.execute(sa.text("SELECT time, PAPP, HCHP, HCHC, temperature, libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1"))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1413, in execute
+    return meth(
+           ^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1987, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2344, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1968, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 920, in do_execute
+    cursor.execute(statement, parameters)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 563, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 825, in _read_query_result
+    result.read()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 1199, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 775, in _read_packet
+    packet.raise_for_error()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/usr/local/lib/python3.12/site-packages/pymysql/err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1053, 'Server shutdown in progress')
+[SQL: SELECT time, PAPP, HCHP, HCHC, temperature, libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1115, in _rollback_impl
+    self.engine.dialect.do_rollback(self.connection)
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 693, in do_rollback
+    dbapi_connection.rollback()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 493, in rollback
+    self._read_ok_packet()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 453, in _read_ok_packet
+    pkt = self._read_packet()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 744, in _read_packet
+    packet_header = self._read_bytes(4)
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 798, in _read_bytes
+    raise err.OperationalError(
+pymysql.err.OperationalError: (2013, 'Lost connection to MySQL server during query')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/src/linky2db.py", line 222, in <module>
+    ld.get_data()
+  File "/app/src/linky2db.py", line 188, in get_data
+    with self.production_engine.connect() as con:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 234, in __exit__
+    self.close()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1231, in close
+    self._transaction.close()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2577, in close
+    self._do_close()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2715, in _do_close
+    self._close_impl()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2701, in _close_impl
+    self._connection_rollback_impl()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2693, in _connection_rollback_impl
+    self.connection._rollback_impl()
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1117, in _rollback_impl
+    self._handle_dbapi_exception(e, None, None, None, None)
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2344, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1115, in _rollback_impl
+    self.engine.dialect.do_rollback(self.connection)
+  File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 693, in do_rollback
+    dbapi_connection.rollback()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 493, in rollback
+    self._read_ok_packet()
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 453, in _read_ok_packet
+    pkt = self._read_packet()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 744, in _read_packet
+    packet_header = self._read_bytes(4)
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pymysql/connections.py", line 798, in _read_bytes
+    raise err.OperationalError(
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
