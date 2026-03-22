@@ -25,9 +25,9 @@ services:
              --skip-mysqlx
              --max-execution-time=10000
              --default-storage-engine=InnoDB
-             --innodb-buffer-pool-size=4G
-             --innodb-buffer-pool-chunk-size=512M
-             --innodb-buffer-pool-instances=8
+             --innodb-buffer-pool-size=1536M
+             --innodb-buffer-pool-chunk-size=384M
+             --innodb-buffer-pool-instances=4
              --character-set-server=utf8mb4
              --collation-server=utf8mb4_unicode_ci
              --init-connect='SET NAMES UTF8;'
