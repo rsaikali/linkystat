@@ -93,7 +93,7 @@
                     "editorMode": "code",
                     "format": "time_series",
                     "rawQuery": true,
-                    "rawSql": "SELECT\n  day_date AS time,\n  @running := @running + ((HCHP_delta * $prix_hp + HCHC_delta * $prix_hc) / 1000) AS 'Coût cumulé'\nFROM linky_daily_cache,\n  (SELECT @running := $abonnement) AS init\nWHERE day_date >= (\n  CASE\n    WHEN DAY(CURDATE()) >= $jour_releve_compteur\n    THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\n    ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\n  END\n)\nAND day_date <= CURDATE()\nORDER BY day_date",
+                    "rawSql": "SELECT\n  day_date AS time,\n  $abonnement + SUM((HCHP_delta * $prix_hp + HCHC_delta * $prix_hc) / 1000) OVER (ORDER BY day_date ROWS UNBOUNDED PRECEDING) AS 'Coût cumulé'\nFROM linky_daily_cache\nWHERE day_date >= (\n  CASE\n    WHEN DAY(CURDATE()) >= $jour_releve_compteur\n    THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\n    ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\n  END\n)\nAND day_date <= CURDATE()\nORDER BY day_date",
                     "refId": "A"
                 },
                 {
@@ -101,7 +101,7 @@
                     "editorMode": "code",
                     "format": "time_series",
                     "rawQuery": true,
-                    "rawSql": "SELECT\n  period_end AS time,\n  (\n    SELECT\n      @total := $abonnement + SUM((HCHP_delta * $prix_hp + HCHC_delta * $prix_hc) / 1000)\n    FROM linky_daily_cache\n    WHERE day_date >= p.period_start AND day_date <= CURDATE()\n  ) / DATEDIFF(CURDATE(), p.period_start) * DATEDIFF(p.period_end, p.period_start) AS 'Projection'\nFROM linky_period_cache p,\n  (SELECT @total := 0) AS init\nWHERE p.period_type = 'month'\n  AND p.period_start <= CURDATE()\n  AND p.period_end > CURDATE()\nLIMIT 1",
+                    "rawSql": "SELECT\n  p.period_end AS time,\n  (\n    $abonnement + COALESCE((\n      SELECT SUM((d.HCHP_delta * $prix_hp + d.HCHC_delta * $prix_hc) / 1000)\n      FROM linky_daily_cache d\n      WHERE d.day_date >= p.period_start AND d.day_date <= CURDATE()\n    ), 0)\n  ) / GREATEST(DATEDIFF(CURDATE(), p.period_start), 1) * DATEDIFF(p.period_end, p.period_start) AS 'Projection'\nFROM linky_period_cache p\nWHERE p.period_type = 'month'\n  AND p.period_start <= CURDATE()\n  AND p.period_end > CURDATE()\nLIMIT 1",
                     "refId": "B"
                 }
             ],
@@ -332,13 +332,15 @@
             "gridPos": { "h": 10, "w": 12, "x": 0, "y": 12 },
             "id": 6,
             "options": {
-                "dims": {
-                    "x": "temperature_avg",
-                    "exclude": ["time"]
-                },
                 "legend": { "displayMode": "hidden", "placement": "bottom" },
-                "series": [],
-                "seriesMapping": "auto",
+                "series": [
+                    {
+                        "frame": { "matcher": { "id": "byIndex", "options": 0 } },
+                        "x": { "matcher": { "id": "byName", "options": "temperature_avg" } },
+                        "y": { "matcher": { "id": "byName", "options": "total_kwh" } }
+                    }
+                ],
+                "seriesMapping": "manual",
                 "tooltip": { "mode": "single", "sort": "none" }
             },
             "targets": [
@@ -347,7 +349,7 @@
                     "editorMode": "code",
                     "format": "table",
                     "rawQuery": true,
-                    "rawSql": "SELECT\n  day_date AS time,\n  temperature_avg,\n  total_kwh\nFROM linky_daily_cache\nWHERE temperature_avg IS NOT NULL\n  AND total_kwh > 0\nORDER BY day_date",
+                    "rawSql": "SELECT\n  temperature_avg,\n  total_kwh\nFROM linky_daily_cache\nWHERE temperature_avg IS NOT NULL\n  AND total_kwh > 0\nORDER BY temperature_avg",
                     "refId": "A"
                 }
             ],
@@ -456,7 +458,7 @@
                         "scaleDistribution": { "type": "linear" }
                     },
                     "decimals": 0,
-                    "unit": "watt"
+                    "unit": "watth"
                 },
                 "overrides": []
             },
@@ -478,8 +480,8 @@
                 "exemplars": { "color": "rgba(255,0,255,0.7)" },
                 "filterValues": { "le": 0 },
                 "legend": { "show": true },
-                "rowsFrame": { "layout": "auto" },
-                "showValue": "never",
+                "rowsFrame": { "layout": "auto", "value": "heure" },
+                "showValue": "auto",
                 "tooltip": { "mode": "single", "showColorScale": true, "yHistogram": false }
             },
             "targets": [
@@ -488,19 +490,12 @@
                     "editorMode": "code",
                     "format": "table",
                     "rawQuery": true,
-                    "rawSql": "SELECT\n  CONCAT(\n    CASE DAYOFWEEK(time)\n      WHEN 2 THEN '1-Lun'\n      WHEN 3 THEN '2-Mar'\n      WHEN 4 THEN '3-Mer'\n      WHEN 5 THEN '4-Jeu'\n      WHEN 6 THEN '5-Ven'\n      WHEN 7 THEN '6-Sam'\n      WHEN 1 THEN '7-Dim'\n    END\n  ) AS jour,\n  CONCAT(LPAD(HOUR(time), 2, '0'), 'h') AS heure,\n  ROUND(AVG(PAPP) * (\n    (SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC))\n      / (TIMESTAMPDIFF(SECOND, MIN(time), MAX(time)) / 3600)\n      / AVG(PAPP)\n    FROM linky_realtime)\n  )) AS puissance\nFROM linky_realtime\nWHERE time >= NOW() - INTERVAL 30 DAY\nGROUP BY DAYOFWEEK(time), HOUR(time)\nORDER BY DAYOFWEEK(time), HOUR(time)",
+                    "rawSql": "SELECT\n  CONCAT(LPAD(h.hour_of_day, 2, '0'), 'h') AS heure,\n  ROUND(AVG(CASE WHEN h.dow = 2 THEN h.consumption_wh END)) AS 'Lun',\n  ROUND(AVG(CASE WHEN h.dow = 3 THEN h.consumption_wh END)) AS 'Mar',\n  ROUND(AVG(CASE WHEN h.dow = 4 THEN h.consumption_wh END)) AS 'Mer',\n  ROUND(AVG(CASE WHEN h.dow = 5 THEN h.consumption_wh END)) AS 'Jeu',\n  ROUND(AVG(CASE WHEN h.dow = 6 THEN h.consumption_wh END)) AS 'Ven',\n  ROUND(AVG(CASE WHEN h.dow = 7 THEN h.consumption_wh END)) AS 'Sam',\n  ROUND(AVG(CASE WHEN h.dow = 1 THEN h.consumption_wh END)) AS 'Dim'\nFROM (\n  SELECT\n    HOUR(time) AS hour_of_day,\n    DAYOFWEEK(time) AS dow,\n    (HCHP - LAG(HCHP) OVER (ORDER BY time)) + (HCHC - LAG(HCHC) OVER (ORDER BY time)) AS consumption_wh\n  FROM linky_history\n  WHERE time >= NOW() - INTERVAL 90 DAY\n) h\nWHERE h.consumption_wh >= 0 AND h.consumption_wh < 10000\nGROUP BY h.hour_of_day\nORDER BY h.hour_of_day",
                     "refId": "A"
                 }
             ],
-            "title": "Heatmap — Consommation par heure et jour de la semaine",
-            "transformations": [
-                {
-                    "id": "prepareTimeSeries",
-                    "options": {
-                        "format": "many"
-                    }
-                }
-            ],
+            "title": "Heatmap — Consommation par heure et jour de la semaine (Wh)",
+            "transformations": [],
             "type": "heatmap"
         }
     ],
