@@ -10,7 +10,7 @@ echo "*********************************"
 echo "********** Creating ${GRAFANA_MYSQL_USER} user **********"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
-CREATE USER '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
+CREATE USER IF NOT EXISTS '${GRAFANA_MYSQL_USER}' IDENTIFIED BY '${GRAFANA_MYSQL_PASSWORD}';
 GRANT SELECT, SHOW VIEW, EXECUTE ON ${MYSQL_DATABASE}.* TO '${GRAFANA_MYSQL_USER}';
 FLUSH PRIVILEGES;
 "
@@ -57,15 +57,37 @@ CREATE TABLE IF NOT EXISTS linky_period_cache (
     PRIMARY KEY (period_type, period_start),
     KEY idx_period_type_end (period_type, period_end)
 );
+"
 
-CREATE INDEX idx_linky_realtime_time_hchx ON linky_realtime (time, HCHP, HCHC);
-CREATE INDEX idx_linky_history_time_hchx ON linky_history (time, HCHP, HCHC);
-CREATE INDEX idx_linky_history_time_temp ON linky_history (time, temperature);
+echo "************* Creating indexes *************"
+mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
+"
+SELECT IF(
+    COUNT(*) = 0,
+    'ALTER TABLE linky_realtime ADD INDEX idx_linky_realtime_time_hchx (time, HCHP, HCHC)',
+    'SELECT 1'
+) INTO @sql FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = '${MYSQL_DATABASE}' AND INDEX_NAME = 'idx_linky_realtime_time_hchx';
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SELECT IF(
+    COUNT(*) = 0,
+    'ALTER TABLE linky_history ADD INDEX idx_linky_history_time_hchx (time, HCHP, HCHC)',
+    'SELECT 1'
+) INTO @sql FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = '${MYSQL_DATABASE}' AND INDEX_NAME = 'idx_linky_history_time_hchx';
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SELECT IF(
+    COUNT(*) = 0,
+    'ALTER TABLE linky_history ADD INDEX idx_linky_history_time_temp (time, temperature)',
+    'SELECT 1'
+) INTO @sql FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = '${MYSQL_DATABASE}' AND INDEX_NAME = 'idx_linky_history_time_temp';
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 "
 
 echo "************ Creating triggers ************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
+DROP TRIGGER IF EXISTS realtime_trigger;
 delimiter ;;
 CREATE TRIGGER realtime_trigger AFTER INSERT ON linky_realtime FOR EACH ROW
 BEGIN
@@ -83,6 +105,7 @@ delimiter ;
 echo "************* Creating events *************"
 mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
 "
+DROP PROCEDURE IF EXISTS refresh_linky_cache;
 delimiter ;;
 CREATE PROCEDURE refresh_linky_cache()
 BEGIN
@@ -160,13 +183,15 @@ BEGIN
         updated_at = VALUES(updated_at);
 END;;
 
-CREATE EVENT IF NOT EXISTS clean_realtime ON SCHEDULE EVERY 1 MINUTE 
+DROP EVENT IF EXISTS clean_realtime;
+CREATE EVENT clean_realtime ON SCHEDULE EVERY 1 MINUTE
 DO
 BEGIN
 	DELETE FROM linky_realtime WHERE time < NOW() - INTERVAL 2 DAY;
 END;;
 
-CREATE EVENT IF NOT EXISTS refresh_linky_cache_event ON SCHEDULE EVERY 5 MINUTE
+DROP EVENT IF EXISTS refresh_linky_cache_event;
+CREATE EVENT refresh_linky_cache_event ON SCHEDULE EVERY 5 MINUTE
 DO
 BEGIN
 	CALL refresh_linky_cache();
