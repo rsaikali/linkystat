@@ -332,15 +332,12 @@
             "gridPos": { "h": 10, "w": 12, "x": 0, "y": 12 },
             "id": 6,
             "options": {
+                "dims": {
+                    "x": "temperature_avg"
+                },
                 "legend": { "displayMode": "hidden", "placement": "bottom" },
-                "series": [
-                    {
-                        "frame": { "matcher": { "id": "byIndex", "options": 0 } },
-                        "x": { "matcher": { "id": "byName", "options": "temperature_avg" } },
-                        "y": { "matcher": { "id": "byName", "options": "total_kwh" } }
-                    }
-                ],
-                "seriesMapping": "manual",
+                "series": [],
+                "seriesMapping": "auto",
                 "tooltip": { "mode": "single", "sort": "none" }
             },
             "targets": [
@@ -480,7 +477,7 @@
                 "exemplars": { "color": "rgba(255,0,255,0.7)" },
                 "filterValues": { "le": 0 },
                 "legend": { "show": true },
-                "rowsFrame": { "layout": "auto", "value": "heure" },
+                "rowsFrame": { "layout": "auto" },
                 "showValue": "auto",
                 "tooltip": { "mode": "single", "showColorScale": true, "yHistogram": false }
             },
@@ -490,7 +487,7 @@
                     "editorMode": "code",
                     "format": "table",
                     "rawQuery": true,
-                    "rawSql": "SELECT\n  CONCAT(LPAD(h.hour_of_day, 2, '0'), 'h') AS heure,\n  ROUND(AVG(CASE WHEN h.dow = 2 THEN h.consumption_wh END)) AS 'Lun',\n  ROUND(AVG(CASE WHEN h.dow = 3 THEN h.consumption_wh END)) AS 'Mar',\n  ROUND(AVG(CASE WHEN h.dow = 4 THEN h.consumption_wh END)) AS 'Mer',\n  ROUND(AVG(CASE WHEN h.dow = 5 THEN h.consumption_wh END)) AS 'Jeu',\n  ROUND(AVG(CASE WHEN h.dow = 6 THEN h.consumption_wh END)) AS 'Ven',\n  ROUND(AVG(CASE WHEN h.dow = 7 THEN h.consumption_wh END)) AS 'Sam',\n  ROUND(AVG(CASE WHEN h.dow = 1 THEN h.consumption_wh END)) AS 'Dim'\nFROM (\n  SELECT\n    HOUR(time) AS hour_of_day,\n    DAYOFWEEK(time) AS dow,\n    (HCHP - LAG(HCHP) OVER (ORDER BY time)) + (HCHC - LAG(HCHC) OVER (ORDER BY time)) AS consumption_wh\n  FROM linky_history\n  WHERE time >= NOW() - INTERVAL 90 DAY\n) h\nWHERE h.consumption_wh >= 0 AND h.consumption_wh < 10000\nGROUP BY h.hour_of_day\nORDER BY h.hour_of_day",
+                    "rawSql": "SELECT\n  h.hour_of_day AS heure,\n  ROUND(AVG(CASE WHEN h.dow = 2 THEN h.consumption_wh END)) AS 'Lun',\n  ROUND(AVG(CASE WHEN h.dow = 3 THEN h.consumption_wh END)) AS 'Mar',\n  ROUND(AVG(CASE WHEN h.dow = 4 THEN h.consumption_wh END)) AS 'Mer',\n  ROUND(AVG(CASE WHEN h.dow = 5 THEN h.consumption_wh END)) AS 'Jeu',\n  ROUND(AVG(CASE WHEN h.dow = 6 THEN h.consumption_wh END)) AS 'Ven',\n  ROUND(AVG(CASE WHEN h.dow = 7 THEN h.consumption_wh END)) AS 'Sam',\n  ROUND(AVG(CASE WHEN h.dow = 1 THEN h.consumption_wh END)) AS 'Dim'\nFROM (\n  SELECT\n    HOUR(time) AS hour_of_day,\n    DAYOFWEEK(time) AS dow,\n    (HCHP - LAG(HCHP) OVER (ORDER BY time)) + (HCHC - LAG(HCHC) OVER (ORDER BY time)) AS consumption_wh\n  FROM linky_history\n  WHERE time >= NOW() - INTERVAL 90 DAY\n) h\nWHERE h.consumption_wh >= 0 AND h.consumption_wh < 10000\nGROUP BY h.hour_of_day\nORDER BY h.hour_of_day",
                     "refId": "A"
                 }
             ],

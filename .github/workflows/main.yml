@@ -18,7 +18,7 @@ jobs:
     environment: 
         name: ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: 'Create environment file'
         run: echo '${{ secrets.ENV_FILE }}' > .env
       - name: 'Build new Linkystat application'
