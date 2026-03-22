@@ -182,10 +182,7 @@ class LinkyData(object):
                             # Getting current temperature from OpenWeather API
                             current_temperature = None
                             if self.temperature_manager is not None:
-                                try:
-                                    current_temperature = self.temperature_manager.get_current_temperature()
-                                except (requests.exceptions.RequestException, KeyError) as e:
-                                    logging.warning(f"Unable to retrieve temperature: {e}")
+                                current_temperature = self.temperature_manager.get_current_temperature()
 
                             # Write the received data to the database
                             try:
