@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime
 
+import requests
 import serial
 import sqlalchemy as sa
 
@@ -65,13 +66,37 @@ class LinkyData(object):
 
         # Initialize Linky USB device
         logging.info(f"Connecting to Linky through USB device: {LINKY_USB_DEVICE}")
-        self.serial_port = serial.Serial(port=LINKY_USB_DEVICE, baudrate=LINKY_BAUDRATE, parity=serial.PARITY_EVEN, stopbits=serial.STOPBITS_ONE, bytesize=serial.SEVENBITS, timeout=1)
-        logging.info("Connected to Linky: %s" % self.serial_port.get_settings())
+        self.serial_port = None
+        self._open_serial()
 
         # Initialize MySQL database engine
         logging.info(f"Connecting to database on {MYSQL_HOST}")
-        self.engine = sa.create_engine(CONNECTION_STRING)
+        self.engine = sa.create_engine(CONNECTION_STRING, pool_pre_ping=True)
         logging.info(f"Connected to database: {self.engine.url}")
+
+    # Watchdog: warn after 60s of silence, reset serial after 300s
+    WATCHDOG_WARN_SECONDS = 60
+    WATCHDOG_RESET_SECONDS = 300
+
+    def _open_serial(self):
+        """
+        Open (or reopen) the serial port connection.
+
+        Closes any existing connection before opening a new one.
+
+        :raises serial.SerialException: If the serial port cannot be opened
+        """
+        if self.serial_port is not None and self.serial_port.is_open:
+            self.serial_port.close()
+        self.serial_port = serial.Serial(
+            port=LINKY_USB_DEVICE,
+            baudrate=LINKY_BAUDRATE,
+            parity=serial.PARITY_EVEN,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.SEVENBITS,
+            timeout=1,
+        )
+        logging.info(f"Serial port opened: {self.serial_port.get_settings()}")
 
     def get_data(self):
         """
@@ -84,81 +109,117 @@ class LinkyData(object):
         3. Enrich with current temperature
         4. Store in MySQL database
 
+        Includes a watchdog that monitors serial port activity:
+        - Warns after 60 seconds of no complete packet
+        - Closes and reopens the serial port after 300 seconds of silence
+
+        On serial errors, the connection is automatically reopened after a delay.
+
         Collected data format:
         - PAPP: Instantaneous apparent power (W)
         - HCHC: Off-peak hours index (Wh)
         - HCHP: Peak hours index (Wh)
         - LTARF: Current tariff label
         - DATE: Data timestamp
-
-        :raises serial.SerialException: On serial reading error
-        :raises sqlalchemy.exc.SQLAlchemyError: On database error
         """
-        data = {}
+        while True:
+            data = {}
+            last_packet_time = time.monotonic()
+            warned = False
 
-        with self.serial_port as ser:
-            # Continuously read lines from the serial port
-            while True:
-                line = ser.readline()
+            try:
+                with self.serial_port as ser:
+                    # Continuously read lines from the serial port
+                    while True:
+                        line = ser.readline()
 
-                # Check if the line contains the start of a new packet
-                if b"\x03\x02" in bytearray(line):
-                    data = {}
+                        # Watchdog: check for serial silence
+                        elapsed = time.monotonic() - last_packet_time
+                        if not line:
+                            if elapsed > self.WATCHDOG_RESET_SECONDS:
+                                logging.warning(f"No data received for {int(elapsed)}s, resetting serial connection...")
+                                break  # Exit inner loop to reopen serial
+                            if elapsed > self.WATCHDOG_WARN_SECONDS and not warned:
+                                logging.warning(f"No data received for {int(elapsed)}s, waiting...")
+                                warned = True
+                            continue
 
-                # Decode the line and split it into an array
-                arr = line.decode("ascii").strip().split()
+                        # Check if the line contains the start of a new packet
+                        if b"\x03\x02" in bytearray(line):
+                            data = {}
 
-                # Check if the array has the expected number of elements
-                if len(arr) < 3:
-                    # Skip this line and continue to the next one
+                        # Decode the line and split it into an array
+                        arr = line.decode("ascii").strip().split()
+
+                        # Check if the array has the expected number of elements
+                        if len(arr) < 3:
+                            # Skip this line and continue to the next one
+                            continue
+
+                        # Extract the key, value, and checksum from the array
+                        key, value, checksum = arr[0], " ".join(arr[1:-1]), arr[-1]
+
+                        # Check if the key is one of the expected ones and if the checksum is correct
+                        if key not in KEEP_KEYS.keys() or not LinkyData.verify_checksum(key, value, checksum):
+                            continue
+
+                        # Store value in current dataframe
+                        data[KEEP_KEYS[key]] = value
+
+                        # Check if all expected keys have been processed
+                        if len(data.keys()) == len(KEEP_KEYS.keys()):
+
+                            # Reset watchdog on successful packet
+                            last_packet_time = time.monotonic()
+                            warned = False
+
+                            # Get timestamp from dataframe
+                            timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
+
+                            # Log the received packet information
+                            logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])} LTARF={data['LTARF']}]")
+
+                            # Getting current temperature from OpenWeather API
+                            current_temperature = None
+                            if self.temperature_manager is not None:
+                                try:
+                                    current_temperature = self.temperature_manager.get_current_temperature()
+                                except (requests.exceptions.RequestException, KeyError) as e:
+                                    logging.warning(f"Unable to retrieve temperature: {e}")
+
+                            # Write the received data to the database
+                            try:
+                                with self.engine.begin() as connection:
+                                    # Prepare the SQL query to insert the data into the table
+                                    sql_query = sa.text(
+                                        """
+                                        INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
+                                        VALUES (:timestamp, :hchc, :hchp, :papp, :temperature, :ltarf)
+                                    """
+                                    )
+                                    # Execute the SQL query with parameterized values
+                                    connection.execute(
+                                        sql_query,
+                                        {"timestamp": timestamp, "hchc": int(data["HCHC"]), "hchp": int(data["HCHP"]), "papp": int(data["PAPP"]), "temperature": current_temperature, "ltarf": data["LTARF"]},
+                                    )
+                            except sa.exc.SQLAlchemyError as e:
+                                logging.error(f"Database insertion error: {e}")
+                                # Continue the loop despite the error to not stop data collection
+                                continue
+
+                # If we exited the inner loop (watchdog reset), reopen serial
+                logging.info("Reopening serial connection...")
+                self._open_serial()
+
+            except serial.SerialException as e:
+                logging.error(f"Serial port error: {e}")
+                logging.info("Attempting to reopen serial port in 5 seconds...")
+                time.sleep(5)
+                try:
+                    self._open_serial()
+                except serial.SerialException as e:
+                    logging.error(f"Failed to reopen serial port: {e}")
                     continue
-
-                # Extract the key, value, and checksum from the array
-                key, value, checksum = arr[0], " ".join(arr[1:-1]), arr[-1]
-
-                # Check if the key is one of the expected ones and if the checksum is correct
-                if key not in KEEP_KEYS.keys() or not LinkyData.verify_checksum(key, value, checksum):
-                    continue
-
-                # Store value in current dataframe
-                data[KEEP_KEYS[key]] = value
-
-                # Check if all expected keys have been processed
-                if len(data.keys()) == len(KEEP_KEYS.keys()):
-
-                    # Get timestamp from dataframe
-                    timestamp = datetime.strptime(data["DATE"][1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
-
-                    # Log the received packet information
-                    logging.info(f"Received new packet from '{LINKY_USB_DEVICE}' Linky device [PAPP={int(data['PAPP'])} HCHP={int(data['HCHP'])} HCHC={int(data['HCHC'])} LTARF={data['LTARF']}]")
-
-                    # Getting current temperature from OpenWeather API
-                    current_temperature = None
-                    if self.temperature_manager is not None:
-                        try:
-                            current_temperature = self.temperature_manager.get_current_temperature()
-                        except Exception as e:
-                            logging.warning(f"Unable to retrieve temperature: {e}")
-
-                    # Write the received data to the database
-                    try:
-                        with self.engine.begin() as connection:
-                            # Prepare the SQL query to insert the data into the table
-                            sql_query = sa.text(
-                                """
-                                INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
-                                VALUES (:timestamp, :hchc, :hchp, :papp, :temperature, :ltarf)
-                            """
-                            )
-                            # Execute the SQL query with parameterized values
-                            connection.execute(
-                                sql_query,
-                                {"timestamp": timestamp, "hchc": int(data["HCHC"]), "hchp": int(data["HCHP"]), "papp": int(data["PAPP"]), "temperature": current_temperature, "ltarf": data["LTARF"]},
-                            )
-                    except sa.exc.SQLAlchemyError as e:
-                        logging.error(f"Database insertion error: {e}")
-                        # Continue the loop despite the error to not stop data collection
-                        continue
 
     @staticmethod
     def verify_checksum(key, value, checksum):
