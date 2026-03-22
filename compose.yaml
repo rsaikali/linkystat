@@ -7,7 +7,6 @@ services:
     build: .
     env_file: .env
     restart: always
-    mem_limit: 256m
     devices:
       - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}
     depends_on:
@@ -21,7 +20,6 @@ services:
     image: mysql:8.4
     env_file: .env
     restart: always
-    mem_limit: 1792m
     command: >
       mysqld --skip-performance-schema
              --skip-mysqlx
@@ -52,7 +50,6 @@ services:
     image: grafana/grafana:11.5.8
     env_file: .env
     restart: always
-    mem_limit: 512m
     environment:
       - GF_INSTALL_PLUGINS=yesoreyeram-boomtheme-panel,nikosc-percenttrend-panel,briangann-gauge-panel
     ports:
@@ -60,7 +57,7 @@ services:
     volumes:
       - ./files/grafana/etc:/etc/grafana
     healthcheck:
-      test: wget -q --spider http://localhost:3000/healthz
+      test: curl http://localhost:3000/healthz | grep Ok
       interval: 1s
       retries: 120
     depends_on:

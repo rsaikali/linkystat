@@ -39,7 +39,6 @@ class TemperatureManager(object):
         self.latitude = latitude
         self.longitude = longitude
         self.cache = TTLCache(maxsize=16, ttl=600)
-        self.last_known_temperature = None
 
     @cachedmethod(lambda self: self.cache)
     def get_current_temperature(self):
@@ -64,17 +63,10 @@ class TemperatureManager(object):
             response.raise_for_status()
             temperature = round(response.json()["main"]["temp"], 2)
             logging.info(f"Calling OpenWeather API for current temperature: {temperature}°C")
-            self.last_known_temperature = temperature
             return temperature
         except requests.exceptions.RequestException as e:
             logging.error(f"Error calling OpenWeather API: {e}")
-            if self.last_known_temperature is not None:
-                logging.info(f"Using last known temperature: {self.last_known_temperature}°C")
-                return self.last_known_temperature
             raise
         except KeyError as e:
             logging.error(f"Malformed OpenWeather API response, missing key: {e}")
-            if self.last_known_temperature is not None:
-                logging.info(f"Using last known temperature: {self.last_known_temperature}°C")
-                return self.last_known_temperature
             raise

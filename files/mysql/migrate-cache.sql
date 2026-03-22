@@ -31,7 +31,6 @@ DROP PROCEDURE IF EXISTS refresh_linky_cache;
 DELIMITER ;;
 CREATE PROCEDURE refresh_linky_cache()
 BEGIN
-    -- Daily cache: only recalculate today and yesterday
     INSERT INTO linky_daily_cache (day_date, HCHC_delta, HCHP_delta, total_kwh, temperature_avg, updated_at)
     SELECT
         DATE(time) AS day_date,
@@ -41,7 +40,6 @@ BEGIN
         ROUND(AVG(temperature), 2) AS temperature_avg,
         NOW() AS updated_at
     FROM linky_history
-    WHERE time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
     GROUP BY DATE(time)
     ON DUPLICATE KEY UPDATE
         HCHC_delta = VALUES(HCHC_delta),
@@ -50,7 +48,6 @@ BEGIN
         temperature_avg = VALUES(temperature_avg),
         updated_at = VALUES(updated_at);
 
-    -- Monthly cache: only recalculate current billing period
     INSERT INTO linky_period_cache (period_type, period_start, period_end, HCHC_delta, HCHP_delta, total_kwh, updated_at)
     SELECT
         'month' AS period_type,
@@ -70,7 +67,6 @@ BEGIN
                 ELSE STR_TO_DATE(DATE_FORMAT(DATE_SUB(time, INTERVAL 1 MONTH), '%Y-%m-24'), '%Y-%m-%d')
             END AS period_start
         FROM linky_history
-        WHERE time >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)
     ) AS month_data
     GROUP BY period_start
     ON DUPLICATE KEY UPDATE
@@ -80,7 +76,6 @@ BEGIN
         total_kwh = VALUES(total_kwh),
         updated_at = VALUES(updated_at);
 
-    -- Yearly cache: only recalculate current billing year
     INSERT INTO linky_period_cache (period_type, period_start, period_end, HCHC_delta, HCHP_delta, total_kwh, updated_at)
     SELECT
         'year' AS period_type,
@@ -100,7 +95,6 @@ BEGIN
                 ELSE STR_TO_DATE(CONCAT(YEAR(time) - 1, '-12-24'), '%Y-%m-%d')
             END AS period_start
         FROM linky_history
-        WHERE time >= DATE_SUB(CURDATE(), INTERVAL 13 MONTH)
     ) AS year_data
     GROUP BY period_start
     ON DUPLICATE KEY UPDATE
