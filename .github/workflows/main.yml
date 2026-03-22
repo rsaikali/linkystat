@@ -28,9 +28,7 @@ jobs:
       - name: 'Run database migration'
         run: |
           set -e
-          MYSQL_ROOT_PASSWORD=$(grep '^MYSQL_ROOT_PASSWORD=' .env | cut -d= -f2-)
-          MYSQL_DATABASE=$(grep '^MYSQL_DATABASE=' .env | cut -d= -f2-)
-          docker exec -i mysql mysql --force -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < files/mysql/migrate-cache.sql
+          docker exec -i mysql sh -c 'sh /docker-entrypoint-initdb.d/init-script.sh'
       - name: 'Wait for services to be healthy'
         run: sleep 30
       - name: 'Verify deployment'

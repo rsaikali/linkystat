@@ -7,6 +7,7 @@ services:
     build: .
     env_file: .env
     restart: always
+    mem_limit: 128m
     devices:
       - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}
     depends_on:
@@ -33,6 +34,7 @@ services:
              --init-connect='SET NAMES UTF8;'
              --lc_time_names='fr_FR'
              --mysql_native_password=ON
+    mem_limit: 2g
     ports:
       - 3306:3306
     volumes:
@@ -52,12 +54,13 @@ services:
     restart: always
     environment:
       - GF_INSTALL_PLUGINS=yesoreyeram-boomtheme-panel,nikosc-percenttrend-panel,briangann-gauge-panel
+    mem_limit: 256m
     ports:
       - 3000:3000
     volumes:
       - ./files/grafana/etc:/etc/grafana
     healthcheck:
-      test: curl http://localhost:3000/healthz | grep Ok
+      test: wget --spider -q http://localhost:3000/healthz || exit 1
       interval: 1s
       retries: 120
     depends_on:
