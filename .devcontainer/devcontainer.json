@@ -11,7 +11,7 @@
         "mysql:3306"
     ],
     "mounts": [
-        "type=bind,source=${localEnv:USERPROFILE}\\.ssh,target=/root/.ssh"
+        "type=bind,source=/home/rsaikali/.ssh,target=/root/.ssh"
     ],
     "shutdownAction": "stopCompose",
     "initializeCommand": [
@@ -35,29 +35,6 @@
     },
     "customizations": {
         "vscode": {
-            "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "python.formatting.provider": "black",
-                "python.linting.enabled": true,
-                "python.linting.pylintEnabled": false,
-                "python.analysis.autoImportCompletions": true,
-                "editor.defaultFormatter": "ms-python.black-formatter",
-                "editor.insertSpaces": true,
-                "editor.tabSize": 4,
-                "editor.detectIndentation": false,
-                "editor.formatOnSave": true,
-                "[python]": {
-                    "editor.formatOnSave": true,
-                    "editor.defaultFormatter": "ms-python.black-formatter",
-                    "editor.codeActionsOnSave": {
-                        "source.sortImports": "explicit"
-                    }
-                },
-                "black-formatter.args": [
-                    "--line-length=200",
-                    "--skip-magic-trailing-comma"
-                ]
-            },
             "extensions": [
                 "ms-python.autopep8",
                 "ms-python.black-formatter",

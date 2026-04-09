@@ -4,5 +4,6 @@ services:
   # Python Linky application
   linky2db:
     command: sleep infinity
+    devices: []
     volumes:
       - .:/app
