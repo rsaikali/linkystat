@@ -831,7 +831,7 @@
                 "name": "nb_days_period",
                 "options": [],
                 "query": "SELECT\n    CASE WHEN DAYOFMONTH(current_date) <= $jour_releve_compteur\n\tTHEN \n        DAYOFMONTH(LAST_DAY(DATE_ADD(DATE_SUB(current_date, interval 1 month), interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))                     \n    ELSE\n        DAYOFMONTH(LAST_DAY(date_add(current_date, interval $jour_releve_compteur - DAYOFMONTH(current_date) day)))\n    END",
-                "refresh": 1,
+                "refresh": 5,
                 "regex": "",
                 "type": "query"
             },
@@ -845,7 +845,7 @@
                 "name": "consommation_veille",
                 "options": [],
                 "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime WHERE time >= NOW() - INTERVAL 90 DAY;",
-                "refresh": 1,
+                "refresh": 5,
                 "regex": "",
                 "type": "query"
             },
@@ -859,7 +859,7 @@
                 "name": "cosphi",
                 "options": [],
                 "query": "SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, MIN(time), MAX(time)) / 3600) / AVG(PAPP) FROM linky_realtime WHERE time >= NOW() - INTERVAL 90 DAY",
-                "refresh": 1,
+                "refresh": 5,
                 "regex": "",
                 "type": "query"
             },
@@ -874,7 +874,7 @@
                 "name": "last_update",
                 "options": [],
                 "query": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
-                "refresh": 2,
+                "refresh": 5,
                 "regex": "",
                 "type": "query"
             },
@@ -889,7 +889,7 @@
                 "name": "last_temperature",
                 "options": [],
                 "query": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
-                "refresh": 2,
+                "refresh": 5,
                 "regex": "",
                 "sort": 1,
                 "type": "query"
@@ -904,7 +904,7 @@
                 "name": "libelle_tarif",
                 "options": [],
                 "query": "SELECT libelle_tarif FROM linky.linky_realtime ORDER BY time DESC LIMIT 1",
-                "refresh": 2,
+                "refresh": 5,
                 "regex": "",
                 "type": "query"
             }
@@ -918,7 +918,6 @@
         "hidden": true,
         "nowDelay": "",
         "refresh_intervals": [
-            "2s",
             "5s",
             "10s",
             "30s",
