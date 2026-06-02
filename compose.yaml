@@ -1,13 +1,33 @@
 services:
 
   ###############################################################################
-  # Python Linky application
-  linky2db:
+  # Linky collector — MQTT mode (Zigbee2MQTT / ZLinky_TIC)
+  # Start with: docker compose --profile mqtt up -d
+  linky2db-mqtt:
     container_name: linky2db
     build: .
     env_file: .env
     restart: always
     mem_limit: 128m
+    profiles: [mqtt]
+    environment:
+      - LINKY_SOURCE=mqtt
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ###############################################################################
+  # Linky collector — USB mode (TIC dongle direct)
+  # Start with: docker compose --profile usb up -d
+  linky2db-usb:
+    container_name: linky2db
+    build: .
+    env_file: .env
+    restart: always
+    mem_limit: 128m
+    profiles: [usb]
+    environment:
+      - LINKY_SOURCE=usb
     devices:
       - ${LINKY_USB_DEVICE}:${LINKY_USB_DEVICE}
     depends_on:

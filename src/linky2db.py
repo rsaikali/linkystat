@@ -369,12 +369,22 @@ class LinkyDataFromProd(object):
 
 
 if __name__ == "__main__":
-    try:
-        # Get realtime data from USB TeleInfo
+    LINKY_SOURCE = os.getenv("LINKY_SOURCE", "auto")
+
+    if LINKY_SOURCE == "mqtt":
+        from mqtt2db import LinkyDataFromMQTT
+
+        ld = LinkyDataFromMQTT()
+    elif LINKY_SOURCE == "usb":
         ld = LinkyData()
-    except serial.serialutil.SerialException:
-        # In development, we don't have USB serial connection to Linky device. We'll get realtime data from production environment.
-        logging.warning("Cannot establish direct USB connection to Linky device, getting data from production database...")
-        ld = LinkyDataFromProd()
+    else:
+        # auto: try USB first, fall back to MQTT if unavailable
+        try:
+            ld = LinkyData()
+        except serial.serialutil.SerialException:
+            logging.warning("USB unavailable, falling back to MQTT (Zigbee2MQTT)...")
+            from mqtt2db import LinkyDataFromMQTT
+
+            ld = LinkyDataFromMQTT()
 
     ld.get_data()

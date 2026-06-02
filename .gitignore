@@ -6,3 +6,5 @@ linkystat.code-workspace
 env/.env
 env/.env.dev
 src/__pycache__
+*.sql
+*.sql.gz
