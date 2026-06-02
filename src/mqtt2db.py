@@ -98,16 +98,9 @@ class LinkyDataFromMQTT:
             logging.debug(f"Incomplete Z2M payload, missing: {missing}")
             return
 
-        # Parse timestamp: use DATE from TIC frame if present, else now()
-        date_raw = payload.get(MQTT_FIELD_DATE)
-        if date_raw:
-            try:
-                # TIC format: H240601120000 (H + YYMMDDHHmmss)
-                timestamp = datetime.strptime(str(date_raw)[1:], "%y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
-            except (ValueError, IndexError):
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Use wall-clock time, not the meter's internal DATE: the Linky meter's
+        # clock can drift years off (seen as 2025 on a running 2026 system).
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         papp = int(payload[MQTT_FIELD_PAPP])
         hchc = int(float(payload[MQTT_FIELD_HCHC]) * MQTT_ENERGY_SCALE)
@@ -125,7 +118,7 @@ class LinkyDataFromMQTT:
                 connection.execute(
                     sa.text(
                         """
-                        INSERT INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
+                        INSERT IGNORE INTO linky_realtime (time, HCHC, HCHP, PAPP, temperature, libelle_tarif)
                         VALUES (:timestamp, :hchc, :hchp, :papp, :temperature, :ltarf)
                         """
                     ),
