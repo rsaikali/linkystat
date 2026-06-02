@@ -1,39 +1,19 @@
-name: Deploy Linkystat to production
+name: CD
+
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy'
-        type: environment
-        default: 'raspberrypi_rsaikali'
-        required: true
+
 jobs:
-  deploy-production:
-    runs-on:
-      - self-hosted
-      - ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
-    environment: 
-        name: ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
+  deploy:
+    name: Deploy to Raspberry Pi
+    runs-on: [self-hosted, Linux, ARM64, raspberrypi_rsaikali]
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@v6
-      - name: 'Create environment file'
-        run: echo '${{ secrets.ENV_FILE }}' > .env
-      - name: 'Build new Linkystat application'
-        run: docker compose --env-file .env build --pull
-      - name: 'Deploy with rolling update'
-        run: docker compose --env-file .env up -d --force-recreate --remove-orphans
-      - name: 'Run database migration'
+      - name: Pull and deploy
         run: |
-          set -e
-          docker exec -i mysql sh -c 'sh /docker-entrypoint-initdb.d/init-script.sh'
-      - name: 'Wait for services to be healthy'
-        run: sleep 30
-      - name: 'Verify deployment'
-        run: |
-          docker compose --env-file .env ps
-          curl -f http://localhost:3000/healthz || exit 1
-      - name: 'Cleanup old images (preserve volumes)'
-        run: docker image prune -af
+          cd ~/linkystat
+          make deploy

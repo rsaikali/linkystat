@@ -1,33 +1,30 @@
 name: "MySQL: Restore database"
+
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy'
-        type: environment
-        default: 'raspberrypi_rsaikali'
-        required: true
+
 jobs:
   restore-database:
-    runs-on:
-      - self-hosted
-      - ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
-    environment: 
-        name: ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
+    name: Restore from Google Drive
+    runs-on: [self-hosted, Linux, ARM64, raspberrypi_rsaikali]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Load environment from Pi
+        run: cat ~/linkystat/.env >> $GITHUB_ENV
+
       - uses: akiojin/decode-base64-github-action@v0.1.0
         id: decode-base64
         with:
           base64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
-      - name: 'Get .env file from secrets'
-        run: echo '${{ secrets.ENV_FILE }}' > .env
-      - name: Load .env file
-        uses: xom9ikk/dotenv@v2.2.0
-      - name: Download latest MySQL backup from Google Drive
+
+      - name: Download latest backup from Google Drive
         uses: k0staa/download-gdrive-file-action@v1
         with:
           service-account-key-json: ${{ steps.decode-base64.outputs.decoded }}
           download-file-name: "${{ env.VIRTUAL_HOST }}.sql.gz"
+
       - name: Restore MySQL database
-        run: ./scripts/mysql_restore.sh ${PWD}/${{ env.VIRTUAL_HOST }}.sql.gz
+        run: |
+          cd ~/linkystat
+          ./scripts/mysql_restore.sh ${PWD}/${{ env.VIRTUAL_HOST }}.sql.gz

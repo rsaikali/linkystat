@@ -1,44 +1,42 @@
 name: "MySQL: Backup database"
+
 on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy'
-        type: environment
-        default: 'raspberrypi_rsaikali'
-        required: true
+
 jobs:
   backup-database:
-    runs-on:
-      - self-hosted
-      - ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
-    environment: 
-        name: ${{ inputs.environment == '' && 'raspberrypi_rsaikali' || inputs.environment }}
+    name: Backup to Google Drive
+    runs-on: [self-hosted, Linux, ARM64, raspberrypi_rsaikali]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Load environment from Pi
+        run: cat ~/linkystat/.env >> $GITHUB_ENV
+
       - name: Get current date
         id: date
         run: echo "timestamp=$(date +'%Y-%m-%d.%H%M%S')" >> $GITHUB_OUTPUT
-      - name: 'Get .env file from secrets'
-        run: echo '${{ secrets.ENV_FILE }}' > .env
-      - name: Load .env file
-        uses: xom9ikk/dotenv@v2.2.0
+
       - name: Backup MySQL database
-        run: ./scripts/mysql_backup.sh
-      - name: Upload latest MySQL backup to Google Drive
+        run: |
+          cd ~/linkystat
+          ./scripts/mysql_backup.sh
+
+      - name: Upload latest backup to Google Drive
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
-          target: "./linkystat_mysql_backup.sql.gz"
+          target: "~/linkystat/linkystat_mysql_backup.sql.gz"
           name: "${{ env.VIRTUAL_HOST }}.sql.gz"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
           override: true
-      - name: Upload timestamped MySQL backup to Google Drive
+
+      - name: Upload timestamped backup to Google Drive
         uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v2.2.2
         with:
-          target: "./linkystat_mysql_backup.sql.gz"
+          target: "~/linkystat/linkystat_mysql_backup.sql.gz"
           name: "${{ env.VIRTUAL_HOST }}.${{ steps.date.outputs.timestamp }}.sql.gz"
           credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
           parent_folder_id: 1vXUlIfsEXpzthi_mttXSkuZajfyWG6a5
