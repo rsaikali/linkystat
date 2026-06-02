@@ -3,7 +3,6 @@ import os
 import time
 from datetime import datetime
 
-import requests
 import serial
 import sqlalchemy as sa
 
