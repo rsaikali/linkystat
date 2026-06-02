@@ -26,5 +26,4 @@ jobs:
 
       - name: Restore MySQL database
         run: |
-          cd ~/linkystat
-          ./scripts/mysql_restore.sh ${PWD}/${{ env.VIRTUAL_HOST }}.sql.gz
+          ~/linkystat/scripts/mysql_restore.sh ${{ github.workspace }}/${{ env.VIRTUAL_HOST }}.sql.gz
