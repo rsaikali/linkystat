@@ -85,10 +85,9 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 "
 
 echo "************ Creating triggers ************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
+mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} << 'MYSQL_EOF'
 DROP TRIGGER IF EXISTS realtime_trigger;
-delimiter ;;
+DELIMITER //
 CREATE TRIGGER realtime_trigger AFTER INSERT ON linky_realtime FOR EACH ROW
 BEGIN
 	INSERT INTO linky_history (time, HCHC, HCHP, temperature)
@@ -98,15 +97,14 @@ BEGIN
 		new.HCHP,
 		new.temperature)
     ON DUPLICATE KEY UPDATE HCHC=new.HCHC, HCHP=new.HCHP, temperature=new.temperature;
-END;;
-delimiter ;
-"
+END//
+DELIMITER ;
+MYSQL_EOF
 
 echo "************* Creating events *************"
-mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} --execute \
-"
+mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} << 'MYSQL_EOF'
 DROP PROCEDURE IF EXISTS refresh_linky_cache;
-delimiter ;;
+DELIMITER //
 CREATE PROCEDURE refresh_linky_cache()
 BEGIN
     INSERT INTO linky_daily_cache (day_date, HCHC_delta, HCHP_delta, total_kwh, temperature_avg, updated_at)
@@ -181,25 +179,25 @@ BEGIN
         HCHP_delta = VALUES(HCHP_delta),
         total_kwh = VALUES(total_kwh),
         updated_at = VALUES(updated_at);
-END;;
+END//
 
 DROP EVENT IF EXISTS clean_realtime;
 CREATE EVENT clean_realtime ON SCHEDULE EVERY 6 HOUR
 DO
 BEGIN
 	DELETE FROM linky_realtime WHERE time < NOW() - INTERVAL 2 DAY;
-END;;
+END//
 
 DROP EVENT IF EXISTS refresh_linky_cache_event;
 CREATE EVENT refresh_linky_cache_event ON SCHEDULE EVERY 5 MINUTE
 DO
 BEGIN
 	CALL refresh_linky_cache();
-END;;
+END//
 
+DELIMITER ;
 CALL refresh_linky_cache();
-delimiter ;
-"
+MYSQL_EOF
 
 echo "*******************************************"
 echo "***** Done creating Linkystat schema ******"
