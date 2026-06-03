@@ -37,7 +37,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -128,7 +128,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \"a\", LEAD(today) OVER (ORDER BY t) - today FROM\r\n((SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 90 DAY AND NOW())\r\nUNION\r\n(SELECT\r\n    MAX(time) as t,\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as today\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 90 DAY - INTERVAL 1 MINUTE AND NOW() - INTERVAL 1 MINUTE)) D LIMIT 1",
+          "rawSql": "SELECT\n    day_date                  AS \"time\",\n    HCHP_delta / 1000         AS \"HP (kWh)\",\n    HCHC_delta / 1000         AS \"HC (kWh)\"\nFROM linky_daily_cache\nWHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 35 DAY)\n  AND day_date <  DATE((SELECT MAX(time) FROM linky_history))\nORDER BY day_date",
           "refId": "A",
           "sql": {
             "columns": [
@@ -215,7 +215,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -375,7 +375,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  $__timeGroupAlias(time, $__interval), \r\n  ROUND(PAPP * $cosphi / 5) * 5 AS \"Puissance apparente\" \r\nFROM linky_realtime \r\nWHERE $__timeFilter(time) \r\n",
+          "rawSql": "SELECT\n    $__timeGroupAlias(time, $__interval),\n    ROUND((MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000, 3) AS \"\u00c9nergie (kWh/h)\"\nFROM linky_history\nWHERE $__timeFilter(time)\nGROUP BY 1\nORDER BY 1",
           "refId": "A",
           "sql": {
             "columns": [
@@ -413,7 +413,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  MAX(time),\r\n  ${consommation_veille:raw} AS \"Consommation veille\"\r\nFROM\r\n  linky_realtime;",
+          "rawSql": "SELECT MAX(time), 0 AS \"R\u00e9f\u00e9rence\"\nFROM linky_history",
           "refId": "B",
           "sql": {
             "columns": [
@@ -434,7 +434,7 @@
           }
         }
       ],
-      "title": "",
+      "title": "\u00c9nergie (kWh/h)",
       "transparent": true,
       "type": "timeseries"
     },
@@ -566,7 +566,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "description": "",
       "fieldConfig": {
@@ -604,7 +604,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 90 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 24 as total_kwh\r\nFROM linky_realtime\r\nWHERE time BETWEEN NOW() - INTERVAL 2 DAY AND NOW() - INTERVAL 90 DAY)",
+          "rawSql": "(SELECT \"current\",\n        (HCHP_delta + HCHC_delta) AS total_kwh\n FROM linky_daily_cache\n WHERE day_date = DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)\nUNION\n(SELECT \"base\",\n        AVG(HCHP_delta + HCHC_delta)\n FROM linky_daily_cache\n WHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 30 DAY)\n   AND day_date <  DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -654,7 +654,7 @@
       "datasource": {
         "default": true,
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "description": "",
       "fieldConfig": {
@@ -691,7 +691,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc)  / 1000) + ($abonnement / $nb_days_period) as total_kwh\r\nFROM linky_realtime\r\nWHERE time > NOW() - INTERVAL 90 DAY)\r\nUNION\r\n(SELECT \r\n\t\"base\",\r\n    (((MAX(HCHP) - MIN(HCHP)) * $prix_hp + (MAX(HCHC) - MIN(HCHC)) * $prix_hc) / 1000 / $nb_days_period) + ($abonnement / $nb_days_period)  as total_kwh\r\nFROM linky_history\r\nWHERE time BETWEEN NOW() - INTERVAL $nb_days_period DAY AND NOW())",
+          "rawSql": "(SELECT \"current\",\n        (((HCHP_delta) * $prix_hp + (HCHC_delta) * $prix_hc) / 1000)\n        + ($abonnement / $nb_days_period) AS total\n FROM linky_daily_cache\n WHERE day_date = DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)\nUNION\n(SELECT \"base\",\n        AVG((((HCHP_delta) * $prix_hp + (HCHC_delta) * $prix_hc) / 1000)\n        + ($abonnement / $nb_days_period))\n FROM linky_daily_cache\n WHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 30 DAY)\n   AND day_date <  DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -740,7 +740,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "description": "",
       "fieldConfig": {
@@ -778,7 +778,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "\r\n(SELECT\r\n \"current\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as total_kwh\r\nFROM linky_realtime\r\nWHERE time >= NOW() - INTERVAL 90 DAY)\r\nUNION\r\n(SELECT \r\n \"base\",\r\n (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as total_kwh\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)",
+          "rawSql": "(SELECT \"current\",\n        (HCHP_delta + HCHC_delta) / 1000 AS total_kwh\n FROM linky_daily_cache\n WHERE day_date = DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)\nUNION\n(SELECT \"base\",\n        AVG((HCHP_delta + HCHC_delta) / 1000)\n FROM linky_daily_cache\n WHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 30 DAY)\n   AND day_date <  DATE((SELECT MAX(time) FROM linky_history)) - INTERVAL 1 DAY)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -827,7 +827,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {},
@@ -904,7 +904,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -1000,7 +1000,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(\r\n  SELECT\r\n    DATE(DATE_FORMAT(MAX(time), '%Y-%m-%d 00:00:00')) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as \"total_kwh\"\r\n  FROM\r\n    linky_realtime\r\n  WHERE\r\n    time >= NOW() - INTERVAL 90 DAY\r\n)\r\nUNION\r\n(\r\n  SELECT\r\n    time as \"timestamp\",\r\n    IFNULL(\r\n      LEAD(counter) OVER (\r\n        ORDER BY\r\n          time\r\n      ) - counter,\r\n      0\r\n    ) AS \"total_kwh\"\r\n  FROM\r\n    (\r\n      SELECT\r\n        time,\r\n        (HCHP + HCHC) / 1000 as counter\r\n      FROM\r\n        linky_history\r\n      WHERE\r\n        time >= NOW() - INTERVAL $nb_days_period DAY\r\n        AND HOUR(time) = 0\r\n        AND MINUTE(time) = 0\r\n        AND DATE(time) <> DATE(time + INTERVAL 1 DAY)\r\n    ) B\r\n)\r\nORDER BY\r\n  timestamp",
+          "rawSql": "SELECT\n    day_date                  AS \"time\",\n    HCHP_delta / 1000         AS \"HP (kWh)\",\n    HCHC_delta / 1000         AS \"HC (kWh)\"\nFROM linky_daily_cache\nWHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 35 DAY)\n  AND day_date <  DATE((SELECT MAX(time) FROM linky_history))\nORDER BY day_date",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1030,7 +1030,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / $nb_days_period / 1000 as \"Moyenne mois\"\r\nFROM\r\n  linky_history\r\nWHERE\r\n  time >= NOW() - INTERVAL $nb_days_period DAY",
+          "rawSql": "SELECT\n    AVG((HCHP_delta + HCHC_delta) / 1000) AS \"Moyenne mois\"\nFROM linky_daily_cache\nWHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL 35 DAY)\n  AND day_date <  DATE((SELECT MAX(time) FROM linky_history))",
           "refId": "B",
           "sql": {
             "columns": [
@@ -1108,7 +1108,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -1198,7 +1198,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n    ((MAX(HCHP) - MIN(HCHP)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures pleines\",\r\n    ((MAX(HCHC) - MIN(HCHC)) * 100) / (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) AS \"Heures creuses\"\r\nFROM linky_history\r\nWHERE\r\n    time >= NOW() - INTERVAL $nb_days_period DAY",
+          "rawSql": "SELECT\n    SUM(HCHP_delta) * 100.0 / SUM(HCHP_delta + HCHC_delta) AS \"Heures pleines\",\n    SUM(HCHC_delta) * 100.0 / SUM(HCHP_delta + HCHC_delta) AS \"Heures creuses\"\nFROM linky_daily_cache\nWHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL $nb_days_period DAY)\n  AND day_date <  DATE((SELECT MAX(time) FROM linky_history))",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1226,7 +1226,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {},
@@ -1263,7 +1263,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(SELECT\r\n  \"current\",\r\n  (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000 as t\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)\r\nUNION\r\n(SELECT\r\n  \"base\",\r\n  p.total_kwh as t\r\nFROM linky_period_cache p\r\nWHERE p.period_type = 'month'\r\n  AND p.period_start < (CASE\r\n    WHEN DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n  END)\r\n  AND (SELECT COUNT(*) FROM linky_daily_cache d WHERE d.day_date >= p.period_start AND d.day_date < p.period_end) >= DATEDIFF(p.period_end, p.period_start)\r\nORDER BY p.period_start DESC\r\nLIMIT 1)",
+          "rawSql": "(SELECT \"current\",\n        SUM((HCHP_delta + HCHC_delta) / 1000) AS t\n FROM linky_daily_cache\n WHERE day_date >= DATE_SUB(DATE((SELECT MAX(time) FROM linky_history)), INTERVAL $nb_days_period DAY)\n   AND day_date <  DATE((SELECT MAX(time) FROM linky_history)))\nUNION\n(SELECT \"base\", p.total_kwh\n FROM linky_period_cache p\n WHERE p.period_type = 'month'\n   AND p.period_end <= DATE((SELECT MAX(time) FROM linky_history))\n ORDER BY p.period_start DESC LIMIT 1 OFFSET 1)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1750,7 +1750,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -1886,7 +1886,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(SELECT\r\n    DATE_ADD(p.period_start, INTERVAL 1 MONTH) as \"timestamp\",\r\n    p.HCHP_delta / 1000 AS \"total_kwh_HCHP\",\r\n    p.HCHC_delta / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_period_cache p\r\nWHERE p.period_type = 'month'\r\n  AND p.period_start < (CASE\r\n    WHEN DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n  END)\r\n  AND (SELECT COUNT(*) FROM linky_daily_cache d WHERE d.day_date >= p.period_start AND d.day_date < p.period_end) >= DATEDIFF(p.period_end, p.period_start)\r\n)\r\nUNION ALL\r\n(SELECT\r\n    DATE_ADD((CASE\r\n      WHEN DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    END), INTERVAL 1 MONTH) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)\r\nORDER BY timestamp\r\n",
+          "rawSql": "SELECT\n    DATE_ADD(p.period_start, INTERVAL 1 MONTH) AS \"time\",\n    p.HCHP_delta / 1000                         AS \"HP (kWh)\",\n    p.HCHC_delta / 1000                         AS \"HC (kWh)\"\nFROM linky_period_cache p\nWHERE p.period_type = 'month'\nORDER BY p.period_start",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1916,7 +1916,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "(SELECT\r\n    DATE_ADD(p.period_start, INTERVAL 1 MONTH) as \"timestamp\",\r\n    ROUND(AVG(h.temperature), 1) as \"Temperature\"\r\nFROM linky_period_cache p\r\nJOIN linky_history h ON h.time >= p.period_start AND h.time < p.period_end\r\nWHERE p.period_type = 'month'\r\n  AND p.period_start < (CASE\r\n    WHEN DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n  END)\r\n  AND (SELECT COUNT(*) FROM linky_daily_cache d WHERE d.day_date >= p.period_start AND d.day_date < p.period_end) >= DATEDIFF(p.period_end, p.period_start)\r\nGROUP BY p.period_start)\r\nUNION ALL\r\n(SELECT\r\n    DATE_ADD((CASE\r\n      WHEN DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      ELSE STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    END), INTERVAL 1 MONTH) as \"timestamp\",\r\n    ROUND(AVG(temperature), 1) as \"Temperature\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL $nb_days_period DAY)\r\nORDER BY timestamp",
+          "rawSql": "SELECT\n    DATE_ADD(p.period_start, INTERVAL 1 MONTH) AS \"time\",\n    ROUND(AVG(d.temperature_avg), 1)            AS \"Temp\u00e9rature\"\nFROM linky_period_cache p\nJOIN linky_daily_cache d\n  ON d.day_date BETWEEN p.period_start AND p.period_end\nWHERE p.period_type = 'month'\nGROUP BY p.period_start\nORDER BY p.period_start",
           "refId": "B",
           "sql": {
             "columns": [
@@ -2365,7 +2365,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -2466,7 +2466,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "(SELECT\r\n    DATE_ADD(p.period_start, INTERVAL 1 YEAR) as \"timestamp\",\r\n    p.HCHP_delta / 1000 AS \"total_kwh_HCHP\",\r\n    p.HCHC_delta / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_period_cache p\r\nWHERE p.period_type = 'year'\r\n  AND p.period_start >= STR_TO_DATE(CONCAT(YEAR((SELECT MIN(day_date) FROM linky_daily_cache)), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n  AND p.period_start < (CASE\r\n    WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n  END)\r\n)\r\nUNION ALL\r\n(SELECT\r\n    DATE_ADD((CASE\r\n      WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    END), INTERVAL 1 YEAR) as \"timestamp\",\r\n    (MAX(HCHP) - MIN(HCHP)) / 1000 AS \"total_kwh_HCHP\",\r\n    (MAX(HCHC) - MIN(HCHC)) / 1000 AS \"total_kwh_HCHC\"\r\nFROM linky_history\r\nWHERE time >= NOW() - INTERVAL DATEDIFF(\r\n    DATE_ADD((CASE\r\n      WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    END), INTERVAL 1 YEAR),\r\n    (CASE\r\n      WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n    END)\r\n  ) DAY\r\n)\r\nORDER BY timestamp\r\n",
+          "rawSql": "SELECT\n    DATE_ADD(p.period_start, INTERVAL 1 YEAR) AS \"time\",\n    p.HCHP_delta / 1000                        AS \"HP (kWh)\",\n    p.HCHC_delta / 1000                        AS \"HC (kWh)\"\nFROM linky_period_cache p\nWHERE p.period_type = 'year'\nORDER BY p.period_start",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2908,7 +2908,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "LINKY_PUBLIC_DS"
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {},
@@ -2945,7 +2945,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  \"current\" as \"current\",\r\n  COALESCE((\r\n    SELECT (MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / 1000\r\n    FROM linky_history\r\n    WHERE time >= NOW() - INTERVAL DATEDIFF(\r\n      DATE_ADD((CASE\r\n        WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n        ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      END), INTERVAL 1 YEAR),\r\n      (CASE\r\n        WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n        ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      END)\r\n    ) DAY\r\n  ), 0) as t\r\nUNION ALL\r\nSELECT\r\n  \"base\" as \"current\",\r\n  COALESCE((\r\n    SELECT p.total_kwh\r\n    FROM linky_period_cache p\r\n    WHERE p.period_type = 'year'\r\n      AND p.period_start < (CASE\r\n        WHEN MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= $jour_releve_compteur THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n        ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()) - 1, '-12-', LPAD($jour_releve_compteur, 2, '0')), '%Y-%m-%d')\r\n      END)\r\n      AND (SELECT COUNT(*) FROM linky_daily_cache d WHERE d.day_date >= p.period_start AND d.day_date < p.period_end) >= DATEDIFF(p.period_end, p.period_start)\r\n    ORDER BY p.period_start DESC\r\n    LIMIT 1\r\n  ), 0) as t",
+          "rawSql": "SELECT\n    DATE_ADD(p.period_start, INTERVAL 1 YEAR) AS \"time\",\n    p.HCHP_delta / 1000                        AS \"HP (kWh)\",\n    p.HCHC_delta / 1000                        AS \"HC (kWh)\"\nFROM linky_period_cache p\nWHERE p.period_type = 'year'\nORDER BY p.period_start",
           "refId": "A",
           "sql": {
             "columns": [
@@ -3367,7 +3367,7 @@
           "datasource": {
             "default": true,
             "type": "mysql",
-            "uid": "LINKY_PUBLIC_DS"
+            "uid": "P211906C1C32DB77E"
           },
           "description": "",
           "fieldConfig": {
@@ -3485,12 +3485,12 @@
               "dataset": "linky",
               "datasource": {
                 "type": "mysql",
-                "uid": "LINKY_PUBLIC_DS"
+                "uid": "P211906C1C32DB77E"
               },
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT $cosphi as \"Cos \u03c6\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
+              "rawSql": "SELECT $cosphi as \"Cos \u03c6\", \r\n       PAPP,\r\n       HCHP/1000 AS \"Heures Pleines\", \r\n       HCHC/1000 AS \"Heures Creuses\"\r\nFROM linky.linky_realtime\r\nORDER BY time DESC LIMIT 1\r\n",
               "refId": "A",
               "sql": {
                 "columns": [
@@ -3608,14 +3608,18 @@
           "text": "145",
           "value": "145"
         },
-        "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky_realtime;",
+        "definition": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky.linky_realtime;",
         "hide": 2,
         "name": "consommation_veille",
         "options": [],
-        "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky_realtime;",
+        "query": "SELECT ROUND(MIN(PAPP) * $cosphi / 5) * 5 FROM linky_history;",
         "refresh": 2,
         "regex": "",
-        "type": "query"
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "LINKY_PUBLIC_DS"
+        }
       },
       {
         "current": {
@@ -3626,10 +3630,14 @@
         "hide": 2,
         "name": "cosphi",
         "options": [],
-        "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_realtime",
+        "query": "SELECT(MAX(HCHP) - MIN(HCHP) + MAX(HCHC) - MIN(HCHC)) / (TIMESTAMPDIFF(SECOND, min(time), max(time)) / 3600) / AVG(PAPP) FROM linky_history",
         "refresh": 2,
         "regex": "",
-        "type": "query"
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "LINKY_PUBLIC_DS"
+        }
       },
       {
         "current": {
@@ -3641,10 +3649,14 @@
         "hide": 2,
         "name": "last_update",
         "options": [],
-        "query": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_realtime ORDER BY time DESC LIMIT 1",
+        "query": "SELECT DATE_FORMAT(time, '%d.%m %H:%i:%s') FROM linky_history ORDER BY time DESC LIMIT 1",
         "refresh": 2,
         "regex": "",
-        "type": "query"
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "LINKY_PUBLIC_DS"
+        }
       },
       {
         "current": {
@@ -3656,25 +3668,33 @@
         "hide": 2,
         "name": "last_temperature",
         "options": [],
-        "query": "SELECT round(temperature, 1) FROM linky_realtime ORDER BY time DESC LIMIT 1",
+        "query": "SELECT round(temperature, 1) FROM linky_history ORDER BY time DESC LIMIT 1",
         "refresh": 2,
         "regex": "",
         "sort": 1,
-        "type": "query"
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "LINKY_PUBLIC_DS"
+        }
       },
       {
         "current": {
           "text": "HEURE PLEINE",
           "value": "HEURE PLEINE"
         },
-        "definition": "SELECT libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1",
+        "definition": "SELECT libelle_tarif FROM linky.linky_realtime ORDER BY time DESC LIMIT 1",
         "hide": 2,
         "name": "libelle_tarif",
         "options": [],
-        "query": "SELECT libelle_tarif FROM linky_realtime ORDER BY time DESC LIMIT 1",
+        "query": "SELECT libelle_tarif FROM linky_history ORDER BY time DESC LIMIT 1",
         "refresh": 2,
         "regex": "",
-        "type": "query"
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "LINKY_PUBLIC_DS"
+        }
       }
     ]
   },
@@ -3694,7 +3714,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "Linky \u2014 Demo",
+  "title": "Linkystat \u2014 Demo (donn\u00e9es d\u00e9cal\u00e9es de 30 jours)",
   "uid": "linkystat-public",
   "version": 3,
   "weekStart": "monday"
