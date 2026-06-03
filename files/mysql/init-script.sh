@@ -204,3 +204,49 @@ delimiter ;
 echo "*******************************************"
 echo "***** Done creating Linkystat schema ******"
 echo "*******************************************"
+
+if [ "${DEMO_MODE:-false}" = "true" ]; then
+echo "************************************"
+echo "*** Creating linky_public schema ***"
+echo "************************************"
+mysql -u root -p${MYSQL_ROOT_PASSWORD} --execute \
+"
+CREATE DATABASE IF NOT EXISTS linky_public;
+
+-- linky_realtime is purged every 2 days; source the public view from linky_history
+CREATE OR REPLACE VIEW linky_public.linky_realtime AS
+    SELECT
+        DATE_SUB(time, INTERVAL 30 DAY) AS time,
+        0                               AS PAPP,
+        HCHP, HCHC, temperature,
+        ''                              AS libelle_tarif
+    FROM linky.linky_history
+    WHERE time <= NOW() - INTERVAL 30 DAY;
+
+CREATE OR REPLACE VIEW linky_public.linky_history AS
+    SELECT DATE_SUB(time, INTERVAL 30 DAY) AS time, HCHC, HCHP, temperature
+    FROM linky.linky_history
+    WHERE time <= NOW() - INTERVAL 30 DAY;
+
+CREATE OR REPLACE VIEW linky_public.linky_daily_cache AS
+    SELECT
+        DATE_SUB(day_date, INTERVAL 30 DAY) AS day_date,
+        HCHC_delta, HCHP_delta, total_kwh, temperature_avg, updated_at
+    FROM linky.linky_daily_cache
+    WHERE day_date <= DATE(NOW() - INTERVAL 30 DAY);
+
+CREATE OR REPLACE VIEW linky_public.linky_period_cache AS
+    SELECT
+        period_type,
+        DATE_SUB(period_start, INTERVAL 30 DAY) AS period_start,
+        DATE_SUB(period_end,   INTERVAL 30 DAY) AS period_end,
+        HCHC_delta, HCHP_delta, total_kwh, updated_at
+    FROM linky.linky_period_cache
+    WHERE period_end <= DATE(NOW() - INTERVAL 30 DAY);
+
+CREATE USER IF NOT EXISTS '${GRAFANA_PUBLIC_MYSQL_USER}'@'%' IDENTIFIED BY '${GRAFANA_PUBLIC_MYSQL_PASSWORD}';
+GRANT SELECT, SHOW VIEW ON linky_public.* TO '${GRAFANA_PUBLIC_MYSQL_USER}'@'%';
+FLUSH PRIVILEGES;
+"
+echo "**** Done creating linky_public schema ****"
+fi

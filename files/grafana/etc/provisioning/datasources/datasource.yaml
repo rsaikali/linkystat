@@ -3,6 +3,7 @@ apiVersion: 1
 datasources:
   - name: MySQL
     type: mysql
+    uid: P211906C1C32DB77E
     isDefault: true
     url: mysql:3306
     user: ${GRAFANA_MYSQL_USER}
@@ -14,3 +15,20 @@ datasources:
       connMaxLifetime: 14400
     secureJsonData:
       password: ${GRAFANA_MYSQL_PASSWORD}
+
+  # Demo mode: read-only datasource on linky_public views (-30 day offset)
+  # Only functional when DEMO_MODE=true (DB + user created by init-script.sh)
+  - name: MySQL Public
+    type: mysql
+    uid: LINKY_PUBLIC_DS
+    isDefault: false
+    url: mysql:3306
+    user: ${GRAFANA_PUBLIC_MYSQL_USER}
+    jsonData:
+      database: linky_public
+      maxOpenConns: 10
+      maxIdleConns: 5
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+    secureJsonData:
+      password: ${GRAFANA_PUBLIC_MYSQL_PASSWORD}
