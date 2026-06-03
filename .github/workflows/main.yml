@@ -16,4 +16,6 @@ jobs:
       - name: Pull and deploy
         run: |
           cd ~/linkystat
+          git fetch origin main
+          git reset --hard origin/main
           make deploy
