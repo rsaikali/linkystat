@@ -74,6 +74,7 @@ services:
     restart: always
     environment:
       - GF_INSTALL_PLUGINS=yesoreyeram-boomtheme-panel,nikosc-percenttrend-panel,briangann-gauge-panel
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=${GF_DEFAULT_HOME_DASHBOARD}
     mem_limit: 256m
     ports:
       - 3000:3000
