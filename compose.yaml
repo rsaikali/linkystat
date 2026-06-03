@@ -44,17 +44,19 @@ services:
     command: >
       mysqld --skip-performance-schema
              --skip-mysqlx
-             --max-execution-time=10000
+             --skip-name-resolve
              --default-storage-engine=InnoDB
-             --innodb-buffer-pool-size=1536M
-             --innodb-buffer-pool-chunk-size=384M
-             --innodb-buffer-pool-instances=4
+             --innodb-buffer-pool-size=128M
+             --innodb-buffer-pool-instances=1
+             --innodb-flush-log-at-trx-commit=2
+             --innodb-doublewrite=0
+             --innodb-stats-on-metadata=0
              --character-set-server=utf8mb4
              --collation-server=utf8mb4_unicode_ci
              --init-connect='SET NAMES UTF8;'
              --lc_time_names='fr_FR'
              --mysql_native_password=ON
-    mem_limit: 2g
+    mem_limit: 512m
     ports:
       - 3306:3306
     volumes:
