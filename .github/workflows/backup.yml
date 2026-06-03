@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Load environment from Pi
-        run: cat ~/linkystat/.env >> $GITHUB_ENV
+        run: grep -v '^#' ~/linkystat/.env | grep -v '^[[:space:]]*$' >> $GITHUB_ENV
 
       - name: Get current date
         id: date
