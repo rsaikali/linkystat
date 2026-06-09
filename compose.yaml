@@ -77,11 +77,12 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=yesoreyeram-boomtheme-panel,nikosc-percenttrend-panel,briangann-gauge-panel
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=${GF_DEFAULT_HOME_DASHBOARD}
-    mem_limit: 256m
+    mem_limit: 512m
     ports:
       - "192.168.1.111:3000:3000"
     volumes:
       - ./files/grafana/etc:/etc/grafana
+      - grafana_data:/var/lib/grafana
     healthcheck:
       test: wget --spider -q http://localhost:3000/healthz || exit 1
       interval: 1s
@@ -94,3 +95,4 @@ services:
 # MySQL volume
 volumes:
   dbdata:
+  grafana_data:
